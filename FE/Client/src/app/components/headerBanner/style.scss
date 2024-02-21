@@ -1,0 +1,77 @@
+@import '../../variables';
+
+.header-banner {
+  background-image: url('/assets/img/BannerHomepage.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 40em;
+  display: flex;
+  align-items: center;
+  .banner-content {
+    padding: 3em;
+    &-title {
+      font-family: 'Open Sans', sans-serif;
+      color: $green-leaf-color;
+      font-weight: bold;
+    }
+    &-text {
+      width: 8em;
+      font-size: 3em;
+      word-wrap: break-word;
+      padding: 0.2em 0;
+      font-weight: bold;
+      color: $text-bold-color;
+      line-height: 1.2;
+    }
+    .btn-explore {
+      padding: 0.8em 1.5em;
+      outline: none;
+      border: none;
+      border-radius: 0.8em;
+      color: $black-color;
+      font-weight: 500;
+      background-color: $orange-mix-yellow-color;
+      opacity: 0.9;
+      transition: all 0.5s linear;
+      &:hover {
+        background-color: $orange-mix-yellow-color;
+        color: $text-bold-color;
+        opacity: 1;
+      }
+      span {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+//tablet
+@media screen and (max-width: 1023.98px) {
+  .header-banner {
+    min-height: 35em;
+    .banner-content {
+      &-text {
+        font-size: 2.8em;
+      }
+    }
+    .btn-explore {
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+    }
+  }
+}
+//mobile
+@media screen and (max-width: 768px) {
+  .header-banner {
+    min-height: 30em;
+    .banner-content {
+      &-text {
+        font-size: 2em;
+      }
+    }
+    .btn-explore {
+      padding: 0.4em 1em;
+      font-size: 0.8em;
+    }
+  }
+}

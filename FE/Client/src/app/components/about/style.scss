@@ -1,0 +1,140 @@
+@import '../../variables';
+
+.about {
+  background-color: #f9f8f8;
+  .about-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('/assets/img/flowerAbout.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 10em 0;
+    .about-box-img {
+      width: 50%;
+    }
+    .about-box-content {
+      width: 50%;
+      .about-title {
+        font-size: 3em;
+        font-weight: 400;
+        color: $green-leaf-color;
+        padding-bottom: 0.5em;
+      }
+      .about-sub-title {
+        font-size: 3em;
+        color: $text-bold-color;
+        font-weight: bold;
+        line-height: 1.2;
+        padding-bottom: 0.5em;
+      }
+      .about-text {
+        font-size: 1em;
+        line-height: 1.2;
+        margin-bottom: 2.5em;
+      }
+      .about-sub-box {
+        display: flex;
+        align-items: center;
+        .about-sub-icon {
+          padding: 2em;
+        }
+        .sub-box-content {
+          display: flex;
+          flex-direction: column;
+          &-title {
+            font-weight: bold;
+            font-size: 1.8em;
+            color: $text-bold-color;
+            margin-bottom: 0.5em;
+          }
+          &-text {
+            font-size: 1.1em;
+          }
+        }
+      }
+      .btn-about {
+        color: $white-color;
+        font-size: 1.2em;
+        background-color: $text-bold-color;
+        padding: 1em 2.2em;
+        border-radius: 0.8em;
+        margin-top: 1.6em;
+      }
+    }
+  }
+  //tablet
+  @media screen and (max-width: 1023.98px) {
+    .about-container {
+      .about-box-content {
+        .about-title {
+          font-size: 1.8em;
+        }
+        .about-sub-title {
+          font-size: 2.2em;
+        }
+        .about-sub-box {
+          margin-bottom: 1em;
+          .about-sub-icon {
+            padding: 1.1em;
+          }
+          .sub-box-content {
+            &-title {
+              font-size: 1.7em;
+            }
+            &-text {
+              font-size: 1.1em;
+            }
+          }
+        }
+        .btn-about {
+          font-size: 1.1em;
+          padding: 0.8em 2em;
+        }
+      }
+    }
+  }
+  //mobile
+  @media screen and (max-width: 768px) {
+    .about-container {
+      flex-direction: column;
+      background: none;
+      padding: 2em 0;
+      .about-box-img {
+        background: url('/assets/img/flowerAbout.png');
+        height: 20em;
+        width: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      .about-box-content {
+        width: 100%;
+        .about-title {
+          font-size: 1.5em;
+        }
+        .about-sub-title {
+          font-size: 2em;
+        }
+        .about-sub-box {
+          .about-sub-icon {
+            padding: 1em;
+          }
+          .sub-box-content {
+            &-title {
+              font-size: 1.5em;
+            }
+            &-text {
+              font-size: 1em;
+            }
+          }
+        }
+        .btn-about {
+          font-size: 1.1em;
+          padding: 0.8em 2em;
+        }
+      }
+    }
+  }
+}
