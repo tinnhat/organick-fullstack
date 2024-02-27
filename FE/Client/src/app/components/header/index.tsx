@@ -1,21 +1,29 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import './style.scss'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faMagnifyingGlass, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
+import ModalCart from '../modalCart'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 export default function Header({}: Props) {
+  const [showCart,setShowCart] = useState(false);
+  const router = useRouter()
+  const handleShowCart = () => {
+    setShowCart(true)
+  }
   return (
     <header className='header'>
       <div className='container'>
         <div className='header-container'>
-          <a className='header-logo' href='/'>
+          <Link className='header-logo' href='/'>
             <Image src={'/assets/img/Logo.svg'} alt='' className='logo-img' width={50} height={50} />
             <p className='header-logo-name'>Organick</p>
-          </a>
+          </Link>
           <div className='header-menu-mobile'>
             <FontAwesomeIcon icon={faBars} />
           </div>
@@ -52,13 +60,23 @@ export default function Header({}: Props) {
             </li>
           </ul>
           <div className='header-box-cart'>
-            <div className='icon-box'>
-              <FontAwesomeIcon icon={faMagnifyingGlass} className='icon-box-search' />
-            </div>
-            <div className='cart-box'>
+            <div className='cart-box' onClick={handleShowCart}>
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
               <p className='cart-box-number'>Cart(0)</p>
             </div>
+            <button className='btn-login' onClick={() => router.push('/login')} >Login</button>
+            {/* <div className='avatar-box'>
+              <Image src={'/assets/img/avatar.jpg'} alt='' className='avatar-img' width={50} height={50} style={{
+                borderRadius: '50%',
+                cursor: 'pointer'
+              }} />
+              <div className='avatar-menu'>
+                <div className='item' onClick={() => router.push('/my-account')}>My account</div>
+                <div className='item'onClick={() => router.push('/order-history')}>Order History</div>
+                <div className='item'>Sign out</div>
+              </div>
+            </div> */}
+            {showCart && <ModalCart/>}
           </div>
         </div>
       </div>

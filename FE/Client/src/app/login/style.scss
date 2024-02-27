@@ -1,0 +1,119 @@
+@import '../../app/variables';
+.auth-page {
+  .auth-container {
+    margin: 0 auto;
+    margin-top: 60px;
+    width: 70%;
+    height: 550px;
+    background-color: #fedcc5;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    .bkg-login-img{
+      width: 50%;
+    }
+    .box {
+      background-color: $green-leaf-color;
+      padding: 20px;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      margin-left: 20px;
+      width: calc(50% - 20px);
+      height: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      .box__title {
+        font-size: 24px;
+        font-weight: 500;
+        color: $white-mix-gray-color;
+      }
+      .title{
+        color: $text-bold-color;
+      }
+      .input-box {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        input {
+          width: 100%;
+          border: 1px solid $text-bold-color;
+          background-color: $text-bold-color;
+          color: $white-color;
+          outline: none;
+          padding: 10px;
+          border-radius: 10px;
+          &::placeholder {
+            color: #b2bec3;
+          }
+        }
+        label {
+          color: $text-bold-color;
+          margin-bottom: 4px;
+          font-weight: 400;
+        }
+      }
+      .btn-create-account {
+        border: none;
+        outline: none;
+        width: 80%;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: $white-color;
+        color: $text-bold-color;
+        transition: all 0.2s linear;
+        font-size: 17px;
+        margin: 20px 0;
+        &:hover {
+          color: $text-bold-color;
+          background-color: $orange-mix-yellow-color;
+        }
+      }
+      .box__text {
+        color: $white-mix-gray-color;
+        margin-bottom: 0;
+        span {
+          margin-left: 4px;
+          cursor: pointer;
+          color: $text-bold-color;
+          transition: all 0.2s linear;
+          &:hover{
+            color: $orange-mix-yellow-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1023.98px) {
+  .auth-page {
+    .auth-container {
+      width: 80%;
+      .bkg-login-img{
+        width: 40%;
+      }
+      .box {
+        width: calc(60% - 20px);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  .auth-page {
+    .auth-container {
+      width: 90%;
+      .bkg-login-img{
+        width: 0%;
+      }
+      .box {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}

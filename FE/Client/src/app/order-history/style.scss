@@ -1,0 +1,120 @@
+@import '../../app/variables';
+
+.order-history {
+  margin: 40px 0;
+  .order-history-container {
+    margin: auto;
+    padding: 10px;
+    background-color: #f5f6fa;
+    .order-history-title {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 33px;
+      color: $text-bold-color;
+    }
+    .order-history-options {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      justify-content: space-around;
+      .option{
+        padding: 10px;
+        text-align: center;
+        width: 33.33%;
+        cursor: pointer;
+        font-weight: 500;
+        background-color: $gray-color;
+        color: $text-bold-color;
+        &.active{
+          background-color: $green-leaf-color;
+          color: $white-color;
+        }
+      }
+    }
+    .search-box{
+      margin: 20px 0;
+      position: relative;
+      .icon{
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-bold-color;
+        cursor: pointer;
+      }
+      input{
+        padding: 10px;
+        padding-right: 40px;
+        width: 100%;
+        outline: none;
+        border: none;
+        border: 1px solid $gray-color;
+        background-color: $gray-color;
+        border-radius: 4px;
+        &:active, &:focus{
+          border: 1px solid $text-bold-color;
+        }
+      }
+    }
+    .list-orders{
+      padding: 0;
+      .order {
+        margin: 10px 0;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+        .order-header-info{
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid $white-mix-gray-color;
+          .order-date{
+            margin-left: 10px;
+          }
+          .order-status{
+            margin-left: auto;
+            background-color: red;
+            padding: 4px;
+            border-radius: 4px;
+            color: $white-color;
+          }
+        }
+        .product-info{
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid $white-mix-gray-color;
+          .product-straight{
+            margin-left: 10px;
+            .product-name{
+              font-weight: bold;
+              color: $text-bold-color;
+            }
+          }
+          .product-price{
+            margin-left: auto;
+            font-size: 17px;
+            color: $text-bold-color;
+          }
+        }
+        .order-more-info{
+          margin-top: 20px;
+          display: flex;
+          align-items: flex-start;
+          .note{
+            width: 70%;
+            p{
+              margin-bottom: 0;
+            }
+          }
+          .total{
+            text-align: right;
+            width: 30%;
+            font-weight: bold;
+            font-size: 17px;
+            color: $text-bold-color;
+          }
+        }
+
+      }
+    }
+  }
+}

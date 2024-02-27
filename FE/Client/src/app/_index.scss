@@ -16,6 +16,13 @@ body {
   box-sizing: border-box;
   overflow-x: hidden;
 }
+ol, ul {
+	list-style: none;
+  text-decoration: none;
+}
+a{
+  text-decoration: none !important;
+}
 .btn {
   color: $text-bold-color;
   font-size: 1.2em;

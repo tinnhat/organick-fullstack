@@ -2,12 +2,12 @@ import 'bootstrap/dist/css/bootstrap.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './_index.scss'
-import './_reset.scss'
 import Footer from './components/footer'
 import Header from './components/header'
 import Head from 'next/head'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { config } from '@fortawesome/fontawesome-svg-core'
+import NewLatter from './components/newslatter'
 const inter = Inter({ subsets: ['latin'] })
 config.autoAddCss = false
 export const metadata: Metadata = {
@@ -25,6 +25,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         {children}
+        <NewLatter />
         <Footer />
       </body>
     </html>

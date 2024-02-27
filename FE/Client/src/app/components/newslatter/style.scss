@@ -1,0 +1,90 @@
+@import "../../variables";
+
+.newsLatteer {
+  margin-top: 12em;
+  .newslatteer-container {
+    background: url("/assets/img/subscribe.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 6em 4em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 1.5em;
+    .newslatter-text {
+      font-size: 3em;
+      width: 50%;
+      color: #fff;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 0;
+    }
+    .newslatter-box {
+      display: flex;
+      align-items: center;
+      width: 50%;
+      .newslatter-input {
+        padding: 1.2em 1em;
+        border: none;
+        outline: none;
+        margin-right: 0.5em;
+        width: 100%;
+        border-radius: 0.8em;
+      }
+      .btn-subscribe {
+        background-color: $text-bold-color;
+        padding: 0.8em 2.5em;
+        color: #fff;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 0.8em;
+      }
+    }
+  }
+}
+//tablet
+@media screen and (max-width: 1023.98px) {
+  .newsLatteer {
+    margin-top: 10em;
+    .newslatteer-container {
+      padding: 4em 2em;
+      .newslatter-text {
+        width: 40%;
+        font-size: 2.2em;
+      }
+      .newslatter-box {
+        width: 60%;
+        .btn-subscribe {
+          padding: 0.8em 2em;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .newsLatteer {
+    margin-top: 8em;
+    .newslatteer-container {
+      padding: 2em 1em;
+      flex-direction: column;
+      .newslatter-text {
+        width: 100%;
+        font-size: 2em;
+      }
+      .newslatter-box {
+        flex-direction: column;
+        width: 100%;
+        // .btn-subscribe {
+        //   padding: 0.8em 2em;
+        // }
+        .newslatter-input {
+          margin-right: 0;
+          margin: 1em 0;
+        }
+        .btn-subscribe {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

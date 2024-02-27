@@ -14,7 +14,7 @@ export default function About({}: Props) {
             <p className='about-title'>About Us</p>
             <p className='about-sub-title'>We Believe in Working Accredited Farmers</p>
             <p className='about-text'>
-              Simply dummy text of the printing and typesetting industry. Lorem had ceased to been the industry's
+              Simply dummy text of the printing and typesetting industry. Lorem had ceased to been the industry&apos;s
               standard dummy text ever since the 1500s, when an unknown printer took a galley.
             </p>
             <div className='about-sub-box'>
