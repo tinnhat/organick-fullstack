@@ -67,7 +67,11 @@
           gap: 1em;
           .number {
             color: #fff;
-            padding: 1.1em 1em;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
             background-color: $green-leaf-color;
             font-weight: bold;

@@ -1,11 +1,13 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import './style.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { faMagnifyingGlass, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import Select from 'react-select'
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { products } from './mockDataProducts'
 
 type Props = {}
 
@@ -18,7 +20,15 @@ const options = [
   { value: 'www', label: 'aa' },
 ]
 
+
+
 export default function DetailShop({}: Props) {
+  const [quantityDefaultShow,setQuantityDefaultShow] = useState(8)
+  const [items,setItems] = useState(products)
+  const fetchMoreData = () => {
+      setQuantityDefaultShow((prev) => prev + 8);
+      setItems((prev) => [...prev, ...products]);
+  };
   return (
     <section className='detail-shop'>
       <div className='container'>
@@ -55,618 +65,37 @@ export default function DetailShop({}: Props) {
             </div>
           </div>
           <div className='container-products'>
-            <div className='row-products'>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
+            <InfiniteScroll
+              dataLength={quantityDefaultShow}
+              next={fetchMoreData}
+              hasMore={true}
+              loader={<h4>Loading...</h4>}
+            >
+              <div className='row-products'>
+                {items.map((product, index) => (
+                  <div className='product-box' key={index}>
+                  <div className='product-tag'>{product.tag}</div>
+                  <Image
+                    src={product.img}
+                    alt=''
+                    className='product-img'
+                    layout='fill'
+                  />
+                  <p className='product-name'>{product.name}</p>
+                  <div className='straight'></div>
+                  <div className='price-start-box'>
+                    <div className='price-box'>
+                      <p className='price-old'>{product.price}</p>
+                      <p className='price-sale'>{product.salePrice}</p>
+                    </div>
+                    <div className='start-box'>
+                      {Array.from({ length: product.rating }).map((val ,idx) => (<FontAwesomeIcon icon={faStar} key={idx} />))}
+                    </div>
                   </div>
                 </div>
+                ))}
               </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$13.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product2.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Fresh Banana Fruites</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$14.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Millets</div>
-                <Image
-                  src={'/assets/img/product3.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>White Nuts</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Vegetable</div>
-                <Image
-                  src={'/assets/img/product4.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Vegan Red Tomato</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$17.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Health</div>
-                <Image
-                  src={'/assets/img/product5.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Mung Bean</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$11.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Nuts</div>
-                <Image
-                  src={'/assets/img/product6.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Brown Hazelnut</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$12.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product7.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Eggs</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$17.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product8.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-              <div className='product-box'>
-                <div className='product-tag'>Fresh</div>
-                <Image
-                  src={'/assets/img/product1.png'}
-                  alt=''
-                  className='product-img'
-                  layout='fill'
-                />
-
-                <p className='product-name'>Zelco Suji Elaichi Rush</p>
-                <div className='straight'></div>
-                <div className='price-start-box'>
-                  <div className='price-box'>
-                    <p className='price-old'>$20.00</p>
-                    <p className='price-sale'>$15.00</p>
-                  </div>
-                  <div className='start-box'>
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                    <FontAwesomeIcon icon={faStar} />
-                  </div>
-                </div>
-              </div>
-            </div>
+            </InfiniteScroll>
           </div>
         </div>
       </div>

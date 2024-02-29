@@ -12,10 +12,11 @@
     text-align: center;
     padding: 1em;
     .container-filter {
-      width: calc(100% - 10px);
+      width: calc(100% - 20px);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin: auto;
       margin-bottom: 10px;
       background-color: $gray-color;
       padding: 10px;
@@ -86,7 +87,8 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 1em;
-        
+        padding: 0 10px;
+        justify-content: center;
         .product-box {
           cursor: pointer;
           width: calc(25% - 1em);
