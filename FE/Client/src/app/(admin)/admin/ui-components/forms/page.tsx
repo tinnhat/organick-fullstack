@@ -92,24 +92,6 @@ const Forms = () => {
             </>
           </BaseCard>
         </Grid>
-  
-        <Grid item xs={12} lg={12}>
-          <BaseCard title='Form Design Type'>
-            <Stack spacing={3} direction='row'>
-              <TextField
-                id='outlined-basic'
-                label='Outlined'
-                variant='outlined'
-              />
-              <TextField id='filled-basic' label='Filled' variant='filled' />
-              <TextField
-                id='standard-basic'
-                label='Standard'
-                variant='standard'
-              />
-            </Stack>
-          </BaseCard>
-        </Grid>
       </Grid>
     );
   };

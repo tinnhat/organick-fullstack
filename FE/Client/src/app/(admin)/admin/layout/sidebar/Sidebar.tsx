@@ -1,7 +1,6 @@
 import { useMediaQuery, Box, Drawer } from '@mui/material';
 import DarkLogo from '../shared/logo/LogoDark';
 import SidebarItems from './SidebarItems';
-import Upgrade from './Updrade';
 import { SidebarProfile } from './SidebarProfile';
 
 interface ItemType {
