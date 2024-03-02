@@ -1,7 +1,7 @@
-import { useMediaQuery, Box, Drawer } from "@mui/material";
-import DarkLogo from "../shared/logo/LogoDark";
-import SidebarItems from "./SidebarItems";
-import Upgrade from "./Updrade";
+import { useMediaQuery, Box, Drawer } from '@mui/material';
+import DarkLogo from '../shared/logo/LogoDark';
+import SidebarItems from './SidebarItems';
+import Upgrade from './Updrade';
 import { SidebarProfile } from './SidebarProfile';
 
 interface ItemType {
@@ -15,9 +15,9 @@ const Sidebar = ({
   onSidebarClose,
   isSidebarOpen,
 }: ItemType) => {
-  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'));
 
-  const sidebarWidth = "270px";
+  const sidebarWidth = '270px';
 
   if (lgUp) {
     return (
@@ -32,16 +32,16 @@ const Sidebar = ({
         {/* Sidebar for desktop */}
         {/* ------------------------------------------- */}
         <Drawer
-          anchor="left"
+          anchor='left'
           open={isSidebarOpen}
-          variant="permanent"
+          variant='permanent'
           PaperProps={{
             sx: {
               width: sidebarWidth,
-              boxSizing: "border-box",
-              border: "0",
-              top: "64px",
-              boxShadow: "1px 0 20px #00000014",
+              boxSizing: 'border-box',
+              border: '0',
+              top: '64px',
+              boxShadow: '1px 0 20px #00000014',
             },
           }}
         >
@@ -50,20 +50,20 @@ const Sidebar = ({
           {/* ------------------------------------------- */}
           <Box
             sx={{
-              height: "100%",
+              height: '100%',
             }}
 
           >
             <Box sx={{
-               height: "calc(100vh - 70px)",
-               overflow: "auto", 
+               height: 'calc(100vh - 70px)',
+               overflow: 'auto', 
             }}>
               {/* ------------------------------------------- */}
               {/* Sidebar Items */}
               {/* ------------------------------------------- */}
               <SidebarProfile />
               <Box mt={3}><SidebarItems /></Box>
-              <Upgrade />
+              {/* <Upgrade /> */}
             </Box>
           </Box>
         </Drawer>
@@ -73,10 +73,10 @@ const Sidebar = ({
 
   return (
     <Drawer
-      anchor="left"
+      anchor='left'
       open={isMobileSidebarOpen}
       onClose={onSidebarClose}
-      variant="temporary"
+      variant='temporary'
       PaperProps={{
         sx: {
           width: sidebarWidth,
@@ -95,7 +95,7 @@ const Sidebar = ({
       {/* ------------------------------------------- */}
       <SidebarProfile />
       <Box mt={3}><SidebarItems /></Box>
-      <Upgrade />
+      {/* <Upgrade /> */}
     </Drawer>
   );
 };

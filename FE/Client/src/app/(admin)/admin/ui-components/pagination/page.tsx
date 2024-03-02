@@ -1,5 +1,5 @@
 'use client';
-import { Grid, Pagination, Stack } from "@mui/material";
+import { Grid, Pagination, Stack } from '@mui/material';
 import BaseCard from '../../components/shared/BaseCard';
 
 
@@ -7,45 +7,45 @@ const Paginations = () => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} lg={12}>
-        <BaseCard title="Paginations">
+        <BaseCard title='Paginations'>
           <Stack spacing={2}>
             <Pagination count={10} />
-            <Pagination count={10} color="primary" />
-            <Pagination count={10} color="secondary" />
+            <Pagination count={10} color='primary' />
+            <Pagination count={10} color='secondary' />
             <Pagination count={10} disabled />
           </Stack>
         </BaseCard>
       </Grid>
       <Grid item xs={12} lg={12}>
-        <BaseCard title="Outlined Paginations">
+        <BaseCard title='Outlined Paginations'>
           <Stack spacing={2}>
-            <Pagination count={10} variant="outlined" />
-            <Pagination count={10} variant="outlined" color="primary" />
-            <Pagination count={10} variant="outlined" color="secondary" />
-            <Pagination count={10} variant="outlined" disabled />
+            <Pagination count={10} variant='outlined' />
+            <Pagination count={10} variant='outlined' color='primary' />
+            <Pagination count={10} variant='outlined' color='secondary' />
+            <Pagination count={10} variant='outlined' disabled />
           </Stack>
         </BaseCard>
       </Grid>
       <Grid item xs={12} lg={12}>
-        <BaseCard title="Squred Paginations">
+        <BaseCard title='Squred Paginations'>
           <Stack spacing={2}>
-            <Pagination count={10} shape="rounded" variant="outlined" />
+            <Pagination count={10} shape='rounded' variant='outlined' />
             <Pagination
               count={10}
-              shape="rounded"
-              variant="outlined"
-              color="primary"
+              shape='rounded'
+              variant='outlined'
+              color='primary'
             />
             <Pagination
               count={10}
-              shape="rounded"
-              variant="outlined"
-              color="secondary"
+              shape='rounded'
+              variant='outlined'
+              color='secondary'
             />
             <Pagination
               count={10}
-              shape="rounded"
-              variant="outlined"
+              shape='rounded'
+              variant='outlined'
               disabled
             />
           </Stack>

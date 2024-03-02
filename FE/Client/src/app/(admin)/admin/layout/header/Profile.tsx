@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import Link from "next/link";
+import React, { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import Link from 'next/link';
 import {
   Box,
   Menu,
@@ -12,16 +12,16 @@ import {
   ListItemButton,
   List,
   ListItemText,
-} from "@mui/material";
+} from '@mui/material';
 
-import { Stack } from "@mui/system";
+import { Stack } from '@mui/system';
 import {
   IconChevronDown,
   IconCreditCard,
   IconCurrencyDollar,
   IconMail,
   IconShield,
-} from "@tabler/icons-react";
+} from '@tabler/icons-react';
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -42,41 +42,38 @@ const Profile = () => {
   return (
     <Box>
       <IconButton
-        size="large"
-        aria-label="menu"
-        color="inherit"
-        aria-controls="msgs-menu"
-        aria-haspopup="true"
+        size='large'
+        aria-label='menu'
+        color='inherit'
+        aria-controls='msgs-menu'
+        aria-haspopup='true'
         sx={{
-          ...(typeof anchorEl2 === "object" && {
-            borderRadius: "9px",
+          ...(typeof anchorEl2 === 'object' && {
+            borderRadius: '9px',
           }),
         }}
         onClick={handleClick2}
       >
         <Avatar
-          src={"/images/users/user2.jpg"}
-          alt={"ProfileImg"}
+          src={'/images/users/user2.jpg'}
+          alt={'ProfileImg'}
           sx={{
             width: 35,
             height: 35,
           }}
         />
       </IconButton>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
       <Menu
-        id="msgs-menu"
+        id='msgs-menu'
         anchorEl={anchorEl2}
         keepMounted
         open={Boolean(anchorEl2)}
         onClose={handleClose2}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         sx={{
-          "& .MuiMenu-paper": {
-            width: "360px",
+          '& .MuiMenu-paper': {
+            width: '360px',
             p: 2,
             pb: 2,
             pt:0
@@ -87,24 +84,20 @@ const Profile = () => {
         <Box pt={0}>
 
           <List>
-            <ListItemButton component="a" href="#">
-              <ListItemText primary="My Profile" />
+            <ListItemButton component={Link} href='/admin/my-profile'>
+              <ListItemText primary='My Profile' />
             </ListItemButton>
-            <ListItemButton component="a" href="#">
-              <ListItemText primary="My Account" />
+            <ListItemButton component={Link} href='/admin/change-password'>
+              <ListItemText primary='Change Password' />
             </ListItemButton>
-            <ListItemButton component="a" href="#">
-              <ListItemText primary="Change Password" />
-            </ListItemButton>
-            <ListItemButton component="a" href="#">
-              <ListItemText primary="My Task" />
+            <ListItemButton component={Link} href='/home'>
+              <ListItemText primary='Switch to client' />
             </ListItemButton>
           </List>
-
         </Box>
         <Divider />
         <Box mt={2}>
-          <Button fullWidth variant="contained" color="primary">
+          <Button fullWidth variant='contained' color='primary'>
             Logout
           </Button>
         </Box>

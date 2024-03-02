@@ -4,10 +4,10 @@ import { Typography } from '@mui/material';
 
 const CustomFormLabel = styled((props: any) => (
   <Typography
-    variant="subtitle1"
+    variant='subtitle1'
     fontWeight={500}
     {...props}
-    component="label"
+    component='label'
     htmlFor={props.htmlFor}
   />
 ))(() => ({

@@ -19,68 +19,68 @@ const Forms = () => {
     return (
       <Grid container spacing={3}>
         <Grid item xs={12} lg={12}>
-          <BaseCard title="Form Layout">
+          <BaseCard title='Form Layout'>
             <>
             <Stack spacing={3}>
               <TextField
-                id="name-basic"
-                label="Name"
-                variant="outlined"
-                defaultValue="Nirav Joshi"
+                id='name-basic'
+                label='Name'
+                variant='outlined'
+                defaultValue='Nirav Joshi'
               />
-              <TextField id="email-basic" label="Email" variant="outlined" />
+              <TextField id='email-basic' label='Email' variant='outlined' />
               <TextField
-                id="pass-basic"
-                label="Password"
-                type="password"
-                variant="outlined"
+                id='pass-basic'
+                label='Password'
+                type='password'
+                variant='outlined'
               />
               <TextField
-                id="outlined-multiline-static"
-                label="Text Area"
+                id='outlined-multiline-static'
+                label='Text Area'
                 multiline
                 rows={4}
-                defaultValue="Default Value"
+                defaultValue='Default Value'
               />
               <TextField
                 error
-                id="er-basic"
-                label="Error"
-                defaultValue="ad1avi"
-                variant="outlined"
+                id='er-basic'
+                label='Error'
+                defaultValue='ad1avi'
+                variant='outlined'
               />
               <FormGroup>
                 <FormControlLabel
                   control={<Checkbox defaultChecked />}
-                  label="Terms & Condition"
+                  label='Terms & Condition'
                 />
                 <FormControlLabel
                   disabled
                   control={<Checkbox />}
-                  label="Disabled"
+                  label='Disabled'
                 />
               </FormGroup>
               <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+                <FormLabel id='demo-radio-buttons-group-label'>Gender</FormLabel>
                 <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="female"
-                  name="radio-buttons-group"
+                  aria-labelledby='demo-radio-buttons-group-label'
+                  defaultValue='female'
+                  name='radio-buttons-group'
                 >
                   <FormControlLabel
-                    value="female"
+                    value='female'
                     control={<Radio />}
-                    label="Female"
+                    label='Female'
                   />
                   <FormControlLabel
-                    value="male"
+                    value='male'
                     control={<Radio />}
-                    label="Male"
+                    label='Male'
                   />
                   <FormControlLabel
-                    value="other"
+                    value='other'
                     control={<Radio />}
-                    label="Other"
+                    label='Other'
                   />
                 </RadioGroup>
               </FormControl>
@@ -94,18 +94,18 @@ const Forms = () => {
         </Grid>
   
         <Grid item xs={12} lg={12}>
-          <BaseCard title="Form Design Type">
-            <Stack spacing={3} direction="row">
+          <BaseCard title='Form Design Type'>
+            <Stack spacing={3} direction='row'>
               <TextField
-                id="outlined-basic"
-                label="Outlined"
-                variant="outlined"
+                id='outlined-basic'
+                label='Outlined'
+                variant='outlined'
               />
-              <TextField id="filled-basic" label="Filled" variant="filled" />
+              <TextField id='filled-basic' label='Filled' variant='filled' />
               <TextField
-                id="standard-basic"
-                label="Standard"
-                variant="standard"
+                id='standard-basic'
+                label='Standard'
+                variant='standard'
               />
             </Stack>
           </BaseCard>

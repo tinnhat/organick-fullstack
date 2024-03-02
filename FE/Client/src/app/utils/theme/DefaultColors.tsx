@@ -1,78 +1,78 @@
 'use client';
 
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 import { TimelineConnector } from '@mui/lab';
-import { Poppins } from "next/font/google";
-import theme from "../theme";
+import { Poppins } from 'next/font/google';
+import theme from '../theme';
 
 
 export const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["Helvetica", "Arial", "sans-serif"],
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['Helvetica', 'Arial', 'sans-serif'],
 });
 
 const baselightTheme = createTheme({
-  direction: "ltr",
+  direction: 'ltr',
   palette: {
     primary: {
-      main: "#1e88e5",
-      light: "#e3f1fc",
-      dark: "#1e88e5",
-      contrastText: "#ffffff",
+      main: '#1e88e5',
+      light: '#e3f1fc',
+      dark: '#1e88e5',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: "#21c1d6",
-      light: "#e1f7f8",
-      dark: "#21c1d6",
-      contrastText: "#ffffff",
+      main: '#21c1d6',
+      light: '#e1f7f8',
+      dark: '#21c1d6',
+      contrastText: '#ffffff',
     },
     success: {
-      main: "#13deb9",
-      light: "#E6FFFA",
-      dark: "#02b3a9",
-      contrastText: "#ffffff",
+      main: '#13deb9',
+      light: '#E6FFFA',
+      dark: '#02b3a9',
+      contrastText: '#ffffff',
     },
     info: {
-      main: "#7460ee",
-      light: "#dedaf9",
-      dark: "#1682d4",
-      contrastText: "#ffffff",
+      main: '#7460ee',
+      light: '#dedaf9',
+      dark: '#1682d4',
+      contrastText: '#ffffff',
     },
     error: {
-      main: "#fa896b",
-      light: "#FDEDE8",
-      dark: "#f3704d",
-      contrastText: "#ffffff",
+      main: '#fa896b',
+      light: '#FDEDE8',
+      dark: '#f3704d',
+      contrastText: '#ffffff',
     },
     warning: {
-      main: "#ffb22b",
-      light: "#FEF5E5",
-      dark: "#ae8e59",
-      contrastText: "#ffffff",
+      main: '#ffb22b',
+      light: '#FEF5E5',
+      dark: '#ae8e59',
+      contrastText: '#ffffff',
     },
     grey: {
-      100: "#F2F6FA",
-      200: "#EAEFF4",
-      300: "#DFE5EF",
-      400: "#7C8FAC",
-      500: "#5A6A85",
-      600: "#2a3547",
+      100: '#F2F6FA',
+      200: '#EAEFF4',
+      300: '#DFE5EF',
+      400: '#7C8FAC',
+      500: '#5A6A85',
+      600: '#2a3547',
     },
     text: {
-      primary: "#2a3547",
-      secondary: "#2a3547",
+      primary: '#2a3547',
+      secondary: '#2a3547',
     },
     action: {
-      disabledBackground: "rgba(73,82,88,0.12)",
+      disabledBackground: 'rgba(73,82,88,0.12)',
       hoverOpacity: 0.02,
-      hover: "#f6f9fc",
+      hover: '#f6f9fc',
     },
-    divider: "#e5eaef",
+    divider: '#e5eaef',
     background: {
-      default: "#eef5f9",
-      paper: "#ffffff",
+      default: '#eef5f9',
+      paper: '#ffffff',
     },
   },
 
@@ -137,30 +137,30 @@ const baselightTheme = createTheme({
   
     MuiCssBaseline: {
       styleOverrides: {
-        ".MuiPaper-elevation9, .MuiPopover-root .MuiPaper-elevation": {
+        '.MuiPaper-elevation9, .MuiPopover-root .MuiPaper-elevation': {
           boxShadow:
-            "rgba(145 158 171 / 30%) 0px 0px 2px 0px, rgba(145 158 171 / 12%) 0px 12px 24px -4px !important",
+            'rgba(145 158 171 / 30%) 0px 0px 2px 0px, rgba(145 158 171 / 12%) 0px 12px 24px -4px !important',
         },
         a: {
-          textDecoration: "none",
+          textDecoration: 'none',
         },
-        ".MuiTimelineConnector-root": {
-          width: "1px !important",
-          backgroundColor: "rgba(0, 0, 0, 0.12) !important"
+        '.MuiTimelineConnector-root': {
+          width: '1px !important',
+          backgroundColor: 'rgba(0, 0, 0, 0.12) !important'
         },
       },
     },
     MuiButtonGroup: {
       styleOverrides: {
         root: {
-          boxShadow: "none",
+          boxShadow: 'none',
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          boxShadow: "none",
+          boxShadow: 'none',
           borderRadius:'7px'
         },
       },
@@ -168,33 +168,33 @@ const baselightTheme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          boxShadow: "none",
+          boxShadow: 'none',
         },
       },
     },
     MuiCardHeader: {
       styleOverrides: {
         root: {
-          padding: "16px 24px",
+          padding: '16px 24px',
         },
         title: {
-          fontSize: "1.125rem",
+          fontSize: '1.125rem',
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: "7px",
-          padding: "0",
-          boxShadow: "0px 7px 30px 0px rgba(90, 114, 123, 0.11)",
+          borderRadius: '7px',
+          padding: '0',
+          boxShadow: '0px 7px 30px 0px rgba(90, 114, 123, 0.11)',
         },
       },
     },
     MuiCardContent: {
       styleOverrides: {
         root: {
-          padding: "30px",
+          padding: '30px',
         },
       },
     },  
@@ -208,7 +208,7 @@ const baselightTheme = createTheme({
     MuiTableRow: {
       styleOverrides: {
         root: {
-          "&:last-child td": {
+          '&:last-child td': {
             borderBottom: 0,
           },
         },
@@ -218,7 +218,7 @@ const baselightTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: theme.palette.grey[200],
-          borderRadius: "6px",
+          borderRadius: '6px',
         },
       },
     },
@@ -233,21 +233,21 @@ const baselightTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          "& .MuiOutlinedInput-notchedOutline": {
+          '& .MuiOutlinedInput-notchedOutline': {
             borderColor:
-              theme.palette.mode === "dark"
+              theme.palette.mode === 'dark'
                 ? theme.palette.grey[200]
                 : theme.palette.grey[300],
           },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
+          '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.palette.grey[300],
           },
         },
         input: {
-          padding: "12px 14px",
+          padding: '12px 14px',
         },
         inputSizeSmall: {
-          padding: "8px 14px",
+          padding: '8px 14px',
         },
       },
     },
@@ -255,16 +255,16 @@ const baselightTheme = createTheme({
     MuiAlert: {
       styleOverrides: {
         filledSuccess: {
-          color: "white",
+          color: 'white',
         },
         filledInfo: {
-          color: "white",
+          color: 'white',
         },
         filledError: {
-          color: "white",
+          color: 'white',
         },
         filledWarning: {
-          color: "white",
+          color: 'white',
         },
         standardSuccess: {
           backgroundColor: theme.palette.success.light,

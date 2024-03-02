@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Typography,
   Avatar,
@@ -10,49 +10,49 @@ import {
   ListItemText,
   ListItemButton,
   Badge,
-} from "@mui/material";
+} from '@mui/material';
 
 const contacts = [
   {
-    img: "/images/users/1.jpg",
-    title: "Oliver Jake",
-    subtext: "info@oliver.com",
-    status: "primary.main",
+    img: '/images/users/1.jpg',
+    title: 'Oliver Jake',
+    subtext: 'info@oliver.com',
+    status: 'primary.main',
   },
   {
-    img: "/images/users/2.jpg",
-    title: "Jack Connor",
-    subtext: "info@jack.com",
-    status: "secondary.main",
+    img: '/images/users/2.jpg',
+    title: 'Jack Connor',
+    subtext: 'info@jack.com',
+    status: 'secondary.main',
   },
   {
-    img: "/images/users/3.jpg",
-    title: "Harry Callum",
-    subtext: "info@harry.com",
-    status: "error.main",
+    img: '/images/users/3.jpg',
+    title: 'Harry Callum',
+    subtext: 'info@harry.com',
+    status: 'error.main',
   },
   {
-    img: "/images/users/4.jpg",
-    title: "Jacob Reece",
-    subtext: "info@jacob.com",
-    status: "warning.main",
+    img: '/images/users/4.jpg',
+    title: 'Jacob Reece',
+    subtext: 'info@jacob.com',
+    status: 'warning.main',
   },
 ];
 
 const MyContacts = () => {
   return (
     <>
-      <Card variant="outlined" sx={{ p: 0 }}>
+      <Card variant='outlined' sx={{ p: 0 }}>
         <Box
           px={3}
           py={2}
-          bgcolor="primary.main"
-          color="white"
-          borderRadius="0 !important"
-          mb="-15px"
+          bgcolor='primary.main'
+          color='white'
+          borderRadius='0 !important'
+          mb='-15px'
         >
-          <Typography variant="h5">My Contacts</Typography>
-          <Typography variant="subtitle1">Checkout my contacts here</Typography>
+          <Typography variant='h5'>My Contacts</Typography>
+          <Typography variant='subtitle1'>Checkout my contacts here</Typography>
         </Box>
         <Box pt={2}>
           <List>
@@ -61,20 +61,20 @@ const MyContacts = () => {
                 <ListItemButton>
                   <ListItemAvatar>
                     <Badge
-                      variant="dot"
+                      variant='dot'
                       sx={{
-                        ".MuiBadge-badge": {
+                        '.MuiBadge-badge': {
                           backgroundColor: contact.status,
                         },
                       }}
                     >
-                      <Avatar src={contact.img} alt="1" />
+                      <Avatar src={contact.img} alt='1' />
                     </Badge>
                   </ListItemAvatar>
                   <ListItemText
                     primary={contact.title}
                     primaryTypographyProps={{
-                      fontSize: "16px",
+                      fontSize: '16px',
                       fontWeight: 500,
                     }}
                     secondary={contact.subtext}

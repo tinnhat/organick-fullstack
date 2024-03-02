@@ -1,6 +1,6 @@
-import Footer from "../footer";
-import Header from "../header";
-import NewLatter from "../newslatter";
+import Footer from '../footer';
+import Header from '../header';
+import NewLatter from '../newslatter';
 
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {

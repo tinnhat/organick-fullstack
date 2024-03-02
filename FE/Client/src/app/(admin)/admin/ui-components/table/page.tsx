@@ -1,6 +1,6 @@
 'use client';
-import { Grid} from "@mui/material";
-import ProductPerfomance from "../../components/dashboard/ProductPerformance";
+import { Grid} from '@mui/material';
+import ProductPerfomance from '../../components/dashboard/ProductPerformance';
 
 const Tables = () => {
   return (
