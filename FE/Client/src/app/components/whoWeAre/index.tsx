@@ -10,7 +10,7 @@ export default function WhoWeAre({}: Props) {
         <Image src={'/assets/img/whoweare.png'} alt='' width={200} height={200} />
       </div>
       <div className='whoWeAre-content-box'>
-        <div className='content-box'>
+        <div className='content-box' data-aos='fade-up' data-aos-duration='500'>
           <p className='content-title'>Eco Friendly</p>
           <p className='content-header'>Econis is a Friendly Organic Store</p>
           <p className='content-text'>Start with Our Company First</p>

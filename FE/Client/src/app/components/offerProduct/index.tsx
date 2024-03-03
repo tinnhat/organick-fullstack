@@ -8,7 +8,7 @@ export default function OfferProduct({}: Props) {
   return (
     <section className='offer-product'>
       <div className='container'>
-        <div className='offer-product-container'>
+        <div className='offer-product-container' data-aos='fade-up' data-aos-duration='1000'>
           <p className='offer-product-title'>About Us</p>
           <p className='offer-product-sub-title'>What We Offer for You</p>
           <div className='list-product'>

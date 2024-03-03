@@ -4,7 +4,7 @@ import BannerImg from '@/app/components/bannerImg'
 import WhyChooseUs from '@/app/components/whyChooseUs'
 import Team from '@/app/components/team'
 import OfferProduct from '@/app/components/offerProduct'
-
+import AOSComponent from '@/app/components/aos'
 
 type Props = {}
 

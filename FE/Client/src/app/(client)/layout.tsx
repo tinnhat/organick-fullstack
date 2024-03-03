@@ -8,6 +8,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import Header from '@/app/components/header'
 import NewLatter from '@/app/components/newslatter'
 import Footer from '@/app/components/footer'
+import AOSComponent from '../components/aos'
 const inter = Inter({ subsets: ['latin'] })
 config.autoAddCss = false
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function ClientLayout({
     <html lang='en'>
       <body className={inter.className}>
         <Header />
-        {children}
+        <AOSComponent>{children}</AOSComponent>
         <NewLatter />
         <Footer />
       </body>

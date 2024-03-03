@@ -23,7 +23,7 @@ export default function Offer({}: Props) {
               </span>
             </button>
           </div>
-          <div className='row-products'>
+          <div className='row-products' data-aos='fade-up' data-aos-duration='500'>
             <div className='product-box'>
               <div className='product-tag'>Vegetable</div>
               <Image src={'/assets/img/product1.png'} alt='' className='product-img' layout='fill' />

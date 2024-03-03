@@ -8,17 +8,26 @@ export default function ServiceSingle({}: Props) {
     <section className='service-single'>
       <div className='container'>
         <div className='ss-container'>
-          <Image src={'/assets/img/PhotoSS.png'} alt='' className='ss-img' layout='fill' />
-          <div className='ss-box__info'>
+          <Image
+            src={'/assets/img/PhotoSS.png'}
+            alt=''
+            className='ss-img'
+            layout='fill'
+            data-aos='fade-up'
+            data-aos-duration='1000'
+          />
+          <div className='ss-box__info' data-aos='fade-up' data-aos-duration='2000'>
             <p className='ss-box__title'>Organic Store Services</p>
             <p className='ss-box__text'>
-              t is a long established fact that a reader will be distracted by the readable content of a page when
-              looking a layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of
-              letters, as opposed to using 'Content here, content here', making it look like readable English.
+              t is a long established fact that a reader will be distracted by the readable content
+              of a page when looking a layout. The point of using Lorem Ipsum is that it has a
+              more-or-less normal distribution of letters, as opposed to using 'Content here,
+              content here', making it look like readable English.
             </p>
             <p className='ss-box__text'>
-              Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and
-              auncover many web sites still in their infancy. Various versions have evolved over the years
+              Many desktop publishing packages and web page editors now use Lorem Ipsum as their
+              default model text, and auncover many web sites still in their infancy. Various
+              versions have evolved over the years
             </p>
             <div className='ss-box__img'>
               <div className='box-img'>
@@ -27,8 +36,8 @@ export default function ServiceSingle({}: Props) {
               <div className='box-content'>
                 <p className='box-content__title'>Why Organic</p>
                 <p className='box-content__text'>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptat. page editors now use Lorem Ipsum as
-                  their default model text, and auncover.
+                  Sed ut perspiciatis unde omnis iste natus error sit voluptat. page editors now use
+                  Lorem Ipsum as their default model text, and auncover.
                 </p>
               </div>
             </div>
@@ -36,8 +45,8 @@ export default function ServiceSingle({}: Props) {
               <div className='box-content'>
                 <p className='box-content__title'>Speciality Produce</p>
                 <p className='box-content__text'>
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptat. page editors now use Lorem Ipsum as
-                  their default model text, and auncover.
+                  Sed ut perspiciatis unde omnis iste natus error sit voluptat. page editors now use
+                  Lorem Ipsum as their default model text, and auncover.
                 </p>
               </div>
               <div className='box-img'>
@@ -46,9 +55,10 @@ export default function ServiceSingle({}: Props) {
             </div>
             <p className='ss-box__sub-title'>We farm your land</p>
             <p className='ss-box__text'>
-              It is a long established fact that a reader will be distracted by the readable content of a page when
-              looking a layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of
-              letters, as opposed to using 'Content here, content here', making it look like readable English.
+              It is a long established fact that a reader will be distracted by the readable content
+              of a page when looking a layout. The point of using Lorem Ipsum is that it has a
+              more-or-less normal distribution of letters, as opposed to using 'Content here,
+              content here', making it look like readable English.
             </p>
             <div className='ss-box-quantity'>
               <div className='quantity-box'>

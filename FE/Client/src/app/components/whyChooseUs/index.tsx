@@ -8,12 +8,12 @@ export default function WhyChooseUs({}: Props) {
   return (
     <section className='choos'>
       <div className='container'>
-        <div className='choos-container'>
+        <div className='choos-container' data-aos='fade-up' data-aos-duration='1000'>
           <div className='choos-content-box'>
             <p className='title'>Why choose us?</p>
             <p className='sub-title'>We do not buy from the open market & traders.</p>
             <p className='content-text'>
-              Simply dummy text of the printing and typesetting industry. Lorem had ceased to been the industry's
+              Simply dummy text of the printing and typesetting industry. Lorem had ceased to been the industry&apos;s
               standard the 1500s, when an unknown
             </p>
             <div className='sub-info-box'>

@@ -11,7 +11,7 @@ export default function ShopShow({}: Props) {
   return (
     <section className='shop'>
       <div className='container'>
-        <div className='shop-container'>
+        <div className='shop-container' data-aos='fade-up' data-aos-duration='1000'>
           <p className='shop-title'>Categories</p>
           <p className='shop-sub-title'>Our Products</p>
           <div className='container-products'>

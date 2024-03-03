@@ -10,7 +10,7 @@ export default function Team({}: Props) {
   return (
     <section className='team'>
       <div className='container'>
-        <div className='team-container'>
+        <div className='team-container' data-aos='fade-up' data-aos-duration='1000'>
           <p className='team-title'>Team</p>
           <p className='team-sub-title'>Our Organic Experts</p>
           <p className='team-sub-text'>

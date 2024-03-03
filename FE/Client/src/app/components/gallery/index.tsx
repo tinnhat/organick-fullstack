@@ -5,7 +5,7 @@ type Props = {}
 export default function Gallery({}: Props) {
   return (
     <section className='gallery'>
-      <div className='gallery-container'>
+      <div className='gallery-container' data-aos='fade-up' data-aos-duration='1000'>
         <div className='box-gallery orange'>
           <button className='btn btn-gallery'>Organic Juice</button>
         </div>

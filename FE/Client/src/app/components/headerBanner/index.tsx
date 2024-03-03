@@ -6,7 +6,7 @@ type Props = {}
 
 export default function HeaderBanner({}: Props) {
   return (
-    <section className='header-banner'>
+    <section className='header-banner' data-aos='zoom-in-down'>
       <div className='container'>
         <div className='banner-content'>
           <p className='banner-content-title'>100% Natural Food</p>

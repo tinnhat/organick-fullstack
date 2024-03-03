@@ -7,7 +7,7 @@ export default function ServicesInfo({}: Props) {
   return (
     <section className='service-info'>
       <div className='container'>
-        <div className='service-info-container'>
+        <div className='service-info-container' data-aos='fade-up' data-aos-duration='1500'>
           <p className='service-info-title'>What we Grow</p>
           <p className='service-info-sub-title'>Better Agriculture for Better Future</p>
           <div className='service-info-box'>

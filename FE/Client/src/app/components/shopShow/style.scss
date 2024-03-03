@@ -59,6 +59,7 @@
             color: $text-bold-color;
             font-weight: 500;
             padding-bottom: 0.5em;
+            margin-bottom: 0;
           }
           .straight {
             background-color: #dedddd;
@@ -74,6 +75,7 @@
               display: flex;
               align-items: center;
               .price-old {
+                margin-bottom: 0;
                 font-size: 0.7em;
                 color: gray;
                 font-weight: 500;
@@ -81,6 +83,7 @@
                 padding-right: 0.5em;
               }
               .price-sale {
+                margin-bottom: 0;
                 color: $text-bold-color;
                 font-weight: 600;
               }
@@ -105,6 +108,19 @@
       margin-top: 4em;
     }
   }
+  //custom
+  @media screen and (max-width: 1200.98px) {
+    .shop-container {
+      .container-products {
+        .row-products {
+          .product-box {
+            width: calc(33.33% - 1em);
+          }
+        }
+      }
+    }
+  }
+    
   //tablet
   @media screen and (max-width: 1023.98px) {
     .shop-container {

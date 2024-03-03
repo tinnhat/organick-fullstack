@@ -10,25 +10,35 @@ export default function Counter({}: Props) {
     <section className='counter'>
       <div className='container'>
         <div className='counter-container'>
-          <p className='counter-title'>Testimonial</p>
-          <p className='counter-question'>What Our Customer Saying?</p>
-          <div className='counter-people'>
-            <Image src={'/assets/img/avatar.jpg'} alt='' className='avatar-counter' width={200} height={200} />
+          <p className='counter-title' data-aos='fade-up' data-aos-duration='500'>
+            Testimonial
+          </p>
+          <p className='counter-question' data-aos='fade-up' data-aos-duration='800'>
+            What Our Customer Saying?
+          </p>
+          <div className='counter-people' data-aos='fade-up' data-aos-duration='1200'>
+            <Image
+              src={'/assets/img/avatar.jpg'}
+              alt=''
+              className='avatar-counter'
+              width={200}
+              height={200}
+            />
             <div className='box-start'>
-            <FontAwesomeIcon icon={faStar} />
-            <FontAwesomeIcon icon={faStar} />
-            <FontAwesomeIcon icon={faStar} />
-            <FontAwesomeIcon icon={faStar} />
-            <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
             </div>
             <p className='counter-people-text'>
-              Simply dummy text of the printing and typesetting industry. Lorem Ipsum simply dummy text of the printing
-              and typesetting industry. Lorem Ipsum has been.
+              Simply dummy text of the printing and typesetting industry. Lorem Ipsum simply dummy
+              text of the printing and typesetting industry. Lorem Ipsum has been.
             </p>
             <p className='counter-people-name'>Sara Taylor</p>
             <p className='counter-people-position'>Consumer</p>
           </div>
-          <div className='counter-box'>
+          <div className='counter-box' data-aos='fade-up' data-aos-duration='1500'>
             <div className='circle-counter'>
               <p className='circle-counter-number'>100%</p>
               <p className='circle-counter-text'>Organic</p>
