@@ -1,0 +1,94 @@
+@import '../../variables';
+
+.service-info {
+  margin: 10em 0;
+  &-container {
+    text-align: center;
+    .service-info-title {
+      font-size: 2em;
+      color: $green-leaf-color;
+    }
+    .service-info-sub-title {
+      font-size: 3em;
+      font-weight: bold;
+      line-height: 1.2;
+      width: 40%;
+      margin: 0.5em auto;
+      color: $text-bold-color;
+    }
+    .service-info-box {
+      margin-top: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1em;
+      .box {
+        width: 25%;
+        .child-box {
+          &__title {
+            color: $text-bold-color;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+          }
+          &__text {
+            line-height: 1.2;
+            color: $black-color;
+          }
+          margin-bottom: 4em;
+        }
+      }
+      .center-box {
+        width: 50%;
+        &__img {
+          width: 100% !important;
+          position: relative !important;
+          object-fit: cover;
+          height: 100% !important;
+        }
+      }
+    }
+    .btn-service {
+      border: 2px solid $text-bold-color;
+      border-radius: 1em;
+      padding: 1em 3em;
+    } //tablet
+    @media screen and (max-width: 1023.98px) {
+      .service-info-sub-title {
+        width: 80%;
+        font-size: 2.8em;
+      }
+      .service-info-box {
+        .box {
+          width: 30%;
+        }
+        .center-box {
+          width: 40%;
+        }
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .service-info-sub-title {
+        width: 100%;
+        font-size: 2em;
+        margin-bottom: 2em;
+      }
+      .service-info-box {
+        flex-direction: column;
+        .box {
+          width: 100%;
+          .child-box {
+            margin-bottom: 2em;
+            text-align: center;
+          }
+        }
+        .center-box {
+          width: 100%;
+        }
+      }
+      .btn-service {
+        padding: 0.8em 2em;
+      }
+    }
+  }
+}
