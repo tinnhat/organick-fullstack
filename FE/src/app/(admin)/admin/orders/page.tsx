@@ -19,6 +19,7 @@ import Typography from '@mui/material/Typography'
 import React, { useState } from 'react'
 import BaseCard from '../components/shared/BaseCard'
 import AddOrder from './addOrder'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
@@ -138,6 +139,7 @@ const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean 
 }
 
 export default function Orders({}: Props) {
+  const router = useRouter()
   const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
   const [page, setPage] = useState(0)
@@ -262,7 +264,7 @@ export default function Orders({}: Props) {
                                 cursor: 'pointer',
                                 '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' }
                               }}
-                              onClick={() => console.log(product)}
+                              onClick={() => router.push(`/admin/orders/${product.id}`)}
                             >
                               <TableCell>
                                 <TypographyCus data={product.id} showToolTip={true} />
