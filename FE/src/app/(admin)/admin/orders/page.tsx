@@ -16,112 +16,22 @@ import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BaseCard from '../components/shared/BaseCard'
 import AddOrder from './addOrder'
 import { useRouter } from 'next/navigation'
-
+import { OrdersMock } from '@/app/common/mockData'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { cloneDeep } from 'lodash'
+import { useDebounce } from '@uidotdev/usehooks'
 type Props = {}
-
-const products = [
-  {
-    id: '1',
-    name: 'Sunil Joshi',
-    post: 'Web Designer',
-    pname: 'Elite Admin',
-    priority: 'Low',
-    pbg: 'primary.main',
-    budget: '3.9'
-  },
-  {
-    id: '2',
-    name: 'Andrew McDownland',
-    post: 'Project Manager',
-    pname: 'Real Homes WP Theme',
-    priority: 'Medium',
-    pbg: 'secondary.main',
-    budget: '24.5'
-  },
-  {
-    id: '3',
-    name: 'Christopher Jamil',
-    post: 'Project Manager',
-    pname: 'MedicalPro WP Theme',
-    priority: 'High',
-    pbg: 'error.main',
-    budget: '12.8'
-  },
-  {
-    id: '4',
-    name: 'Nirav Joshi',
-    post: 'Frontend Engineer',
-    pname: 'Hosting Press HTML',
-    priority: 'Critical',
-    pbg: 'success.main',
-    budget: '2.4'
-  },
-  {
-    id: '5',
-    name: 'Sunil Joshi',
-    post: 'Web Designer',
-    pname: 'Elite Admin',
-    priority: 'Low',
-    pbg: 'primary.main',
-    budget: '3.9'
-  },
-  {
-    id: '6',
-    name: 'Andrew McDownland',
-    post: 'Project Manager',
-    pname: 'Real Homes WP Theme',
-    priority: 'Medium',
-    pbg: 'secondary.main',
-    budget: '24.5'
-  },
-  {
-    id: '7',
-    name: 'Christopher Jamil',
-    post: 'Project Manager',
-    pname: 'MedicalPro WP Theme',
-    priority: 'High',
-    pbg: 'error.main',
-    budget: '12.8'
-  },
-  {
-    id: '8',
-    name: 'Nirav Joshi',
-    post: 'Frontend Engineer',
-    pname: 'Hosting Press HTML',
-    priority: 'Critical',
-    pbg: 'success.main',
-    budget: '2.4'
-  },
-  {
-    id: '9',
-    name: 'Sunil Joshi',
-    post: 'Web Designer',
-    pname: 'Elite Admin',
-    priority: 'Low',
-    pbg: 'primary.main',
-    budget: '3.9'
-  },
-  {
-    id: '10',
-    name: 'Andrew McDownland',
-    post: 'Project Manager',
-    pname: 'Real Homes WP Theme',
-    priority: 'Medium',
-    pbg: 'secondary.main',
-    budget: '24.5'
-  }
-]
 
 const styleOneColumn = {
   maxWidth: 150,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical'
+  WebkitBoxOrient: 'vertical',
 }
 
 const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
@@ -139,18 +49,37 @@ const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean 
 }
 
 export default function Orders({}: Props) {
+  const [orders, setOrders] = useState<Order[]>([])
+  const [ordersShow, setOrdersShow] = useState<Order[]>([])
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const debouncedSearch = useDebounce(search, 300)
+
+  useEffect(() => {
+    setOrders(OrdersMock)
+    setOrdersShow(OrdersMock)
+  }, [])
+
+  //use useEffect to watch value and debounce
+  useEffect(() => {
+    const newOrderShow = cloneDeep(orders)
+    if (debouncedSearch) {
+      const filtered = newOrderShow.filter((item: Order) => {
+        return item._id.includes(search)
+      })
+      setOrdersShow(filtered)
+      setPage(0)
+    }
+  }, [debouncedSearch, orders, search])
+
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
   }
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(newPage)
-
     setPage(newPage)
   }
 
@@ -160,13 +89,16 @@ export default function Orders({}: Props) {
   }
 
   const visibleRows = React.useMemo(() => {
-    return products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-  }, [page, rowsPerPage])
+    return ordersShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+  }, [page, rowsPerPage, ordersShow])
 
   const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value)
-
     setSearch(event.target.value)
+  }
+
+  const deleteOrder = (e: any, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   return (
@@ -182,7 +114,7 @@ export default function Orders({}: Props) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    mb: 2
+                    mb: 2,
                   }}
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
@@ -201,12 +133,18 @@ export default function Orders({}: Props) {
                       endAdornment: (
                         <InputAdornment position='end'>
                           {search ? (
-                            <CloseIcon sx={{ cursor: 'pointer' }} onClick={() => setSearch('')} />
+                            <CloseIcon
+                              sx={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                setSearch('')
+                                setOrdersShow(orders)
+                              }}
+                            />
                           ) : (
                             <SearchIcon sx={{ cursor: 'pointer' }} />
                           )}
                         </InputAdornment>
-                      )
+                      ),
                     }}
                   />
                 </Box>
@@ -216,15 +154,15 @@ export default function Orders({}: Props) {
                       sx={{
                         width: {
                           xs: '274px',
-                          sm: '100%'
-                        }
+                          sm: '100%',
+                        },
                       }}
                     >
                       <Table
                         aria-label='simple table'
                         sx={{
                           whiteSpace: 'nowrap',
-                          mt: 2
+                          mt: 2,
                         }}
                       >
                         <TableHead>
@@ -236,56 +174,55 @@ export default function Orders({}: Props) {
                             </TableCell>
                             <TableCell>
                               <Typography color='textSecondary' variant='h6'>
-                                Assigned
+                                Phone
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color='textSecondary' variant='h6'>
-                                Name
+                                Total Price
                               </Typography>
                             </TableCell>
                             <TableCell>
                               <Typography color='textSecondary' variant='h6'>
-                                Priority
+                                Status
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color='textSecondary' variant='h6'>
+                                Created At
                               </Typography>
                             </TableCell>
                             <TableCell align='right'>
-                              <Typography color='textSecondary' variant='h6'>
-                                Budget
+                              <Typography
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}
+                                color='textSecondary'
+                                variant='h6'
+                              >
+                                Action
                               </Typography>
                             </TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {visibleRows.map(product => (
+                          {visibleRows.map((order: Order) => (
                             <TableRow
-                              key={product.id}
+                              key={order._id}
                               sx={{
                                 cursor: 'pointer',
-                                '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' }
+                                '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
                               }}
-                              onClick={() => router.push(`/admin/orders/${product.id}`)}
+                              onClick={() => router.push(`/admin/orders/${order._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={product.id} showToolTip={true} />
+                                <TypographyCus data={order._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus
-                                      data={
-                                        product.name +
-                                        ' test name long logn logn lgon lgongl lglnmong long'
-                                      }
-                                      showToolTip={true}
-                                    />
-                                    <Typography
-                                      sx={styleOneColumn}
-                                      color='textSecondary'
-                                      fontSize='13px'
-                                    >
-                                      {product.post}
-                                    </Typography>
+                                    <TypographyCus data={order.phone} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -295,7 +232,7 @@ export default function Orders({}: Props) {
                                   color='textSecondary'
                                   fontSize='14px'
                                 >
-                                  {product.pname}
+                                  ${order.totalPrice}
                                 </Typography>
                               </TableCell>
                               <TableCell>
@@ -303,15 +240,40 @@ export default function Orders({}: Props) {
                                   sx={{
                                     pl: '4px',
                                     pr: '4px',
-                                    backgroundColor: product.pbg,
-                                    color: '#fff'
+                                    backgroundColor: 'red',
+                                    color: '#fff',
                                   }}
                                   size='small'
-                                  label={product.priority}
+                                  label={order.status}
                                 ></Chip>
                               </TableCell>
-                              <TableCell align='right'>
-                                <Typography fontSize='14px'>${product.budget}k</Typography>
+                              <TableCell>
+                                <Typography
+                                  sx={styleOneColumn}
+                                  color='textSecondary'
+                                  fontSize='14px'
+                                >
+                                  {order.createdAt.toString()}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                <Typography
+                                  sx={{
+                                    ...styleOneColumn,
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                      transition: 'all 0.5s ease',
+                                      color: 'red',
+                                    },
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                  color='textSecondary'
+                                  fontSize='14px'
+                                >
+                                  <DeleteIcon onClick={e => deleteOrder(e, order._id)} />
+                                </Typography>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -321,7 +283,7 @@ export default function Orders({}: Props) {
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
                       component='div'
-                      count={products.length}
+                      count={ordersShow.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}

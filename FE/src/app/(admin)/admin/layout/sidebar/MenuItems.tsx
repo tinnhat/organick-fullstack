@@ -16,12 +16,6 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Orders',
-    icon: IconBoxMultiple,
-    href: '/admin/orders'
-  },
-  {
-    id: uniqueId(),
     title: 'Users',
     icon: IconUser,
     href: '/admin/users'
@@ -31,6 +25,12 @@ const Menuitems = [
     title: 'Products',
     icon: IconStar,
     href: '/admin/products'
+  },
+  {
+    id: uniqueId(),
+    title: 'Orders',
+    icon: IconBoxMultiple,
+    href: '/admin/orders'
   },
   {
     id: uniqueId(),
