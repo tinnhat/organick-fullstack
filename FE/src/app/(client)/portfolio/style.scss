@@ -1,0 +1,32 @@
+@import '../../variables';
+
+.portfolio {
+  .portfolio-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2em;
+    justify-content: center;
+    margin: 10em 0;
+    .box-info {
+      width: 30%;
+      .box-info__img {
+        object-fit: fill;
+        border-radius: 1em;
+        width: 100% !important;
+        position: relative !important;
+        height: 100% !important;
+      }
+      &__name {
+        font-weight: bold;
+        color: $text-bold-color;
+        margin: 0.5em 0;
+      }
+      &__tag {
+        font-size: 0.9em;
+        color: $green-leaf-color;
+        font-weight: bold;
+      }
+    }
+  }
+}
