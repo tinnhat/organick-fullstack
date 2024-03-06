@@ -28,3 +28,31 @@ type Product = {
   createdAt: Date | string
   _destroy: boolean
 }
+
+type User = {
+  _id: string
+  fullname: string
+  email: string
+  password?: string
+  isConfirm: boolean
+  isAdmin: boolean
+  updateAt: Date | string
+  createdAt: Date | string
+  _destroy: boolean
+}
+
+type Category = {
+  _id: string
+  name: string
+  updateAt: Date | string
+  createdAt: Date | string
+  _destroy: boolean
+}
+
+type Status = {
+  _id: string
+  name: string
+  updateAt: Date | string
+  createdAt: Date | string
+  _destroy: boolean
+}

@@ -24,6 +24,7 @@ import { OrdersMock } from '@/app/common/mockData'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
+import DeleteOrder from './deleteOrder'
 type Props = {}
 
 const styleOneColumn = {
@@ -56,6 +57,10 @@ export default function Orders({}: Props) {
   const [open, setOpen] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [showDelete, setShowDelete] = useState({
+    show: false,
+    id: '',
+  })
   const debouncedSearch = useDebounce(search, 300)
 
   useEffect(() => {
@@ -99,6 +104,10 @@ export default function Orders({}: Props) {
   const deleteOrder = (e: any, id: string) => {
     e.preventDefault()
     e.stopPropagation()
+    setShowDelete({
+      show: true,
+      id,
+    })
   }
 
   return (
@@ -297,6 +306,7 @@ export default function Orders({}: Props) {
         </Grid>
       </div>
       <AddOrder open={open} toggleDrawer={toggleDrawer} />
+      <DeleteOrder showDelete={showDelete} setShowDelete={setShowDelete} />
     </>
   )
 }
