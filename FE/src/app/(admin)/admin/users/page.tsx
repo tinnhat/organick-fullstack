@@ -29,11 +29,11 @@ import Checkbox from '@mui/material/Checkbox'
 type Props = {}
 
 const styleOneColumn = {
-  maxWidth: 150,
+  maxWidth: 200,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
+  WebkitBoxOrient: 'vertical'
 }
 
 const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
@@ -177,32 +177,32 @@ export default function Users({}: Props) {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell>
+                            <TableCell sx={{ width: 300 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Id
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 300 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Email
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Confirm
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Admin
                               </Typography>
-                            </TableCell>
-                            <TableCell>
+                            </TableCell >
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Deleted
                               </Typography>
                             </TableCell>
-                            <TableCell align='right'>
+                            <TableCell align='right' sx={{ width: 100 }}>
                               <Typography
                                 sx={{
                                   display: 'flex',
