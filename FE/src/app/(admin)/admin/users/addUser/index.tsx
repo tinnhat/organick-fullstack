@@ -1,9 +1,24 @@
-import { Box, Stack, TextField, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormik, Formik, Field, Form } from 'formik'
 import * as yup from 'yup'
+import TextFieldPassword from '../../components/password'
+import Image from 'next/image'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { styled } from '@mui/material/styles'
 
 type Props = {
   open: boolean
@@ -14,7 +29,21 @@ type MyFormValues = {
   fullname: string
   password: string
   confirmPassword: string
+  isAdmin: boolean
+  isConfirm: boolean
 }
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+})
 
 const validationSchema = yup.object({
   email: yup.string().email('Enter a valid email').required('Email is required'),
@@ -30,10 +59,23 @@ const validationSchema = yup.object({
 })
 
 export default function AddUser({ open, toggleDrawer }: Props) {
+  const [file, setFile] = useState<File | undefined>(undefined)
+
   const handleClose = () => {
     toggleDrawer(false)
+    setFile(undefined)
   }
-  const initialValues: MyFormValues = { email: '', fullname: '', password: '', confirmPassword: '' }
+  const initialValues: MyFormValues = {
+    email: '',
+    fullname: '',
+    password: '',
+    confirmPassword: '',
+    isAdmin: false,
+    isConfirm: false,
+  }
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.files && setFile(e.target.files[0])
+  }
 
   return (
     <Drawer
@@ -50,6 +92,37 @@ export default function AddUser({ open, toggleDrawer }: Props) {
         <Typography sx={{ mb: 4 }} variant='h5'>
           Add User
         </Typography>
+        <Box>
+          <Typography variant='h6'>Avatar</Typography>
+          <Button
+            component='label'
+            role={undefined}
+            variant='contained'
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            size='small'
+          >
+            Upload file
+            <VisuallyHiddenInput type='file' onChange={handleChangeImage} />
+          </Button>
+          <br />
+          <Avatar
+            alt='avatar'
+            src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.jpg'}
+            sx={{ height: 80, width: 80, mt: 2, mb: 2, border: '1px solid #ccc' }}
+          />
+        </Box>
+        {file && (
+          <Button
+            size='small'
+            sx={{ mb: 2 }}
+            variant='contained'
+            color='error'
+            onClick={() => setFile(undefined)}
+          >
+            Remove avatar
+          </Button>
+        )}
         <Formik
           validateOnChange={true}
           validationSchema={validationSchema}
@@ -62,7 +135,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
           }}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
-            const { email, fullname, password, confirmPassword } = values
+            const { email, fullname, password, confirmPassword, isAdmin, isConfirm } = values
             return (
               <Form>
                 <Stack spacing={2}>
@@ -87,9 +160,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
                     error={touched.fullname && Boolean(errors.fullname)}
                     helperText={touched.fullname && errors.fullname}
                   />
-                  <TextField
-                    type='password'
-                    fullWidth
+                  <TextFieldPassword
                     id='password'
                     label='Password'
                     variant='outlined'
@@ -98,9 +169,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password}
                   />
-                  <TextField
-                    type='password'
-                    fullWidth
+                  <TextFieldPassword
                     id='confirmPassword'
                     label='Confirm Password'
                     variant='outlined'
@@ -109,6 +178,45 @@ export default function AddUser({ open, toggleDrawer }: Props) {
                     error={touched.confirmPassword && Boolean(errors.confirmPassword)}
                     helperText={touched.confirmPassword && errors.confirmPassword}
                   />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                    }}
+                  >
+                    <FormControl component='fieldset' variant='standard'>
+                      <FormLabel component='legend'>Permission</FormLabel>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={isAdmin}
+                              onChange={handleChange}
+                              value={isAdmin}
+                              name='isAdmin'
+                            />
+                          }
+                          label='Admin'
+                        />
+                      </FormGroup>
+                    </FormControl>
+                    <FormControl component='fieldset' variant='standard'>
+                      <FormLabel component='legend'>Active</FormLabel>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={isConfirm}
+                              value={isConfirm}
+                              onChange={handleChange}
+                              name='isConfirm'
+                            />
+                          }
+                          label='Confirm'
+                        />
+                      </FormGroup>
+                    </FormControl>
+                  </Box>
                   <Box sx={{ display: 'flex' }}>
                     <Button type='submit' disabled={isSubmitting} variant='contained'>
                       Add

@@ -17,7 +17,7 @@ const PageWrapper = styled('div')(() => ({
   paddingBottom: '60px',
   flexDirection: 'column',
   zIndex: 1,
-  backgroundColor: 'transparent'
+  backgroundColor: 'transparent',
 }))
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,8 +31,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className='page-wrapper'
         sx={{
           [theme.breakpoints.up('lg')]: {
-            ml: '270px'
-          }
+            ml: '270px',
+          },
         }}
       >
         <Sidebar
