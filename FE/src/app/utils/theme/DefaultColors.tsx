@@ -39,7 +39,7 @@ const baselightTheme = createTheme({
       contrastText: '#ffffff'
     },
     error: {
-      main: '#fa896b',
+      main: '#e74c3c',
       light: '#FDEDE8',
       dark: '#f3704d',
       contrastText: '#ffffff'

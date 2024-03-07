@@ -43,7 +43,7 @@ export default function DeleteUser({ showDelete, setShowDelete }: Props) {
           variant='h6'
           component='h2'
         >
-          Do you want to delete
+          Do you want to delete user
           <Typography sx={{ color: 'red', ml: { xs: 0, sm: 0, md: 1, lg: 1 } }}>
             {showDelete.id}
           </Typography>
