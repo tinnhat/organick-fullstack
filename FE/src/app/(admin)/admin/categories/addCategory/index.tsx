@@ -92,7 +92,7 @@ export default function AddCategory({ open, toggleDrawer }: Props) {
                     }}
                   >
                     <FormControl component='fieldset' variant='standard'>
-                      <FormLabel component='legend'>Deleted</FormLabel>
+                      <FormLabel component='legend'>Permission</FormLabel>
                       <FormGroup>
                         <FormControlLabel
                           control={
@@ -103,7 +103,7 @@ export default function AddCategory({ open, toggleDrawer }: Props) {
                               name='_destroy'
                             />
                           }
-                          label='Admin'
+                          label='Deleted'
                         />
                       </FormGroup>
                     </FormControl>
