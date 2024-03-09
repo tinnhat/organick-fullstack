@@ -16,7 +16,7 @@ type Order = {
 type Product = {
   _id: string
   name: string
-  description: string
+  description: string | undefined
   additionInfo: string
   slug?: string
   quantity: number

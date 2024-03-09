@@ -23,7 +23,7 @@ const style = {
   borderRadius: '6px',
 }
 
-export default function DeleteUser({ showDelete, setShowDelete }: Props) {
+export default function DeleteProduct({ showDelete, setShowDelete }: Props) {
   const handleClose = () =>
     setShowDelete({
       show: false,
@@ -43,7 +43,7 @@ export default function DeleteUser({ showDelete, setShowDelete }: Props) {
           variant='h6'
           component='h2'
         >
-          Do you want to delete user
+          Do you want to delete
           <Typography sx={{ color: 'red', ml: { xs: 0, sm: 0, md: 1, lg: 1 } }}>
             {showDelete.id}
           </Typography>
