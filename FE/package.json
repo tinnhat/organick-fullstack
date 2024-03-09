@@ -43,6 +43,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-select": "^5.8.0",
     "sass": "^1.71.0",
+    "sonner": "^1.4.3",
     "yup": "^1.4.0"
   },
   "devDependencies": {

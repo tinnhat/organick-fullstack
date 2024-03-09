@@ -21,6 +21,9 @@ import { Form, Formik } from 'formik'
 import * as yup from 'yup'
 import BaseCard from '../../components/shared/BaseCard'
 import DeleteIcon from '@mui/icons-material/Delete'
+import AddProductCus from '../../components/addProductCus'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 type Props = {
   open: boolean
@@ -42,7 +45,6 @@ const styleOneColumn = {
   WebkitBoxOrient: 'vertical',
 }
 
-
 const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
   return showToolTip ? (
     <Tooltip title={data}>
@@ -58,16 +60,20 @@ const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean 
 }
 
 const validationSchema = yup.object({
-  name: yup
-    .string()
-    .required('Name is required')
-    .min(4, 'Name should be of minimum 4 characters length'),
-  _destroy: yup.boolean(),
+  address: yup.string().required('Address is required'),
+  phone: yup.string().required('Phone is required'),
+  note: yup.string(),
 })
 
 export default function AddOrder({ open, toggleDrawer }: Props) {
+  const [cart, setCart] = useState<Product[]>([])
+  const [user, setUser] = useState('')
+  const [showAddProduct, setShowAddProduct] = useState(false)
   const handleClose = () => {
     toggleDrawer(false)
+    setShowAddProduct(false)
+    setUser('')
+    setCart([])
   }
 
   const initialValues: MyFormValues = {
@@ -76,12 +82,35 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
     note: '',
     totalPrice: 0,
   }
+  const handleRemoveCart = (item: Product) => {
+    setCart(cart.filter(cartItem => cartItem._id !== item._id))
+  }
+
+  const handleSubmit = (values: any, actions: any) => {
+    if (!user) {
+      toast.warning('Please select user', { position: 'bottom-left' })
+      actions.setSubmitting(false)
+      return
+    }
+    if (!cart.length) {
+      toast.warning('Please add product', { position: 'bottom-left' })
+      actions.setSubmitting(false)
+      return
+    }
+    console.log(values)
+    console.log(user)
+    console.log(cart)
+
+    setTimeout(() => {
+      actions.setSubmitting(false)
+    }, 1000)
+  }
 
   return (
     <Drawer
       sx={{
         '& .MuiDrawer-paper': {
-          width: { xs: '90vw', md: '70vw', lg: '50vw' },
+          width: { xs: '90vw', md: '70vw', lg: '60vw' },
         },
       }}
       variant='temporary'
@@ -93,12 +122,21 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
           Add Order
         </Typography>
         <Box sx={{ mb: 2 }}>
-          <Button variant='contained'>Add Products</Button>
-          <Button sx={{ ml: 2 }} variant='outlined' color='error'>
-            Clear Products
-          </Button>
+          {showAddProduct ? (
+            <Button variant='contained' color='error' onClick={() => setShowAddProduct(false)}>
+              Hide Add Products
+            </Button>
+          ) : (
+            <Button variant='contained' onClick={() => setShowAddProduct(true)}>
+              Add Products
+            </Button>
+          )}
+          {cart.length > 0 && (
+            <Button sx={{ ml: 2 }} variant='outlined' color='error' onClick={() => setCart([])}>
+              Clear Products
+            </Button>
+          )}
         </Box>
-        
 
         <Box sx={{ mb: 2 }}>
           <BaseCard title='Cart'>
@@ -153,99 +191,121 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{ maxHeight: '400px', overflow: 'auto' }}>
-                  <TableRow
-                    sx={{
-                      cursor: 'pointer',
-                      '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                    }}
-                  >
-                    <TableCell>
-                      <Avatar
-                        sx={{ width: 80, height: 80, borderRadius: 0, border: '1px solid #ccc' }}
-                        src={'/assets/img/product1.png'}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Box display='flex' alignItems='center'>
-                        <Box>
-                          <TypographyCus
-                            data={'Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli'}
-                            showToolTip={true}
-                          />
-                        </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
-                        $23999
+                  {cart.length === 0 && (
+                    <TableRow>
+                      <Typography sx={{ textAlign: 'center', mt: 2, fontWeight: 500 }}>
+                        Cart is empty
                       </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box
+                    </TableRow>
+                  )}
+                  {cart
+                    .map(item => {
+                      return {
+                        ...item,
+                        quantityAddtoCart: 1,
+                      }
+                    })
+                    .map(item => (
+                      <TableRow
+                        key={item._id}
                         sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Button>+</Button>
-                        <TextField
-                          InputProps={{
-                            inputProps: {
-                              max: 999,
-                              min: 1,
-                            },
-                          }}
-                          sx={{
-                            mx: 1,
-                            width: 70,
-                            '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-                              {
-                                display: 'none',
-                              },
-                            '& input[type=number]': {
-                              MozAppearance: 'textfield',
-                            },
-                          }}
-                          type='number'
-                        />
-                        <Button>-</Button>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Typography
-                        sx={{
-                          ...styleOneColumn,
                           cursor: 'pointer',
-                          '&:hover': {
-                            transition: 'all 0.5s ease',
-                            color: 'red',
-                          },
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
                         }}
-                        color='textSecondary'
-                        fontSize='14px'
                       >
-                        <DeleteIcon />
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
+                        <TableCell>
+                          <Avatar
+                            sx={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: 0,
+                              border: '1px solid #ccc',
+                            }}
+                            src={'/assets/img/product1.png'}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Box display='flex' alignItems='center'>
+                            <Box>
+                              <TypographyCus data={item.name} showToolTip={true} />
+                            </Box>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
+                            ${item.price}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <Button>+</Button>
+                            <TextField
+                              value={item.quantityAddtoCart}
+                              InputProps={{
+                                inputProps: {
+                                  max: 999,
+                                  min: 1,
+                                },
+                              }}
+                              sx={{
+                                mx: 1,
+                                width: 70,
+                                '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+                                  {
+                                    display: 'none',
+                                  },
+                                '& input[type=number]': {
+                                  MozAppearance: 'textfield',
+                                },
+                              }}
+                              type='number'
+                            />
+                            <Button>-</Button>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            sx={{
+                              ...styleOneColumn,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                transition: 'all 0.5s ease',
+                                color: 'red',
+                              },
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                            color='textSecondary'
+                            fontSize='14px'
+                          >
+                            <DeleteIcon onClick={() => handleRemoveCart(item)} />
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </BaseCard>
         </Box>
+
+        {showAddProduct && (
+          <Box sx={{ mb: 2 }}>
+            <AddProductCus cart={cart} setCart={setCart} />
+          </Box>
+        )}
+
         <Formik
           validateOnChange={true}
           validationSchema={validationSchema}
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values)
-            setTimeout(() => {
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
             const { address, phone, note, totalPrice } = values
@@ -258,7 +318,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                     options={UsersMock}
                     autoHighlight
                     onChange={(event: any, newValue: any) => {
-                      console.log(newValue)
+                      setUser(newValue)
                     }}
                     getOptionLabel={option => option.fullname}
                     renderOption={(props, option) => (
@@ -293,8 +353,6 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                     onChange={handleChange}
                     error={touched.address && Boolean(errors.address)}
                     helperText={touched.address && errors.address}
-                    multiline
-                    minRows={4}
                   />
                   <TextField
                     fullWidth
@@ -317,7 +375,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                     error={touched.note && Boolean(errors.note)}
                     helperText={touched.note && errors.note}
                     multiline
-                    minRows={4}
+                    minRows={2}
                   />
                   <TextField
                     fullWidth
@@ -327,8 +385,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                     variant='outlined'
                     value={totalPrice}
                     onChange={handleChange}
-                    error={touched.totalPrice && Boolean(errors.totalPrice)}
-                    helperText={touched.totalPrice && errors.totalPrice}
+                    disabled
                   />
                   <Box sx={{ display: 'flex' }}>
                     <Button type='submit' disabled={isSubmitting} variant='contained'>
