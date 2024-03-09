@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './_scrollbar.scss'
-import ToastContainer from './components/toast'
 const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +16,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={inter.className}>
         {children}
-        <ToastContainer />
+       
       </body>
     </html>
   )
