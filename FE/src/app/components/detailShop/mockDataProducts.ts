@@ -5,7 +5,7 @@ export const products = [
     img: '/assets/img/product1.png',
     price: '$20.00',
     salePrice: '$13.00',
-    tag: 'Vegetable',
+    tag: 'Vegetable Vegetable Vegetable',
     rating: 5
   },
   {

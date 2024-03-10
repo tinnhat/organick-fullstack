@@ -49,28 +49,25 @@
       overflow-y: auto;
       padding-right: 4px;
       /* width */
-      &::-webkit-scrollbar {
-        width: 10px;
-      }
-      /* Handle */
-      &::-webkit-scrollbar-thumb {
-        background: $green-leaf-color;
-        border-radius: 10px;
-      }
       .item {
         display: flex;
         gap: 20px;
         align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid $white-mix-gray-color;
+        &:last-child {
+          border-bottom: none;
+        }
         .item-img {
         }
         .item-quantity {
-          width: 50px;
+          width: 60px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-left: auto;
           input {
-            width: 50px;
+            width: 60px;
             text-align: center;
             outline: none;
             background-color: $white-mix-gray-color;

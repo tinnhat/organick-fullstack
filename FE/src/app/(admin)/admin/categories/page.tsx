@@ -26,29 +26,8 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteCategory from './deleteCategory'
 import { Checkbox } from '@mui/material'
+import TypographyTooltip from '../components/typograhyTooltip'
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 250,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
-}
-
-const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Categories({}: Props) {
   const [categories, setCategories] = useState<Category[]>([])
@@ -217,12 +196,12 @@ export default function Categories({}: Props) {
                               onClick={() => router.push(`/admin/categories/${cate._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={cate._id} showToolTip={true} />
+                                <TypographyTooltip data={cate._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={cate.name} showToolTip={true} />
+                                    <TypographyTooltip data={cate.name} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -232,7 +211,11 @@ export default function Categories({}: Props) {
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',
