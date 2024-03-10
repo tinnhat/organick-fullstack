@@ -26,29 +26,8 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteUser from './deleteUser'
 import Checkbox from '@mui/material/Checkbox'
+import TypographyTooltip from '../components/typograhyTooltip'
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 200,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical'
-}
-
-const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Users({}: Props) {
   const [users, setUsers] = useState<User[]>([])
@@ -196,7 +175,7 @@ export default function Users({}: Props) {
                               <Typography color='textSecondary' variant='h6'>
                                 Admin
                               </Typography>
-                            </TableCell >
+                            </TableCell>
                             <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Deleted
@@ -227,12 +206,12 @@ export default function Users({}: Props) {
                               onClick={() => router.push(`/admin/users/${user._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={user._id} showToolTip={true} />
+                                <TypographyTooltip data={user._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={user.email} showToolTip={true} />
+                                    <TypographyTooltip data={user.email} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -248,7 +227,11 @@ export default function Users({}: Props) {
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',

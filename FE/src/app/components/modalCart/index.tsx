@@ -2,15 +2,17 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.scss'
 import Image from 'next/image'
-type Props = {}
+type Props = {
+  setShowCart: (value: boolean) => void
+}
 
-export default function ModalCart({}: Props) {
+export default function ModalCart({ setShowCart }: Props) {
   return (
     <section className='modalCart'>
       <div className='box-cart'>
         <div className='title-box'>
           <p className='title-box-text'>Your Cart</p>
-          <FontAwesomeIcon icon={faXmark} className='icon' />
+          <FontAwesomeIcon icon={faXmark} className='icon' onClick={() => setShowCart(false)} />
         </div>
         <ul className='list-items'>
           <li className='item'>
@@ -18,12 +20,16 @@ export default function ModalCart({}: Props) {
               <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
             </div>
             <div className='item-info'>
-              <p className='item-name'>Calabrese Broccoli</p>
+              <p className='item-name'>
+                Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
+                Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
+                Calabrese Broccoli
+              </p>
               <p className='item-price'>$13.00</p>
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
           <li className='item'>
@@ -36,7 +42,7 @@ export default function ModalCart({}: Props) {
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
           <li className='item'>
@@ -49,7 +55,7 @@ export default function ModalCart({}: Props) {
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
           <li className='item'>
@@ -62,7 +68,7 @@ export default function ModalCart({}: Props) {
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
           <li className='item'>
@@ -75,7 +81,7 @@ export default function ModalCart({}: Props) {
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
           <li className='item'>
@@ -88,7 +94,7 @@ export default function ModalCart({}: Props) {
               <p className='item-action'>Remove</p>
             </div>
             <div className='item-quantity'>
-              <input type='number' defaultValue={1} />
+              <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
         </ul>
