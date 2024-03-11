@@ -16,7 +16,7 @@ export default function ModalCart({ setShowCart }: Props) {
   const router = useRouter()
 
   const handleCheckout = async () => {
-    await fetch('/api/checkout', {
+    const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,8 +30,8 @@ export default function ModalCart({ setShowCart }: Props) {
         return res.json()
       })
       .then(async data => {
-        if (data.url) {
-          router.push(data.url)
+        if (data.session) {
+          router.push(data.session.url)
         }
       })
   }

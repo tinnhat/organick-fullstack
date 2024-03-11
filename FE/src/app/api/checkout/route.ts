@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
-
+const HOST = 'http://localhost:3000'
 const getActiveProducts = async () => {
   const products = await stripe.products.list()
   const availableProducts = products.data.filter((product: any) => product.active)
@@ -12,15 +12,12 @@ export const POST = async (request: any) => {
   const { products } = await request.json()
   //get nhung product dang active
   let activeProducts = await getActiveProducts()
-  console.log(activeProducts)
-
   try {
     for (const product of products) {
       const stripeProduct = activeProducts.find(
         (activeProduct: any) => activeProduct.id === product._id
       )
       if (stripeProduct === undefined) {
-        console.log('Product not found')
         const newProduct = await stripe.products.create({
           id: product._id,
           active: product._destroy,
@@ -33,9 +30,11 @@ export const POST = async (request: any) => {
           images: [product.image],
           url: product.slug,
         })
-        console.log(newProduct)
       } else {
-        console.log('product found')
+        await stripe.products.update(stripeProduct.id, {
+          active: product._destroy,
+          images: [product.image],
+        })
       }
     }
   } catch (error) {
@@ -60,10 +59,28 @@ export const POST = async (request: any) => {
   const session = await stripe.checkout.sessions.create({
     line_items: stripeItems,
     mode: 'payment',
-    success_url: 'http://localhost:3000/success',
-    cancel_url: 'http://localhost:3000/cancel',
-    
+    success_url: `${HOST}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${HOST}/cancel?session_id={CHECKOUT_SESSION_ID}`,
+    custom_fields: [
+      {
+        key: 'engraving',
+        label: {
+          type: 'custom',
+          custom: 'Personalized engraving',
+        },
+        type: 'text',
+      },
+    ],
   })
+  if (!session) {
+    return NextResponse.json({
+      error: {
+        code: 'stripe-error',
+        message: 'Something went wrong',
+      },
+    })
+  }
 
-  return NextResponse.json({ url: session.url })
+  return NextResponse.json({ session }, { status: 200 })
 }
+

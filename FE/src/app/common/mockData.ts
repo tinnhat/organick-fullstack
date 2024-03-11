@@ -267,7 +267,7 @@ export const ProductsMock = [
     quantity: 25,
     priceSale: 59,
     price: 2,
-    image: 'https://orion.vn/media/znbmsrwh/otars-natural-small.png',
+    image: 'https://kingfoodmart.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fsc_pcm_product%2Fprod%2F2023%2F4%2F28%2F4761-369257.jpg&w=1920&q=75',
     categoryId: '7be60109-a65b-4717-b6d2-31bc98271cb0',
     star: 2,
     updateAt: '8/3/2023',
