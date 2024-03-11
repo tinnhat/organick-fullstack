@@ -1,12 +1,40 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import './style.scss'
+import { loadStripe } from '@stripe/stripe-js'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import './style.scss'
+import { ProductsMock } from '@/app/common/mockData'
+
 type Props = {
   setShowCart: (value: boolean) => void
 }
 
+const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+
 export default function ModalCart({ setShowCart }: Props) {
+  const router = useRouter()
+
+  const handleCheckout = async () => {
+    await fetch('/api/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // day la cho truyen product thanh toan
+        products: [{ ...ProductsMock[2], quantityCheckout: 2 }],
+      }),
+    })
+      .then(async res => {
+        return res.json()
+      })
+      .then(async data => {
+        if (data.url) {
+          router.push(data.url)
+        }
+      })
+  }
   return (
     <section className='modalCart'>
       <div className='box-cart'>
@@ -102,7 +130,9 @@ export default function ModalCart({ setShowCart }: Props) {
           <p className='total-text'>Total</p>
           <p className='total-price'>$13.00 USD</p>
         </div>
-        <button className='btn-continue'>Continue to Checkout</button>
+        <button className='btn-continue' onClick={handleCheckout}>
+          Continue to Checkout
+        </button>
       </div>
     </section>
   )
