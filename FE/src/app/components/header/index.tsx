@@ -73,7 +73,7 @@ export default function Header({}: Props) {
             <button className='btn-login' onClick={() => router.push('/login')}>
               Login
             </button>
-            <div className='avatar-box'>
+            {/* <div className='avatar-box'>
               <Image priority src={'/assets/img/avatar.jpg'} alt='' className='avatar-img' width={50} height={50} style={{
                 borderRadius: '50%',
                 cursor: 'pointer'
@@ -83,7 +83,7 @@ export default function Header({}: Props) {
                 <div className='item'onClick={() => router.push('/order-history')}>Order History</div>
                 <div className='item'>Sign out</div>
               </div>
-            </div>
+            </div> */}
             {showCart && <ModalCart setShowCart={setShowCart} />}
           </div>
         </div>
