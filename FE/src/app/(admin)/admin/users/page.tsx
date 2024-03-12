@@ -26,29 +26,10 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteUser from './deleteUser'
 import Checkbox from '@mui/material/Checkbox'
+import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 150,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
-}
-
-const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Users({}: Props) {
   const [users, setUsers] = useState<User[]>([])
@@ -71,15 +52,15 @@ export default function Users({}: Props) {
 
   //use useEffect to watch value and debounce
   useEffect(() => {
-    const newUserShow = cloneDeep(usersShow)
+    const newProductsShow = cloneDeep(users)
     if (debouncedSearch) {
-      const filtered = newUserShow.filter((item: User) => {
+      const filtered = newProductsShow.filter((item: User) => {
         return item.email.includes(search)
       })
       setUsersShow(filtered)
       setPage(0)
     }
-  }, [debouncedSearch, usersShow, search])
+  }, [debouncedSearch, users, search])
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -110,6 +91,38 @@ export default function Users({}: Props) {
       id,
     })
   }
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Name',
+      'Email',
+      'Is Confirm',
+      'Is Admin',
+      'Update At',
+      'Created At',
+      'Is Deleted',
+    ]
+    const rows = usersShow.map((row: User) => ({
+      _id: row._id,
+      fullname: row.fullname,
+      email: row.email,
+      isConfirm: row.isConfirm ? 'Confirmed' : 'Unconfirmed',
+      isAdmin: row.isAdmin ? 'Admin' : 'User',
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Users.xlsx', { compression: true })
+  }
 
   return (
     <>
@@ -129,6 +142,17 @@ export default function Users({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add User
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}
@@ -177,32 +201,32 @@ export default function Users({}: Props) {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell>
+                            <TableCell sx={{ width: 300 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Id
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 300 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Email
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Confirm
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Admin
                               </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: 100 }}>
                               <Typography color='textSecondary' variant='h6'>
                                 Deleted
                               </Typography>
                             </TableCell>
-                            <TableCell align='right'>
+                            <TableCell align='right' sx={{ width: 100 }}>
                               <Typography
                                 sx={{
                                   display: 'flex',
@@ -227,12 +251,12 @@ export default function Users({}: Props) {
                               onClick={() => router.push(`/admin/users/${user._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={user._id} showToolTip={true} />
+                                <TypographyTooltip data={user._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={user.email} showToolTip={true} />
+                                    <TypographyTooltip data={user.email} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -248,7 +272,11 @@ export default function Users({}: Props) {
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',
