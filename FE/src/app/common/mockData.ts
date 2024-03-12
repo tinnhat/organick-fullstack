@@ -267,7 +267,7 @@ export const ProductsMock = [
     quantity: 25,
     priceSale: 59,
     price: 2,
-    image: 'https://orion.vn/media/znbmsrwh/otars-natural-small.png',
+    image: 'https://kingfoodmart.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fsc_pcm_product%2Fprod%2F2023%2F4%2F28%2F4761-369257.jpg&w=1920&q=75',
     categoryId: '7be60109-a65b-4717-b6d2-31bc98271cb0',
     star: 2,
     updateAt: '8/3/2023',
@@ -294,7 +294,7 @@ export const ProductsMock = [
   {
     _id: 'e667e01b-21ae-4416-a212-d001e5ea0e06',
     name: 'facilisi cras non velit nec nisi vulputate nonummy',
-    description: null,
+    description: '',
     additionInfo:
       'vehicula consequat morbi a ipsum integer a nibh in quis justo maecenas rhoncus aliquam lacus',
     slug: 'slug-product-example',
@@ -311,7 +311,7 @@ export const ProductsMock = [
   {
     _id: '9c18dc88-0918-42a9-8f88-af0f8987d02c',
     name: 'eu est congue elementum in hac habitasse',
-    description: null,
+    description: '',
     additionInfo:
       'quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa',
     slug: 'slug-product-example',
@@ -348,7 +348,7 @@ export const ProductsMock = [
     name: 'libero rutrum ac lobortis vel',
     description:
       'nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse',
-    additionInfo: null,
+    additionInfo: '',
     slug: 'slug-product-example',
     quantity: 44,
     priceSale: 69,
@@ -380,7 +380,7 @@ export const ProductsMock = [
   {
     _id: 'bb145a7f-d2e4-49b8-9083-66ec4660f9a5',
     name: 'cras non velit nec nisi vulputate nonummy maecenas tincidunt',
-    description: null,
+    description: '',
     additionInfo:
       'eros vestibulum ac est lacinia nisi venenatis tristique fusce congue diam id ornare imperdiet sapien urna',
     slug: 'slug-product-example',

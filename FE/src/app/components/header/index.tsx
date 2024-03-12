@@ -74,7 +74,7 @@ export default function Header({}: Props) {
               Login
             </button>
             {/* <div className='avatar-box'>
-              <Image src={'/assets/img/avatar.jpg'} alt='' className='avatar-img' width={50} height={50} style={{
+              <Image priority src={'/assets/img/avatar.jpg'} alt='' className='avatar-img' width={50} height={50} style={{
                 borderRadius: '50%',
                 cursor: 'pointer'
               }} />
@@ -84,7 +84,7 @@ export default function Header({}: Props) {
                 <div className='item'>Sign out</div>
               </div>
             </div> */}
-            {showCart && <ModalCart />}
+            {showCart && <ModalCart setShowCart={setShowCart} />}
           </div>
         </div>
       </div>

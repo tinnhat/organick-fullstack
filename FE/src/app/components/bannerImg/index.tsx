@@ -8,7 +8,7 @@ type Props = {
 export default function BannerImg({ pic }: Props) {
   return (
     <section className='banner-img'>
-      <Image src={pic} alt='' className='banner-img__show' layout='fill' />
+      <Image src={pic} alt='' className='banner-img__show' layout='fill' priority />
     </section>
   )
 }

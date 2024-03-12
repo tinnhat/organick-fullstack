@@ -24,8 +24,8 @@ export default function ClientLayout({
     <>
       <Header />
       <AOSComponent>{children}</AOSComponent>
-      <Footer />
       <NewLatter />
+      <Footer />
     </>
   )
 }

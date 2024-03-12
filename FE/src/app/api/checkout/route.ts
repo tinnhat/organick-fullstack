@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
-const HOST = 'https://organick-fullstack.vercel.app'
+const HOST = 'http://localhost:3000'
 const getActiveProducts = async () => {
   const products = await stripe.products.list()
   const availableProducts = products.data.filter((product: any) => product.active)
