@@ -51,6 +51,7 @@
     "sass": "^1.71.0",
     "sonner": "^1.4.3",
     "stripe": "^14.20.0",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {

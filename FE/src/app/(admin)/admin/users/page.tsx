@@ -27,6 +27,8 @@ import { useDebounce } from '@uidotdev/usehooks'
 import DeleteUser from './deleteUser'
 import Checkbox from '@mui/material/Checkbox'
 import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
 
 export default function Users({}: Props) {
@@ -50,15 +52,15 @@ export default function Users({}: Props) {
 
   //use useEffect to watch value and debounce
   useEffect(() => {
-    const newUserShow = cloneDeep(usersShow)
+    const newProductsShow = cloneDeep(users)
     if (debouncedSearch) {
-      const filtered = newUserShow.filter((item: User) => {
+      const filtered = newProductsShow.filter((item: User) => {
         return item.email.includes(search)
       })
       setUsersShow(filtered)
       setPage(0)
     }
-  }, [debouncedSearch, usersShow, search])
+  }, [debouncedSearch, users, search])
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -89,6 +91,38 @@ export default function Users({}: Props) {
       id,
     })
   }
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Name',
+      'Email',
+      'Is Confirm',
+      'Is Admin',
+      'Update At',
+      'Created At',
+      'Is Deleted',
+    ]
+    const rows = usersShow.map((row: User) => ({
+      _id: row._id,
+      fullname: row.fullname,
+      email: row.email,
+      isConfirm: row.isConfirm ? 'Confirmed' : 'Unconfirmed',
+      isAdmin: row.isAdmin ? 'Admin' : 'User',
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Users.xlsx', { compression: true })
+  }
 
   return (
     <>
@@ -108,6 +142,17 @@ export default function Users({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add User
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}

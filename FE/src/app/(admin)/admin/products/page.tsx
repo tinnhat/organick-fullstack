@@ -27,6 +27,8 @@ import { useDebounce } from '@uidotdev/usehooks'
 import DeleteProduct from './deleteProduct'
 import { Avatar, Checkbox } from '@mui/material'
 import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
 
 export default function Products({}: Props) {
@@ -90,6 +92,46 @@ export default function Products({}: Props) {
     })
   }
 
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Name',
+      'Category',
+      'Quantity',
+      'Price',
+      'Price sale',
+      'Image',
+      'Description',
+      'Star',
+      'Update At',
+      'Created At',
+      'Is Deleted',
+    ]
+    const rows = productsShow.map((row: Product) => ({
+      _id: row._id,
+      name: row.name,
+      category: row.category,
+      quantity: row.quantity,
+      price: row.price,
+      priceSale: row.priceSale,
+      image: row.image,
+      description: row.description,
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Products.xlsx', { compression: true })
+  }
+
   return (
     <>
       <div className='products'>
@@ -108,6 +150,17 @@ export default function Products({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add Product
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2,
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}
@@ -270,7 +323,7 @@ export default function Products({}: Props) {
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
                       component='div'
-                      count={products.length}
+                      count={productsShow.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
