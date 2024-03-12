@@ -26,29 +26,10 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteProduct from './deleteProduct'
 import { Avatar, Checkbox } from '@mui/material'
+import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 250,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
-}
-
-const TypographyCus = ({ data, showToolTip = false }: { data: any; showToolTip?: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Products({}: Props) {
   const [products, setProducts] = useState<Product[]>([])
@@ -111,6 +92,46 @@ export default function Products({}: Props) {
     })
   }
 
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Name',
+      'Category',
+      'Quantity',
+      'Price',
+      'Price sale',
+      'Image',
+      'Description',
+      'Star',
+      'Update At',
+      'Created At',
+      'Is Deleted',
+    ]
+    const rows = productsShow.map((row: Product) => ({
+      _id: row._id,
+      name: row.name,
+      category: row.category,
+      quantity: row.quantity,
+      price: row.price,
+      priceSale: row.priceSale,
+      image: row.image,
+      description: row.description,
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Products.xlsx', { compression: true })
+  }
+
   return (
     <>
       <div className='products'>
@@ -129,6 +150,17 @@ export default function Products({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add Product
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2,
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}
@@ -227,7 +259,6 @@ export default function Products({}: Props) {
                               onClick={() => router.push(`/admin/products/${product._id}`)}
                             >
                               <TableCell>
-                                {/* <TypographyCus data={product._id} showToolTip={true} /> */}
                                 <Avatar
                                   alt='Remy Sharp'
                                   src={product.image?.toString()}
@@ -244,27 +275,31 @@ export default function Products({}: Props) {
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={product.name} showToolTip={true} />
+                                    <TypographyTooltip data={product.name} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data='category' showToolTip={true} />
+                                    <TypographyTooltip data='category' showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
                               <TableCell>
-                                <TypographyCus data={product.quantity} />
+                                <TypographyTooltip data={product.quantity} />
                               </TableCell>
                               <TableCell>
-                                <TypographyCus data={`$${product.price}`} />
+                                <TypographyTooltip data={`$${product.price}`} />
                               </TableCell>
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',
@@ -288,7 +323,7 @@ export default function Products({}: Props) {
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
                       component='div'
-                      count={products.length}
+                      count={productsShow.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}

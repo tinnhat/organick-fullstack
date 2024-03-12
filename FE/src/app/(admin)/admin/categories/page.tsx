@@ -26,29 +26,10 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteCategory from './deleteCategory'
 import { Checkbox } from '@mui/material'
+import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 250,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
-}
-
-const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Categories({}: Props) {
   const [categories, setCategories] = useState<Category[]>([])
@@ -111,6 +92,34 @@ export default function Categories({}: Props) {
     })
   }
 
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Name',
+      'Update At',
+      'Created At',
+      'Is Deleted',
+    ]
+    const rows = categoriesShow.map((row: Category) => ({
+      _id: row._id,
+      name: row.name,
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Categories.xlsx', { compression: true })
+  }
+
+
   return (
     <>
       <div className='categories'>
@@ -129,6 +138,17 @@ export default function Categories({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add Category
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}
@@ -217,12 +237,12 @@ export default function Categories({}: Props) {
                               onClick={() => router.push(`/admin/categories/${cate._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={cate._id} showToolTip={true} />
+                                <TypographyTooltip data={cate._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={cate.name} showToolTip={true} />
+                                    <TypographyTooltip data={cate.name} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -232,7 +252,11 @@ export default function Categories({}: Props) {
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',

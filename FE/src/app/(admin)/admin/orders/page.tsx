@@ -25,29 +25,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteOrder from './deleteOrder'
+import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
-
-const styleOneColumn = {
-  maxWidth: 150,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  WebkitLineClamp: '1',
-  WebkitBoxOrient: 'vertical',
-}
-
-const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean }) => {
-  return showToolTip ? (
-    <Tooltip title={data}>
-      <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-        {data}
-      </Typography>
-    </Tooltip>
-  ) : (
-    <Typography sx={styleOneColumn} fontSize='15px' fontWeight={500}>
-      {data}
-    </Typography>
-  )
-}
 
 export default function Orders({}: Props) {
   const [orders, setOrders] = useState<Order[]>([])
@@ -110,6 +91,46 @@ export default function Orders({}: Props) {
     })
   }
 
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Cart',
+      'User',
+      'Total Price',
+      'Address',
+      'Phone',
+      'Note',
+      'Status',
+      'Update At',
+      'Created At',
+      'Is Deleted'
+    ]
+    const rows = ordersShow.map((row: Order) => ({
+      _id: row._id,
+      cart: row.listProduct,
+      user: row.userId,
+      totalPrice: row.totalPrice,
+      address: row.address,
+      phone: row.phone,
+      note: row.note,
+      status: row.status,
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Orders.xlsx', { compression: true })
+  }
+
+
   return (
     <>
       <div className='orders'>
@@ -128,6 +149,17 @@ export default function Orders({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add Order
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}
@@ -226,23 +258,20 @@ export default function Orders({}: Props) {
                               onClick={() => router.push(`/admin/orders/${order._id}`)}
                             >
                               <TableCell>
-                                <TypographyCus data={order._id} showToolTip={true} />
+                                <TypographyTooltip data={order._id} showToolTip={true} />
                               </TableCell>
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyCus data={order.phone} showToolTip={true} />
+                                    <TypographyTooltip data={order.phone} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
                               <TableCell>
-                                <Typography
-                                  sx={styleOneColumn}
-                                  color='textSecondary'
-                                  fontSize='14px'
-                                >
-                                  ${order.totalPrice}
-                                </Typography>
+                                <TypographyTooltip
+                                  data={`$${order.totalPrice}`}
+                                  showToolTip={false}
+                                />
                               </TableCell>
                               <TableCell>
                                 <Chip
@@ -257,18 +286,19 @@ export default function Orders({}: Props) {
                                 ></Chip>
                               </TableCell>
                               <TableCell>
-                                <Typography
-                                  sx={styleOneColumn}
-                                  color='textSecondary'
-                                  fontSize='14px'
-                                >
-                                  {order.createdAt.toString()}
-                                </Typography>
+                                <TypographyTooltip
+                                  data={order.createdAt.toString()}
+                                  showToolTip={false}
+                                />
                               </TableCell>
                               <TableCell>
                                 <Typography
                                   sx={{
-                                    ...styleOneColumn,
+                                    maxWidth: 200,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '1',
+                                    WebkitBoxOrient: 'vertical',
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',
