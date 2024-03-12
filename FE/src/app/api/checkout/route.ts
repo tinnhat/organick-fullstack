@@ -63,12 +63,29 @@ export const POST = async (request: any) => {
     cancel_url: `${HOST}/cancel?session_id={CHECKOUT_SESSION_ID}`,
     custom_fields: [
       {
-        key: 'engraving',
+        key: 'phone',
         label: {
           type: 'custom',
-          custom: 'Personalized engraving',
+          custom: 'Phone number',
+        },
+        type: 'numeric',
+      },
+      {
+        key: 'address',
+        label: {
+          type: 'custom',
+          custom: 'Address',
         },
         type: 'text',
+      },
+      {
+        key: 'note',
+        label: {
+          type: 'custom',
+          custom: 'Note',
+        },
+        type: 'text',
+        optional: true,
       },
     ],
   })
