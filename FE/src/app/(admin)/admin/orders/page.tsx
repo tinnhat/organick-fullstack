@@ -26,6 +26,8 @@ import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
 import DeleteOrder from './deleteOrder'
 import TypographyTooltip from '../components/typograhyTooltip'
+import * as XLSX from 'xlsx'
+
 type Props = {}
 
 export default function Orders({}: Props) {
@@ -89,6 +91,46 @@ export default function Orders({}: Props) {
     })
   }
 
+  const exportFile = () => {
+    const header = [
+      'Id',
+      'Cart',
+      'User',
+      'Total Price',
+      'Address',
+      'Phone',
+      'Note',
+      'Status',
+      'Update At',
+      'Created At',
+      'Is Deleted'
+    ]
+    const rows = ordersShow.map((row: Order) => ({
+      _id: row._id,
+      cart: row.listProduct,
+      user: row.userId,
+      totalPrice: row.totalPrice,
+      address: row.address,
+      phone: row.phone,
+      note: row.note,
+      status: row.status,
+      updateAt: row.updateAt.toString(),
+      createdAt: row.createdAt.toString(),
+      _destroy: row._destroy ? 'Deleted' : 'Active',
+    }))
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates')
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' })
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Orders.xlsx', { compression: true })
+  }
+
+
   return (
     <>
       <div className='orders'>
@@ -107,6 +149,17 @@ export default function Orders({}: Props) {
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
                     Add Order
+                  </Button>
+                  <Button
+                    sx={{
+                      mr: 'auto',
+                      ml: 2
+                    }}
+                    variant='contained'
+                    color='secondary'
+                    onClick={exportFile}
+                  >
+                    Export
                   </Button>
                   <TextField
                     value={search}

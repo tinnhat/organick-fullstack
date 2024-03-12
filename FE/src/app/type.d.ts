@@ -19,6 +19,8 @@ type Product = {
   description: string | undefined
   additionInfo: string
   slug?: string
+  category?: string
+  categoryId?: string
   quantity: number
   priceSale: number
   price: number
