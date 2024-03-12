@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import './style.scss'
 import { ProductsMock } from '@/app/common/mockData'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 type Props = {
   setShowCart: (value: boolean) => void
@@ -13,9 +15,11 @@ type Props = {
 const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export default function ModalCart({ setShowCart }: Props) {
+  const [showRedirect, setShowRedirect] = useState(false)
   const router = useRouter()
 
   const handleCheckout = async () => {
+    setShowRedirect(true)
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: {
@@ -33,6 +37,15 @@ export default function ModalCart({ setShowCart }: Props) {
         if (data.session) {
           router.push(data.session.url)
         }
+      })
+      .catch(err => {
+        console.log(err)
+        toast.error('Something went wrong!', {
+          position: 'top-center',
+        })
+      })
+      .finally(() => {
+        setShowRedirect(false)
       })
   }
   return (
@@ -131,7 +144,7 @@ export default function ModalCart({ setShowCart }: Props) {
           <p className='total-price'>$13.00 USD</p>
         </div>
         <button className='btn-continue' onClick={handleCheckout}>
-          Continue to Checkout
+          {showRedirect ? 'Redirecting...' : 'Continue to Checkout'}
         </button>
       </div>
     </section>
