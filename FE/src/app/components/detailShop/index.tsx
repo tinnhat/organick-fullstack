@@ -8,6 +8,7 @@ import { faMagnifyingGlass, faArrowUp, faArrowDown } from '@fortawesome/free-sol
 import Select from 'react-select'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { products } from './mockDataProducts'
+import Rating from '@mui/material/Rating'
 
 type Props = {}
 
@@ -17,12 +18,13 @@ const options = [
   { value: 'vanilla', label: 'Vanilla' },
   { value: '123', label: 'Vanilzzz  9la' },
   { value: '123ww', label: 'Vanzzzilla' },
-  { value: 'www', label: 'aa' }
+  { value: 'www', label: 'aa' },
 ]
 
 export default function DetailShop({}: Props) {
   const [quantityDefaultShow, setQuantityDefaultShow] = useState(8)
   const [items, setItems] = useState(products)
+  const [star, setStar] = React.useState<number | null>(2)
   const fetchMoreData = () => {
     setQuantityDefaultShow(prev => prev + 8)
     setItems(prev => [...prev, ...products])
@@ -42,11 +44,18 @@ export default function DetailShop({}: Props) {
               {/* sort by rating - click to show 0 -> 5 start */}
               <div className='rating-box'>
                 <span>Rating:</span>
+                {/* <FontAwesomeIcon icon={faStar} />
                 <FontAwesomeIcon icon={faStar} />
                 <FontAwesomeIcon icon={faStar} />
                 <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
+                <FontAwesomeIcon icon={faStar} /> */}
+                <Rating
+                  name='simple-controlled'
+                  value={star}
+                  onChange={(event, newValue) => {
+                    setStar(newValue)
+                  }}
+                />
               </div>
               {/* sort by category - select option */}
               <Select
