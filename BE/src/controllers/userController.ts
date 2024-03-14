@@ -46,5 +46,5 @@ export const userController = {
   createNew,
   login,
   getUserInfo,
-  editUserInfo,
+  editUserInfo
 }

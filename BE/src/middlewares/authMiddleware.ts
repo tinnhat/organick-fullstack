@@ -10,7 +10,7 @@ export const Auth = (req: any, res: Response, next: NextFunction) => {
     try {
       jwt.verify(token, process.env.JWT_SECRET!, async (err: any, decoded: any) => {
         if (err) {
-          return res.status(403).json({ message: 'Failed to authenticate token' })
+          return res.status(StatusCodes.FORBIDDEN).json({ message: 'Failed to authenticate token' })
         }
         //Update req.user
         const user = await userModel.findOneById((decoded as JwtPayload)._id)
@@ -18,13 +18,13 @@ export const Auth = (req: any, res: Response, next: NextFunction) => {
           req.user = user
           next()
         } else {
-          res.status(401).json({ message: 'Wrong authentication token' })
+          res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Wrong authentication token' })
         }
       })
     } catch (error) {
       next(error)
     }
   } else {
-    res.status(401).json({ message: 'Authentication token missing' })
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication token missing' })
   }
 }
