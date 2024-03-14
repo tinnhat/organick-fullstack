@@ -76,7 +76,44 @@ const login = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getUserInfo = async (req: Request, res: Response, next: any) => {
+  try {
+    const userId = req.params.id
+    if (userId) {
+      next()
+    } else {
+      throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'User id is required')
+    }
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
+const editUserInfo = async (req: any, res: Response, next: any) => {
+  console.log("edit user", req.user)
+  const check = Joi.object({
+    fullname: Joi.string().optional().min(3).max(50).trim().strict(),
+    password: Joi.string().optional().min(6).max(50).trim().strict()
+  })
+  try {
+    if (!req.body.fullname && !req.body.password) {
+      throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'Choose at least one field to update(password or fullname)')
+    }
+    await check.validateAsync(req.body, { abortEarly: false })
+    //validate true -> next sang controller
+    next()
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 export const userValidation = {
   createNew,
-  login
+  login,
+  getUserInfo,
+  editUserInfo,
 }

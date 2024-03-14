@@ -9,8 +9,8 @@ const USER_SCHEMA = Joi.object({
   password: Joi.string().required().min(6).max(255).trim().strict(),
   isConfirmed: Joi.boolean().valid(true, false).required(),
   isAdmin: Joi.boolean().valid(true, false).required(),
-  createdAdd: Joi.date().timestamp('javascript').default(Date.now),
-  updatedAdd: Joi.date().timestamp('javascript').default(Date.now),
+  createdAt: Joi.date().timestamp('javascript').default(Date.now),
+  updatedAt: Joi.date().timestamp('javascript').default(Date.now),
   refreshToken: Joi.string(),
   _destroy: Joi.boolean().default(false)
 })
@@ -50,6 +50,18 @@ const findOneByEmail = async (email: string) => {
   }
 }
 
+const findAndUpdate = async (id: string, data: any) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { ...data } })
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 const saveRefreshToken = async (userId: string, refreshToken: string) => {
   try {
     const result = await getDB()
@@ -65,5 +77,6 @@ export const userModel = {
   createNew,
   findOneById,
   findOneByEmail,
+  findAndUpdate,
   saveRefreshToken
 }
