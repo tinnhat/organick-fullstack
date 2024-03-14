@@ -92,7 +92,6 @@ const getUserInfo = async (req: Request, res: Response, next: any) => {
 }
 
 const editUserInfo = async (req: any, res: Response, next: any) => {
-  console.log("edit user", req.user)
   const check = Joi.object({
     fullname: Joi.string().optional().min(3).max(50).trim().strict(),
     password: Joi.string().optional().min(6).max(50).trim().strict()
@@ -115,5 +114,5 @@ export const userValidation = {
   createNew,
   login,
   getUserInfo,
-  editUserInfo,
+  editUserInfo
 }
