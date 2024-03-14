@@ -32,3 +32,5 @@ export const generateRefreshToken = (user: User) => {
     }
   )
 }
+
+export const responseData = (data: any) => ({ success: true, data })

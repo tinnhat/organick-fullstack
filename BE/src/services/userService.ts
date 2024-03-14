@@ -2,11 +2,16 @@ import { userModel } from '~/models/userModel'
 import bcrypt, { hashSync } from 'bcryptjs'
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
-import { generateRefreshToken, generateToken } from '~/utils/algorithms'
+import { generateRefreshToken, generateToken, responseData } from '~/utils/algorithms'
+import { ObjectId } from 'mongodb'
 /* eslint-disable no-useless-catch */
 
 const createNew = async (reqBody: any) => {
   try {
+    const userExist = await userModel.findOneByEmail(reqBody.email)
+    if (userExist) {
+      throw new ApiError(StatusCodes.CONFLICT, 'Email already exists')
+    }
     const newUser = {
       isConfirmed: false,
       isAdmin: false,
@@ -17,7 +22,7 @@ const createNew = async (reqBody: any) => {
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
     //not show password when response
     delete getNewUser.password
-    return getNewUser
+    return responseData(getNewUser)
   } catch (error) {
     throw error
   }
@@ -34,12 +39,54 @@ const login = async (reqBody: any) => {
     }
     //save refresh token in DB
     await userModel.saveRefreshToken(getNewUser._id, generateRefreshToken(getNewUser))
+    //not show password when response
+    delete getNewUser.password
     //add access/refresh token
-    return {
-      user: getNewUser,
-      accessToken: generateToken(getNewUser),
-      refreshToken: generateRefreshToken(getNewUser)
+    return responseData({
+      user: {
+        ...getNewUser,
+        refreshToken: generateRefreshToken(getNewUser)
+      },
+      accessToken: generateToken(getNewUser)
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+const getUserInfo = async (userId: string) => {
+  try {
+    const getNewUser = await userModel.findOneById(userId)
+    if (!getNewUser) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
+    //not show password when response
+    delete getNewUser.password
+    return responseData(getNewUser)
+  } catch (error) {
+    throw error
+  }
+}
+
+const editUserInfo = async (id: string, data: any) => {
+  try {
+    const user = await userModel.findOneById(id)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    if (data.password) {
+      data.password = hashSync(data.password)
+    }
+    const changeData = {
+      ...data,
+      updatedAt: Date.now()
+    }
+    await userModel.findAndUpdate(id, changeData)
+    //get latest data
+    const userUpdated = await userModel.findOneById(id)
+    //not show password when response
+    delete userUpdated.password
+    return responseData(userUpdated)
   } catch (error) {
     throw error
   }
@@ -47,5 +94,7 @@ const login = async (reqBody: any) => {
 
 export const userServices = {
   createNew,
-  login
+  login,
+  getUserInfo,
+  editUserInfo
 }

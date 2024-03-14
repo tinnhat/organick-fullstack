@@ -22,7 +22,29 @@ const login = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getUserInfo = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.getUserInfo(req.params.id)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
+const editUserInfo = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.editUserInfo(req.params.id, req.body)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 export const userController = {
   createNew,
-  login
+  login,
+  getUserInfo,
+  editUserInfo,
 }
