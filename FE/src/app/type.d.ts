@@ -1,19 +1,3 @@
-import 'next-auth'
-
-declare module 'next-auth' {
-  interface Session {
-    user?: {
-      _id?: string;
-    } & DefaultSession['user'];
-  }
-  export interface User {
-    _id?: string | null | undefined
-    fullname?: string
-    email?: string
-    accessToken?: string
-  }
-}
-
 type Order = {
   _id: string
   address: string

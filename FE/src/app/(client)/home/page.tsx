@@ -10,7 +10,7 @@ import WhoWeAre from '@/app/components/whoWeAre'
 
 export default function Home() {
   return (
-    <main>
+    <div className='home-page'>
       <HeaderBanner />
       <OfferBanner />
       <About />
@@ -20,6 +20,6 @@ export default function Home() {
       <WhoWeAre />
       <Gallery />
       <Blog />
-    </main>
+    </div>
   )
 }
