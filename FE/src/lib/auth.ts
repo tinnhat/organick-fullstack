@@ -25,12 +25,7 @@ export const authOptions: AuthOptions = {
         }
         else {
           const { data } = result
-          return {
-            _id: data.user._id,
-            fullname: data.user.fullname,
-            email: data.user.email,
-            accessToken: result.accessToken,
-          }
+          return data
         }
       },
     }),
@@ -50,28 +45,5 @@ export const authOptions: AuthOptions = {
       }
       return true
     },
-    async jwt({ token, user }: any) {
-      if (user?.session) {
-        token.session = user.session
-      }
-
-      if (user?._id) {
-        token._id = user._id
-      }
-
-      if (user?.accessToken) {
-        token.accessToken = user.accessToken
-      }
-      token.exp = token.iat + 60 * 60 * 24
-      return token
-    },
-    session: async ({ session, token }: any) => {
-      session.expires = new Date(token.exp * 1000).toISOString();
-      session.user.session = token.session
-      session.user._id = token._id
-      session.user.accessToken = token.accessToken
-
-      return session
-    },
-  },
+  }
 }
