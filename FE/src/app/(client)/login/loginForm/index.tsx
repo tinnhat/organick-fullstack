@@ -1,5 +1,9 @@
 'use client'
 import React, { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+
 type Props = {
   setShowRegister: (value: boolean) => void
 }
@@ -7,19 +11,31 @@ type Props = {
 export default function LoginForm({ setShowRegister }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (email && password) {
-      const res = await fetch('http://localhost:8017/v1/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-      const result = await res.json()
-      console.log(result)
+    setIsLoading(true)
+    try {
+      if (email && password) {
+        const response = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        })
+        console.log(response)
+        if (response?.error) {
+          toast.error(response.error, {
+            position: 'bottom-right',
+          })
+          return
+        }
+        router.push('/')
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
   return (
@@ -55,8 +71,7 @@ export default function LoginForm({ setShowRegister }: Props) {
             required
           />
         </div>
-
-        <button className='btn-create-account'>Login</button>
+        <button disabled={isLoading} className={`btn-create-account ${isLoading ? 'loading' : ''}`}>Login</button>
       </form>
       <p className='box__text'>
         Don&apos;t have an account ?<span onClick={() => setShowRegister(true)}>Register Now</span>
