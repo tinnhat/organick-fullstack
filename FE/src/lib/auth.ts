@@ -25,7 +25,12 @@ export const authOptions: AuthOptions = {
         }
         else {
           const { data } = result
-          return data
+          return {
+            _id: data.user._id,
+            fullname: data.user.fullname,
+            email: data.user.email,
+            accessToken: result.accessToken,
+          }
         }
       },
     }),
@@ -45,5 +50,6 @@ export const authOptions: AuthOptions = {
       }
       return true
     },
-  }
+
+  },
 }
