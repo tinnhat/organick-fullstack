@@ -22,10 +22,11 @@ export default function ClientLayout({
 }>) {
   return (
     <>
-      <Header />
-      <AOSComponent>{children}</AOSComponent>
-      <NewLatter />
-      <Footer />
+        <Header />
+        <AOSComponent>{children}</AOSComponent>
+        <NewLatter />
+        <Footer />
+      
     </>
   )
 }
