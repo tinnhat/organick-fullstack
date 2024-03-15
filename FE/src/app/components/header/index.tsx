@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
+import { signOut, useSession } from 'next-auth/react'
 
 type Props = {}
 
 export default function Header({}: Props) {
+  const { data: session } = useSession()
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
   const handleShowCart = () => {
@@ -70,20 +72,37 @@ export default function Header({}: Props) {
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
               <p className='cart-box-number'>Cart(0)</p>
             </div>
-            <button className='btn-login' onClick={() => router.push('/login')}>
-              Login
-            </button>
-            {/* <div className='avatar-box'>
-              <Image priority src={'/assets/img/avatar.jpg'} alt='' className='avatar-img' width={50} height={50} style={{
-                borderRadius: '50%',
-                cursor: 'pointer'
-              }} />
-              <div className='avatar-menu'>
-                <div className='item' onClick={() => router.push('/my-account')}>My account</div>
-                <div className='item'onClick={() => router.push('/order-history')}>Order History</div>
-                <div className='item'>Sign out</div>
+            {session ? (
+              <div className='avatar-box'>
+                <Image
+                  priority
+                  src={'/assets/img/avatar.jpg'}
+                  alt=''
+                  className='avatar-img'
+                  width={50}
+                  height={50}
+                  style={{
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                  }}
+                />
+                <div className='avatar-menu'>
+                  <div className='item' onClick={() => router.push('/my-account')}>
+                    My account
+                  </div>
+                  <div className='item' onClick={() => router.push('/order-history')}>
+                    Order History
+                  </div>
+                  <div className='item' onClick={() => signOut()}>
+                    Sign out
+                  </div>
+                </div>
               </div>
-            </div> */}
+            ) : (
+              <button className='btn-login' onClick={() => router.push('/login')}>
+                Login
+              </button>
+            )}
             {showCart && <ModalCart setShowCart={setShowCart} />}
           </div>
         </div>
