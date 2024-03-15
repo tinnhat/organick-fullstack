@@ -1,18 +1,33 @@
-import React from 'react'
-import './style.scss'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+'use client'
+import { getSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import AuthPage from './AuthPage'
+import './style.scss'
+import LoadingCustom from '@/app/components/loading'
+
 type Props = {}
 
-export default async function Login({}: Props) {
-  const session = await getServerSession(authOptions)
-  if (session) redirect('/home')
+export default function Login({}: Props) {
+  const [isLoading, setIsLoading] = useState(true)
+  const route = useRouter()
+  useEffect(() => {
+    const getSessionAsync = async () => {
+      const session = await getSession()
+      return session
+    }
+    getSessionAsync()
+      .then(session => {
+        if (session) {
+          route.push('/home')
+        } else {
+          setIsLoading(false)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [route])
 
-  return (
-    <div className='auth-page'>
-      <AuthPage />
-    </div>
-  )
+  return <div className='auth-page'>{isLoading ? <LoadingCustom /> : <AuthPage />}</div>
 }
