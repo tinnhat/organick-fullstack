@@ -13,6 +13,7 @@ type Props = {}
 
 export default function Header({}: Props) {
   const { data: session } = useSession()
+  console.log(session)
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
   const handleShowCart = () => {
