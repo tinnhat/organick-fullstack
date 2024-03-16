@@ -5,6 +5,7 @@ import { Request, Response } from 'express'
 
 //validate data neu bi loi se quang loi , neu ok -> chuyen data sang controller
 const createNew = async (req: Request, res: Response, next: any) => {
+  console.log(req.body)
   const check = Joi.object({
     fullname: Joi.string().required().min(3).max(50).trim().strict().messages({
       'string.min': 'Full name must be at least 3 characters long',
@@ -48,7 +49,10 @@ const createNew = async (req: Request, res: Response, next: any) => {
   }
 }
 
-const login = async (req: Request, res: Response, next: any) => {
+const login = async (req: any, res: Response, next: any) => {
+  console.log(req.body.email)
+  console.log(req.body.password)
+
   const check = Joi.object({
     email: Joi.string().required().email().trim().strict().messages({
       'string.email': 'Email must be a valid email',
