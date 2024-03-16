@@ -6,7 +6,11 @@ import { generateRefreshToken, generateToken, responseData } from '~/utils/algor
 import { ObjectId } from 'mongodb'
 /* eslint-disable no-useless-catch */
 
-const createNew = async (reqBody: any) => {
+const createNew = async (reqBody: any, reqFile: any) => {
+  console.log('user services', reqBody, reqFile)
+  // co 2 case
+  // case reqFile == null => lay avatar default link
+  // case reqFile !== null => lay avatar upload len -> check file type, file size -> neu dung -> moi insert new user
   try {
     const userExist = await userModel.findOneByEmail(reqBody.email)
     if (userExist) {

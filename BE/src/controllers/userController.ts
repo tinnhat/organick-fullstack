@@ -4,7 +4,7 @@ import { userServices } from '~/services/userService'
 
 const createNew = async (req: Request, res: Response, next: any) => {
   try {
-    const createdUser = await userServices.createNew(req.body)
+    const createdUser = await userServices.createNew(req.body, req.file)
     res.status(StatusCodes.CREATED).json(createdUser)
   } catch (error) {
     next(error)
