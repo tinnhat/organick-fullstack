@@ -4,14 +4,14 @@
     margin: 0 auto;
     margin-top: 60px;
     width: 70%;
-    height: 550px;
+    height: 750px;
     background-color: #fedcc5;
     display: flex;
     align-items: center;
     border-radius: 10px;
     position: relative;
     overflow: hidden;
-    .bkg-login-img{
+    .bkg-login-img {
       width: 50%;
     }
     .box {
@@ -26,12 +26,52 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
+      .preview-avatar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        input[type='file'] {
+          display: none;
+        }
+        .custom-file-upload {
+          width: 150px;
+          border: 1px solid $text-bold-color;
+          display: inline-block;
+          padding: 6px 12px;
+          cursor: pointer;
+          border-radius: 4px;
+          .icon {
+            padding-right: 10px;
+          }
+          &:hover {
+            background-color: $text-bold-color;
+            color: $white-color;
+            transition: all 0.5s ease;
+          }
+        }
+        .clear-img {
+          width: 150px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          padding: 10px;
+          background-color: $text-bold-color;
+          border-radius: 4px;
+          &:hover {
+            background-color: $white-color;
+            color: $text-bold-color;
+            transition: all 0.5s ease;
+          }
+        }
+      }
       .box__title {
         font-size: 24px;
         font-weight: 500;
         color: $white-mix-gray-color;
       }
-      .title{
+      .title {
         color: $text-bold-color;
       }
       .input-box {
@@ -84,7 +124,7 @@
           cursor: pointer;
           color: $text-bold-color;
           transition: all 0.2s linear;
-          &:hover{
+          &:hover {
             color: $orange-mix-yellow-color;
           }
         }
@@ -97,7 +137,7 @@
   .auth-page {
     .auth-container {
       width: 80%;
-      .bkg-login-img{
+      .bkg-login-img {
         width: 40%;
       }
       .box {
@@ -111,7 +151,7 @@
   .auth-page {
     .auth-container {
       width: 90%;
-      .bkg-login-img{
+      .bkg-login-img {
         width: 0%;
       }
       .box {

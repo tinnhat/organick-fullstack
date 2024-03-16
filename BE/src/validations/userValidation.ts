@@ -5,7 +5,6 @@ import { Request, Response } from 'express'
 
 //validate data neu bi loi se quang loi , neu ok -> chuyen data sang controller
 const createNew = async (req: Request, res: Response, next: any) => {
-  console.log(req.body)
   const check = Joi.object({
     fullname: Joi.string().required().min(3).max(50).trim().strict().messages({
       'string.min': 'Full name must be at least 3 characters long',
@@ -36,7 +35,8 @@ const createNew = async (req: Request, res: Response, next: any) => {
     isAdmin: Joi.boolean().valid(true, false).messages({
       'any.required': 'isAdmin is required',
       'any.only': 'isAdmin must be true'
-    })
+    }),
+    file: Joi.any()
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })
