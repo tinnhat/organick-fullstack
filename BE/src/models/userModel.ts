@@ -73,10 +73,21 @@ const saveRefreshToken = async (userId: string, refreshToken: string) => {
   }
 }
 
+const getUsers = async () => {
+  try {
+    const result = await getDB().collection(USER_COLLECTION_NAME).find({}).toArray()
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 export const userModel = {
   createNew,
   findOneById,
   findOneByEmail,
   findAndUpdate,
-  saveRefreshToken
+  saveRefreshToken,
+  getUsers
 }

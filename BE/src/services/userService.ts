@@ -92,9 +92,19 @@ const editUserInfo = async (id: string, data: any) => {
   }
 }
 
+export const getUsers = async () => {
+  try {
+    const allUsers = await userModel.getUsers()
+    return responseData(allUsers)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userServices = {
   createNew,
   login,
   getUserInfo,
-  editUserInfo
+  editUserInfo,
+  getUsers
 }
