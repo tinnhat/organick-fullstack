@@ -11,12 +11,19 @@ Router.get('/', (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ message: 'user get' })
 })
 
+//register or create user
 Router.post('/', userValidation.createNew, userController.createNew)
 
+//login
 Router.post('/login', userValidation.login, userController.login)
 
-Router.get('/:id', userValidation.getUserInfo, userController.getUserInfo)
+//get user by id
+Router.get('/:id', Auth, userValidation.getUserInParams, userController.getUserInfo)
 
-Router.put('/:id', Auth, AdminAuth, userValidation.editUserInfo, userController.editUserInfo)
+//edit user by id
+Router.put('/:id', Auth, userValidation.editUserInfo, userController.editUserInfo)
+
+//delete user by id
+Router.delete('/:id', Auth, AdminAuth, userValidation.getUserInParams, userController.deleteUserById)
 
 export const userRoute = Router

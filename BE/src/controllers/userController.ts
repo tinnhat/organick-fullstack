@@ -34,7 +34,17 @@ const getUserInfo = async (req: Request, res: Response, next: any) => {
 
 const editUserInfo = async (req: Request, res: Response, next: any) => {
   try {
-    const user = await userServices.editUserInfo(req.params.id, req.body)
+    const user = await userServices.editUserInfo(req.params.id, req.body, req.file)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
+const deleteUserById = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.deleteUserById(req.params.id)
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
@@ -46,5 +56,6 @@ export const userController = {
   createNew,
   login,
   getUserInfo,
-  editUserInfo
+  editUserInfo,
+  deleteUserById
 }
