@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { userRoute } from './userRoute'
+
 const Router = express.Router()
 
 Router.get('/', (req: Request, res: Response) => {

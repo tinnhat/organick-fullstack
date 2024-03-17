@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '~/config/mongodb'
+import { DEFAULT_AVATAR } from '~/utils/constants'
 
 const USER_COLLECTION_NAME = 'users'
 const USER_SCHEMA = Joi.object({
@@ -11,6 +12,7 @@ const USER_SCHEMA = Joi.object({
   isAdmin: Joi.boolean().valid(true, false).required(),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(Date.now),
+  avatar: Joi.string().uri().default(DEFAULT_AVATAR),
   refreshToken: Joi.string(),
   _destroy: Joi.boolean().default(false)
 })
@@ -73,10 +75,23 @@ const saveRefreshToken = async (userId: string, refreshToken: string) => {
   }
 }
 
+const findAndRemove = async (id: string) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne({ _id: new ObjectId(id) }, { $set: { _destroy: true } })
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 export const userModel = {
   createNew,
   findOneById,
   findOneByEmail,
   findAndUpdate,
-  saveRefreshToken
+  saveRefreshToken,
+  findAndRemove
 }
