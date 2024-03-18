@@ -15,6 +15,12 @@ export const Auth = (req: any, res: Response, next: NextFunction) => {
         //Update req.user
         const user = await userModel.findOneById((decoded as JwtPayload)._id)
         if (user) {
+          if (!user.isConfirmed) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Please confirm your email' })
+          }
+          if (user._destroy) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User is deleted, Please contact admin' })
+          }
           req.user = user
           next()
         } else {

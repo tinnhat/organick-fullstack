@@ -1,0 +1,31 @@
+@import '../../variables';
+
+.verify-page {
+  margin: 120px 0px;
+  .verify-container {
+    .verify-box {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      .verify-box__title {
+        font-size: 3em;
+        color: $green-leaf-color;
+        font-weight: bold;
+      }
+      .verify-box__desc {
+        font-size: 1em;
+        color: $text-bold-color;
+        font-weight: 400;
+      }
+      .btn-go-login {
+        background-color: $green-leaf-color;
+        color: $white-color;
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        padding: 10px 0;
+        width: 200px;
+      }
+    }
+  }
+}
