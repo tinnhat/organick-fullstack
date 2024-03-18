@@ -12,6 +12,7 @@ const USER_SCHEMA = Joi.object({
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(Date.now),
   refreshToken: Joi.string(),
+  emailToken: Joi.string().default(''),
   _destroy: Joi.boolean().default(false)
 })
 
@@ -83,11 +84,23 @@ const getUsers = async () => {
   }
 }
 
+const verifyEmail = async (token: string) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne({ emailToken:token }, { $set: { isConfirmed: true } })
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 export const userModel = {
   createNew,
   findOneById,
   findOneByEmail,
   findAndUpdate,
   saveRefreshToken,
-  getUsers
+  getUsers,
+  verifyEmail
 }

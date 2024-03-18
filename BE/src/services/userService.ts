@@ -3,7 +3,7 @@ import bcrypt, { hashSync } from 'bcryptjs'
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { generateRefreshToken, generateToken, responseData } from '~/utils/algorithms'
-import { ObjectId } from 'mongodb'
+import CryptoJS from 'crypto-js'
 /* eslint-disable no-useless-catch */
 
 const createNew = async (reqBody: any) => {
@@ -16,7 +16,8 @@ const createNew = async (reqBody: any) => {
       isConfirmed: false,
       isAdmin: false,
       ...reqBody,
-      password: bcrypt.hashSync(reqBody.password)
+      password: bcrypt.hashSync(reqBody.password),
+      emailToken: CryptoJS.lib.WordArray.random(64).toString(CryptoJS.enc.Hex),
     }
     const createdUser = await userModel.createNew(newUser)
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
@@ -92,10 +93,22 @@ const editUserInfo = async (id: string, data: any) => {
   }
 }
 
-export const getUsers = async () => {
+const getUsers = async () => {
   try {
     const allUsers = await userModel.getUsers()
     return responseData(allUsers)
+  } catch (error) {
+    throw error
+  }
+}
+
+const verifyEmail = async (token: string) => {
+  try {
+    const user = await userModel.verifyEmail(token)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    return responseData(user)
   } catch (error) {
     throw error
   }
@@ -106,5 +119,6 @@ export const userServices = {
   login,
   getUserInfo,
   editUserInfo,
-  getUsers
+  getUsers,
+  verifyEmail
 }

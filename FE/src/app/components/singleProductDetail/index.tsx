@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import './style.scss'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,12 +7,18 @@ import { faStar } from '@fortawesome/free-regular-svg-icons'
 type Props = {}
 
 export default function SingleProductDetail({}: Props) {
+  const [isAdding,setIsAdding] = useState(false)
+  const handleAddtoCart = () => {
+    setIsAdding(true)
+    setTimeout(() => {
+      setIsAdding(false)
+    },2000)
+  }
   return (
     <section className='single-product'>
       <div className='container'>
         <div className='product-container'>
           <div className='img-box-product'>
-            <p className='category'>Millets</p>
             <Image src={'/assets/img/Photo.jpg'} alt='' className='img-box-product__img' layout='fill' />
           </div>
           <div className='product-info'>
@@ -30,10 +37,11 @@ export default function SingleProductDetail({}: Props) {
               Simply dummy text of the printing and typesetting industry. Lorem had ceased to been the industry's
               standard dummy text ever since the 1500s, when an unknown printer took a galley.
             </p>
+            <p className='product-category'>Vegetable</p>
             <div className='box-quantity'>
               <p>Quantity: </p>
               <input type='number' defaultValue={1} />
-              <button className='btn btn-add-cart'>Add to Cart</button>
+              <button disabled={isAdding} className='btn btn-add-cart' onClick={() => handleAddtoCart()}>Add to Cart</button>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import Select from 'react-select'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { products } from './mockDataProducts'
 import Rating from '@mui/material/Rating'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
@@ -22,6 +23,7 @@ const options = [
 ]
 
 export default function DetailShop({}: Props) {
+  const router = useRouter()
   const [quantityDefaultShow, setQuantityDefaultShow] = useState(8)
   const [items, setItems] = useState(products)
   const [star, setStar] = React.useState<number | null>(2)
@@ -82,7 +84,7 @@ export default function DetailShop({}: Props) {
             >
               <div className='row-products'>
                 {items.map((product, index) => (
-                  <div className='product-box' key={index}>
+                  <div className='product-box' key={index} onClick={() => router.push(`/shop/${product._id}`)}>
                     <div className='product-tag'>{product.tag}</div>
                     <Image src={product.img} alt='' className='product-img' layout='fill' />
                     <p className='product-name'>{product.name}</p>
