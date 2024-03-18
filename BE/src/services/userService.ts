@@ -1,12 +1,17 @@
-import { userModel } from '~/models/userModel'
 import bcrypt, { hashSync } from 'bcryptjs'
-import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
-import { generateRefreshToken, generateToken, responseData } from '~/utils/algorithms'
 import CryptoJS from 'crypto-js'
 /* eslint-disable no-useless-catch */
+import { userModel } from '~/models/userModel'
+import ApiError from '~/utils/ApiError'
+import { generateRefreshToken, generateToken, responseData, uploadImage } from '~/utils/algorithms'
+import { DEFAULT_AVATAR } from '~/utils/constants'
 
-const createNew = async (reqBody: any) => {
+/* eslint-disable no-useless-catch */
+const createNew = async (reqBody: any, reqFile: any) => {
+  // co 2 case
+  // case reqFile == null => lay avatar default link
+  // case reqFile !== null => lay avatar upload len -> check file type, file size -> neu dung -> moi insert new user
   try {
     const userExist = await userModel.findOneByEmail(reqBody.email)
     if (userExist) {
@@ -18,6 +23,7 @@ const createNew = async (reqBody: any) => {
       ...reqBody,
       password: bcrypt.hashSync(reqBody.password),
       emailToken: CryptoJS.lib.WordArray.random(64).toString(CryptoJS.enc.Hex),
+      avatar: reqFile ? await uploadImage(reqFile) : DEFAULT_AVATAR
     }
     const createdUser = await userModel.createNew(newUser)
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
@@ -69,7 +75,7 @@ const getUserInfo = async (userId: string) => {
   }
 }
 
-const editUserInfo = async (id: string, data: any) => {
+const editUserInfo = async (id: string, data: any, reqFile: any) => {
   try {
     const user = await userModel.findOneById(id)
     if (!user) {
@@ -80,7 +86,8 @@ const editUserInfo = async (id: string, data: any) => {
     }
     const changeData = {
       ...data,
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      avatar: reqFile ? await uploadImage(reqFile) : user.avatar
     }
     await userModel.findAndUpdate(id, changeData)
     //get latest data
@@ -109,6 +116,18 @@ const verifyEmail = async (token: string) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
     return responseData(user)
+  }
+  catch(err) {
+    throw err
+  }
+}
+const deleteUserById = async (id: string) => {
+  try {
+    const user = await userModel.findOneById(id)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    await userModel.findAndRemove(id)
   } catch (error) {
     throw error
   }
@@ -120,5 +139,6 @@ export const userServices = {
   getUserInfo,
   editUserInfo,
   getUsers,
-  verifyEmail
+  verifyEmail,
+  deleteUserById
 }
