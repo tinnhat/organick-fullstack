@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '~/utils/ApiError'
 import { Request, Response } from 'express'
+import { checkPermission } from '~/utils/algorithms'
 
 //validate data neu bi loi se quang loi , neu ok -> chuyen data sang controller
 const createNew = async (req: Request, res: Response, next: any) => {
@@ -48,7 +49,10 @@ const createNew = async (req: Request, res: Response, next: any) => {
   }
 }
 
-const login = async (req: Request, res: Response, next: any) => {
+const login = async (req: any, res: Response, next: any) => {
+  console.log(req.body.email)
+  console.log(req.body.password)
+
   const check = Joi.object({
     email: Joi.string().required().email().trim().strict().messages({
       'string.email': 'Email must be a valid email',
@@ -76,7 +80,7 @@ const login = async (req: Request, res: Response, next: any) => {
   }
 }
 
-const getUserInfo = async (req: Request, res: Response, next: any) => {
+const getUserInParams = async (req: Request, res: Response, next: any) => {
   try {
     const userId = req.params.id
     if (userId) {
@@ -97,12 +101,20 @@ const editUserInfo = async (req: any, res: Response, next: any) => {
     password: Joi.string().optional().min(6).max(50).trim().strict()
   })
   try {
-    if (!req.body.fullname && !req.body.password) {
-      throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'Choose at least one field to update(password or fullname)')
+    if (checkPermission(req.user, req.params.id)) {
+      if (!req.body.fullname && !req.body.password) {
+        throw new ApiError(
+          StatusCodes.UNPROCESSABLE_ENTITY,
+          'Choose at least one field to update(password or fullname)'
+        )
+      }
+      await check.validateAsync(req.body, { abortEarly: false })
+      //validate true -> next sang controller
+
+      next()
+    } else {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Permission denied')
     }
-    await check.validateAsync(req.body, { abortEarly: false })
-    //validate true -> next sang controller
-    next()
   } catch (error) {
     const errorMessage = new Error(String(error)).message
     const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
@@ -113,6 +125,6 @@ const editUserInfo = async (req: any, res: Response, next: any) => {
 export const userValidation = {
   createNew,
   login,
-  getUserInfo,
+  getUserInParams,
   editUserInfo
 }
