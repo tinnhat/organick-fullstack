@@ -41,6 +41,14 @@ ul {
           padding: 0.5em;
           font-weight: 600;
           font-size: 1.2em;
+          &.active {
+            color: $green-leaf-color;
+          }
+          &:hover {
+            color: $green-leaf-color;
+            transition: all 0.2s linear;
+            text-decoration: none;
+          }
         }
       }
     }

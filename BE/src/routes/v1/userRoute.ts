@@ -13,7 +13,7 @@ Router.get('/', Auth, AdminAuth, userController.getUsers)
 Router.post('/', userValidation.createNew, userController.createNew)
 
 //verify
-Router.post('/verify', userController.verifyEmail)
+Router.post('/verify-email', userValidation.verifyEmail, userController.verifyEmail)
 
 //login
 Router.post('/login', userValidation.login, userController.login)

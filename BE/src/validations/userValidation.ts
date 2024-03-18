@@ -50,9 +50,6 @@ const createNew = async (req: Request, res: Response, next: any) => {
 }
 
 const login = async (req: any, res: Response, next: any) => {
-  console.log(req.body.email)
-  console.log(req.body.password)
-
   const check = Joi.object({
     email: Joi.string().required().email().trim().strict().messages({
       'string.email': 'Email must be a valid email',
@@ -122,9 +119,28 @@ const editUserInfo = async (req: any, res: Response, next: any) => {
   }
 }
 
+const verifyEmail = async (req: any, res: Response, next: any) => {
+  const check = Joi.object({
+    emailToken: Joi.string().required().messages({
+      'string.base': 'Email token must be a string',
+      'any.required': 'Email token is required'
+    })
+  })
+  try {
+    await check.validateAsync(req.body, { abortEarly: false })
+    //validate true -> next sang controller
+    next()
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 export const userValidation = {
   createNew,
   login,
   getUserInParams,
-  editUserInfo
+  editUserInfo,
+  verifyEmail
 }
