@@ -6,7 +6,8 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Vegetable Vegetable Vegetable',
-    rating: 5
+    rating: 5,
+    quantity: 0
   },
   {
     _id: 2,
@@ -15,7 +16,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 10
+
   },
   {
     _id: 3,
@@ -24,7 +27,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 0
+
   },
   {
     _id: 4,
@@ -33,7 +38,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 20
+
   },
   {
     _id: 5,
@@ -42,7 +49,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 10
+
   },
   {
     _id: 6,
@@ -51,7 +60,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 0
+
   },
   {
     _id: 47,
@@ -60,7 +71,9 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 0
+
   },
   {
     _id: 58,
@@ -69,6 +82,8 @@ export const products = [
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
-    rating: 5
+    rating: 5,
+    quantity: 20
+
   }
 ]

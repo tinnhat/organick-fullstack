@@ -84,7 +84,11 @@ export default function DetailShop({}: Props) {
             >
               <div className='row-products'>
                 {items.map((product, index) => (
-                  <div className='product-box' key={index} onClick={() => router.push(`/shop/${product._id}`)}>
+                  <div
+                    className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
+                    key={index}
+                    onClick={() => router.push(`/shop/${product._id}`)}
+                  >
                     <div className='product-tag'>{product.tag}</div>
                     <Image src={product.img} alt='' className='product-img' layout='fill' />
                     <p className='product-name'>{product.name}</p>
@@ -100,6 +104,7 @@ export default function DetailShop({}: Props) {
                         ))}
                       </div>
                     </div>
+                    {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
                   </div>
                 ))}
               </div>
