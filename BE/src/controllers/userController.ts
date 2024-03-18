@@ -52,10 +52,21 @@ const getUsers = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const verifyEmail = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.verifyEmail(req.params.token)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 export const userController = {
   createNew,
   login,
   getUserInfo,
   editUserInfo,
-  getUsers
+  getUsers,
+  verifyEmail
 }

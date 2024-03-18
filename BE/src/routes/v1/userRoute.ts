@@ -11,6 +11,9 @@ Router.get('/', Auth, AdminAuth, userController.getUsers)
 
 Router.post('/', userValidation.createNew, userController.createNew)
 
+Router.post('/verify', userController.verifyEmail)
+
+
 Router.post('/login', userValidation.login, userController.login)
 
 Router.get('/:id', userValidation.getUserInfo, userController.getUserInfo)
