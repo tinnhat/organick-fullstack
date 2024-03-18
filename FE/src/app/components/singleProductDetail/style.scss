@@ -24,6 +24,16 @@
         position: relative !important;
         width: 100% !important;
       }
+      .product-sold-out{
+        position: absolute;
+        padding: 0.8em 1.4em;
+        background-color: red;
+        color: #fff;
+        top: 0;
+        right: 0;
+        border-radius: 4px;
+        transform: rotate(35deg);
+      }
     }
     .product-info {
       width: 50%;
@@ -50,6 +60,14 @@
           color: #b8b8b8;
           font-size: 0.8em;
           margin-right: 0.5em;
+        }
+      }
+      .product-quantity {
+        font-size: 1.1em;
+        font-weight:  bold;
+        color: $black-color;
+        span {
+          color: $green-leaf-color;
         }
       }
       .product-info-text {
@@ -91,6 +109,14 @@
           padding: 1em 3em;
           border-radius: 0.8em;
           cursor: pointer;
+          &.sold-out{
+            background-color: #b8b8b8;
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            
+          }
         }
       }
     }
