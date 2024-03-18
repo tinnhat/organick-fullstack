@@ -3,22 +3,23 @@ import { faBars, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
 import { signOut, useSession } from 'next-auth/react'
 
 type Props = {}
-
+const paths = ['/home', '/about', '/shop', '/contact', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
+  const pathName = usePathname()
   const { data: session } = useSession()
-  console.log(session)
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
   const handleShowCart = () => {
     setShowCart(true)
   }
+
   return (
     <header className='header'>
       <div className='container'>
@@ -37,36 +38,20 @@ export default function Header({}: Props) {
             <FontAwesomeIcon icon={faBars} />
           </div>
           <ul className='header-menu-list'>
-            <li className='header-menu-item'>
-              <Link href='/' className='header-menu-item-link'>
-                Home
-              </Link>
-            </li>
-            <li className='header-menu-item'>
-              <Link href='/about' className='header-menu-item-link'>
-                About
-              </Link>
-            </li>
-            <li className='header-menu-item'>
-              <Link href='/portfolio' className='header-menu-item-link'>
-                Portfolio
-              </Link>
-            </li>
-            <li className='header-menu-item'>
-              <Link href='/shop' className='header-menu-item-link'>
-                Shop
-              </Link>
-            </li>
-            <li className='header-menu-item'>
-              <Link href='/services' className='header-menu-item-link'>
-                Services
-              </Link>
-            </li>
-            <li className='header-menu-item'>
-              <Link href='/quality' className='header-menu-item-link'>
-                Quality
-              </Link>
-            </li>
+            {paths.map((path, index) => {
+              return (
+                <li key={index} className='header-menu-item'>
+                  <Link
+                    href={path}
+                    className={`header-menu-item-link ${
+                      pathName === path.toLowerCase() ? 'active' : ''
+                    }`}
+                  >
+                    {path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
           <div className='header-box-cart'>
             <div className='cart-box' onClick={handleShowCart}>

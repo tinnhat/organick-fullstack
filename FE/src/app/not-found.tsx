@@ -1,7 +1,11 @@
 import Link from 'next/link'
-import './_notFound.scss'
 import Footer from './components/footer'
 import Header from './components/header'
+// import '@fortawesome/fontawesome-svg-core/styles.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import './_notFound.scss'
+import './(client)/_index.scss'
+
 type Props = {}
 
 export default function NotFound({}: Props) {

@@ -1,9 +1,12 @@
 import bcrypt, { hashSync } from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
+import CryptoJS from 'crypto-js'
+/* eslint-disable no-useless-catch */
 import { userModel } from '~/models/userModel'
 import ApiError from '~/utils/ApiError'
 import { generateRefreshToken, generateToken, responseData, uploadImage } from '~/utils/algorithms'
 import { DEFAULT_AVATAR } from '~/utils/constants'
+import sendVerificationMail from '~/utils/mail/sendVertificationMail'
 
 /* eslint-disable no-useless-catch */
 const createNew = async (reqBody: any, reqFile: any) => {
@@ -20,10 +23,14 @@ const createNew = async (reqBody: any, reqFile: any) => {
       isAdmin: false,
       ...reqBody,
       password: bcrypt.hashSync(reqBody.password),
+      emailToken: CryptoJS.lib.WordArray.random(64).toString(CryptoJS.enc.Hex),
       avatar: reqFile ? await uploadImage(reqFile) : DEFAULT_AVATAR
     }
+    //insert new user
     const createdUser = await userModel.createNew(newUser)
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
+    // sned email
+    sendVerificationMail(getNewUser)
     //not show password when response
     delete getNewUser.password
     return responseData(getNewUser)
@@ -37,6 +44,12 @@ const login = async (reqBody: any) => {
     const getNewUser = await userModel.findOneByEmail(reqBody.email)
     if (!getNewUser) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Email not found')
+    }
+    if (!getNewUser.isConfirmed) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Please confirm your email')
+    }
+    if (getNewUser._destroy) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'User is deleted, Please contact admin')
     }
     if (!bcrypt.compareSync(reqBody.password, getNewUser.password)) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'Password is incorrect')
@@ -97,6 +110,26 @@ const editUserInfo = async (id: string, data: any, reqFile: any) => {
   }
 }
 
+const getUsers = async () => {
+  try {
+    const allUsers = await userModel.getUsers()
+    return responseData(allUsers)
+  } catch (error) {
+    throw error
+  }
+}
+
+const verifyEmail = async (req: any) => {
+  try {
+    const user = await userModel.verifyEmail(req)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    return responseData(user)
+  } catch (err) {
+    throw err
+  }
+}
 const deleteUserById = async (id: string) => {
   try {
     const user = await userModel.findOneById(id)
@@ -113,6 +146,8 @@ export const userServices = {
   createNew,
   login,
   getUserInfo,
-  deleteUserById,
-  editUserInfo
+  editUserInfo,
+  getUsers,
+  verifyEmail,
+  deleteUserById
 }

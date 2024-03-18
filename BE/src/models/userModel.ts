@@ -14,6 +14,7 @@ const USER_SCHEMA = Joi.object({
   updatedAt: Joi.date().timestamp('javascript').default(Date.now),
   avatar: Joi.string().uri().default(DEFAULT_AVATAR),
   refreshToken: Joi.string(),
+  emailToken: Joi.string(),
   _destroy: Joi.boolean().default(false)
 })
 
@@ -75,6 +76,41 @@ const saveRefreshToken = async (userId: string, refreshToken: string) => {
   }
 }
 
+const getUsers = async () => {
+  try {
+    const result = await getDB().collection(USER_COLLECTION_NAME).find({}).toArray()
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const verifyEmail = async (data: any) => {
+  try {
+    const user = await await getDB().collection(USER_COLLECTION_NAME).findOne({ emailToken: data.emailToken })
+    if (user) {
+      if (user.isConfirmed) {
+        throw new Error('Email already confirmed')
+      }
+      await getDB()
+        .collection(USER_COLLECTION_NAME)
+        .updateOne({ emailToken: data.emailToken }, { $set: { isConfirmed: true, emailToken: null } })
+      //not show password when response
+      delete user.password
+      return {
+        ...user,
+        isConfirmed: true,
+        emailToken: null
+      }
+    } else {
+      throw new Error('Email verification failed, invalid token')
+    }
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 const findAndRemove = async (id: string) => {
   try {
     const result = await getDB()
@@ -93,5 +129,7 @@ export const userModel = {
   findOneByEmail,
   findAndUpdate,
   saveRefreshToken,
+  getUsers,
+  verifyEmail,
   findAndRemove
 }

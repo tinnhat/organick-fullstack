@@ -7,12 +7,13 @@ import { userValidation } from '~/validations/userValidation'
 
 const Router = express.Router()
 
-Router.get('/', (req: Request, res: Response) => {
-  res.status(StatusCodes.OK).json({ message: 'user get' })
-})
+Router.get('/', Auth, AdminAuth, userController.getUsers)
 
 //register or create user
 Router.post('/', userValidation.createNew, userController.createNew)
+
+//verify
+Router.post('/verify-email', userValidation.verifyEmail, userController.verifyEmail)
 
 //login
 Router.post('/login', userValidation.login, userController.login)
