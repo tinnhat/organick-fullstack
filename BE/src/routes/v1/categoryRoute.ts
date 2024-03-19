@@ -11,7 +11,6 @@ Router.get('/', Auth, AdminAuth, categoryController.getCategories)
 
 Router.post('/', Auth, AdminAuth, categoryValidation.createNew, categoryController.createNew)
 
-
 Router.get('/:id', Auth, AdminAuth, categoryValidation.getCategoryInParams, categoryController.getCategoryInfo)
 
 Router.put('/:id', Auth, AdminAuth, categoryValidation.editCategoryInfo, categoryController.editCategoryInfo)
