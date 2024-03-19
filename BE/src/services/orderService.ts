@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
+import { cloneDeep } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { orderModel } from '~/models/orderModel'
 import { productModel } from '~/models/productModel'
@@ -78,14 +79,38 @@ const editOrderInfo = async (id: string, data: any) => {
     if (!order) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
     }
-    const oldListProducts = order.listProducts
-    // check quanity in stock co du hay khong
-   
-    //remove list product has quantity: 0
-    data.listProducts = data.listProducts.filter((item: any) => item.quantity > 0)
-
+    const oldListProducts = cloneDeep(order.listProducts)
+    const concatListProduct = [...oldListProducts, ...data.listProducts]
+    //tra lai quantity product cho kho truoc
+    for (let i = 0; i < oldListProducts.length; i++) {
+      const product = await productModel.findOneById(oldListProducts[i].id)
+      const newQuantity = product.quantity + oldListProducts[i].quantity
+      await productModel.findAndUpdate(oldListProducts[i].id, { quantity: newQuantity })
+    }
+    // update lai product sai khi co mang da gop tu list product moi update
+    const arrListProduct = concatListProduct.reduce((acc: any, item: any) => {
+      if (acc.length === 0) {
+        acc.push(item)
+        return acc
+      }
+      const exitsItem = acc.find((i: any) => i.id === item.id)
+      if (exitsItem) {
+        exitsItem.quantity = item.quantity
+      } else {
+        acc.push(item)
+      }
+      return acc
+    }, [])
+    //bat dau cap nhat lai
+    for (let i = 0; i < arrListProduct.length; i++) {
+      const product = await productModel.findOneById(arrListProduct[i].id)
+      const newQuantity = product.quantity - arrListProduct[i].quantity
+      await productModel.findAndUpdate(arrListProduct[i].id, { quantity: newQuantity })
+    }
+    // //remove list product has quantity: 0
     const changeData = {
       ...data,
+      listProducts: arrListProduct.filter((item: any) => item.quantity > 0),
       updatedAt: Date.now()
     }
     await orderModel.findAndUpdate(id, changeData)

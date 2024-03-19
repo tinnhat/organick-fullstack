@@ -22,7 +22,7 @@ const createNew = async (req: Request, res: Response, next: NextFunction) => {
       'any.required': 'Phone is required',
       'string.empty': 'Phone cannot be an empty field'
     }),
-    note: Joi.string().max(255).trim().strict(),
+    note: Joi.string().optional().max(255).trim().strict(),
     userId: Joi.string().required().messages({
       'string.base': 'User id must be a string',
       'any.required': 'User id is required',
@@ -72,7 +72,7 @@ const editOrderInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
     address: Joi.string().optional().min(1).max(255).trim().strict(),
     phone: Joi.string().optional().min(1).max(255).trim().strict(),
-    note: Joi.string().max(255).trim().strict(),
+    note: Joi.string().optional().max(255).trim().strict(),
     listProducts: Joi.array().optional(),
     totalPrice: Joi.number().optional().min(1).max(9999),
     status: Joi.string()

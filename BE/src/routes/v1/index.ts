@@ -21,5 +21,4 @@ Router.use('/products', productRoute)
 
 Router.use('/orders', orderRoute)
 
-
 export const APIs_V1 = Router
