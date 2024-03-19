@@ -1,4 +1,4 @@
-import createMailTransporter from "./createMailTransporter"
+import createMailTransporter from './createMailTransporter'
 
 const sendVerificationMail = (user: any) => {
   const transporter = createMailTransporter()
@@ -14,7 +14,7 @@ const sendVerificationMail = (user: any) => {
   }
 
   transporter.sendMail(mailOptions, (error: any, info: any) => {
-    if(error) {
+    if (error) {
       console.log(error)
     } else {
       console.log('Email sent: ' + info.response)

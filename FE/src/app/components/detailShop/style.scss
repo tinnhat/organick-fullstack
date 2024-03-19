@@ -99,6 +99,10 @@
           -webkit-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
           -moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
           transition: all 0.2s linear;
+          position: relative;
+          &.product-sold-out{
+            opacity: 0.6;
+          }
           &:hover {
             transform: scale(1.05);
             box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
@@ -167,6 +171,18 @@
                 font-size: 0.8em;
               }
             }
+          }
+          .sold-out {
+            position: absolute;
+            background-color: red;
+            color: #fff;
+            padding: 4px 10px;
+            width: max-content;
+            text-align: center;
+            top: 20px;
+            right: 0;
+            border-radius: 4px;
+            transform: rotate(35deg);
           }
         }
       }

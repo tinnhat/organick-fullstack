@@ -1,6 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '~/config/mongodb'
+import { validateBeforeCreate } from '~/utils/algorithms'
 import { DEFAULT_AVATAR } from '~/utils/constants'
 
 const USER_COLLECTION_NAME = 'users'
@@ -18,13 +19,9 @@ const USER_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
-const validateBeforeCreate = async (data: any) => {
-  return await USER_SCHEMA.validateAsync(data, { abortEarly: false })
-}
-
 const createNew = async (data: any) => {
   try {
-    const validData = await validateBeforeCreate(data)
+    const validData = await validateBeforeCreate(data, USER_SCHEMA)
     const createdUser = await getDB().collection(USER_COLLECTION_NAME).insertOne(validData)
     return createdUser
   } catch (error) {

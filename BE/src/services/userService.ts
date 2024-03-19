@@ -24,7 +24,7 @@ const createNew = async (reqBody: any, reqFile: any) => {
       ...reqBody,
       password: bcrypt.hashSync(reqBody.password),
       emailToken: CryptoJS.lib.WordArray.random(64).toString(CryptoJS.enc.Hex),
-      avatar: reqFile ? await uploadImage(reqFile) : DEFAULT_AVATAR
+      avatar: reqFile ? await uploadImage(reqFile, 'organick/users') : DEFAULT_AVATAR
     }
     //insert new user
     const createdUser = await userModel.createNew(newUser)
@@ -97,7 +97,7 @@ const editUserInfo = async (id: string, data: any, reqFile: any) => {
     const changeData = {
       ...data,
       updatedAt: Date.now(),
-      avatar: reqFile ? await uploadImage(reqFile) : user.avatar
+      avatar: reqFile ? await uploadImage(reqFile, 'organick/users') : user.avatar
     }
     await userModel.findAndUpdate(id, changeData)
     //get latest data
