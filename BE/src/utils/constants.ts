@@ -12,3 +12,11 @@ export const FILE_SIZE = 1024 * 1024 * 10
 //default avatar link
 export const DEFAULT_AVATAR =
   'https://res.cloudinary.com/dchseyg1q/image/upload/v1710660321/organick/users/fbq5fx3zjlla7ufhpzol.jpg'
+
+export enum StatusOrder {
+  Cancel = 'Cancel',
+  Pending = 'Pending',
+  Confirm = 'Confirm',
+  Shipping = 'Shipping',
+  Completed = 'Completed'
+}

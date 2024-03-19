@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
+import { categoryModel } from '~/models/categoryModel'
 import { productModel } from '~/models/productModel'
 import ApiError from '~/utils/ApiError'
 import { responseData, slugify, uploadImage } from '~/utils/algorithms'
@@ -39,10 +40,12 @@ const getProducts = async () => {
 const getProductInfo = async (productId: string) => {
   try {
     const getProduct = await productModel.findOneById(productId)
+    //get category name to FE
+    const category = await categoryModel.findOneById(getProduct?.categoryId)
     if (!getProduct) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
-    return responseData(getProduct)
+    return responseData({ ...getProduct, category: category?.name })
   } catch (error) {
     throw error
   }
