@@ -4,15 +4,20 @@ import './style.scss'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { toast } from 'sonner'
 type Props = {}
 
 export default function SingleProductDetail({}: Props) {
   const [isAdding, setIsAdding] = useState(false)
   const handleAddtoCart = () => {
+    toast.success('Added to cart', {
+      position: 'bottom-right',
+      duration: 3000,
+    })
     setIsAdding(true)
     setTimeout(() => {
       setIsAdding(false)
-    }, 2000)
+    }, 3500)
   }
   return (
     <section className='single-product'>
@@ -51,16 +56,12 @@ export default function SingleProductDetail({}: Props) {
             <div className='box-quantity'>
               <p>Quantity: </p>
               <input min={1} max={999} type='number' defaultValue={1} />
-              {/* <button
-                disabled={isAdding}
-                className='btn btn-add-cart'
-                onClick={() => handleAddtoCart()}
-              >
-                Add to Cart
-              </button> */}
-              <button disabled={isAdding} className='btn btn-add-cart sold-out'>
+              <button disabled={isAdding} className='btn btn-add-cart' onClick={handleAddtoCart}>
                 Add to Cart
               </button>
+              {/* <button disabled={isAdding} className='btn btn-add-cart sold-out'>
+                Add to Cart
+              </button> */}
             </div>
           </div>
         </div>

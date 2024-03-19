@@ -10,7 +10,7 @@ import './style.scss'
 import { signOut, useSession } from 'next-auth/react'
 
 type Props = {}
-const paths = ['/home', '/about', '/shop', '/contact', '/portfolio', '/services', '/quality']
+const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
   const pathName = usePathname()
   const { data: session } = useSession()
