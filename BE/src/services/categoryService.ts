@@ -20,8 +20,8 @@ const createNew = async (reqBody: any) => {
 
 const getCategories = async () => {
   try {
-    const allUsers = await categoryModel.getCategories()
-    return responseData(allUsers)
+    const allCategories = await categoryModel.getCategories()
+    return responseData(allCategories)
   } catch (error) {
     throw error
   }
@@ -52,7 +52,6 @@ const editCategoryInfo = async (id: string, data: any) => {
     await categoryModel.findAndUpdate(id, changeData)
     //get latest data
     const categoryUpdated = await categoryModel.findOneById(id)
-    //not show password when response
     return responseData(categoryUpdated)
   } catch (error) {
     throw error
@@ -74,7 +73,6 @@ const deleteCategoryById = async (id: string) => {
     throw error
   }
 }
-
 
 export const categoryServices = {
   createNew,
