@@ -120,6 +120,27 @@ const findAndRemove = async (id: string) => {
   }
 }
 
+const checkRefreshToken = async (refreshToken: string) => {
+  try {
+    const user = await await getDB().collection(USER_COLLECTION_NAME).findOne({ refreshToken })
+    if (!user) return null
+    return user
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const updateRefreshToken = async (userId: string, newRefreshToken: string) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne({ _id: new ObjectId(userId) }, { $set: { refreshToken: newRefreshToken } })
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 export const userModel = {
   createNew,
   findOneById,
@@ -128,5 +149,7 @@ export const userModel = {
   saveRefreshToken,
   getUsers,
   verifyEmail,
-  findAndRemove
+  findAndRemove,
+  checkRefreshToken,
+  updateRefreshToken
 }

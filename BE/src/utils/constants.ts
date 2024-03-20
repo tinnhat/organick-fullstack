@@ -1,7 +1,7 @@
 export const WHITE_LIST = ['http://localhost:3000', 'https://organick-fullstack.vercel.app']
 export const JWT = {
-  expiresIn: '1d',
-  expiresInRefresh: '3d'
+  expiresIn: '1m',
+  expiresInRefresh: '3m'
 }
 
 export const FILE_ALLOW = ['image/jpeg', 'image/png', 'image/jpg']
