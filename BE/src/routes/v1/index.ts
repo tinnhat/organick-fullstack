@@ -4,6 +4,7 @@ import { userRoute } from './userRoute'
 import { categoryRoute } from './categoryRoute'
 import { productRoute } from './productRoute'
 import { orderRoute } from './orderRoute'
+import { authRoute } from './authRoute'
 
 const Router = express.Router()
 
@@ -20,5 +21,7 @@ Router.use('/categories', categoryRoute)
 Router.use('/products', productRoute)
 
 Router.use('/orders', orderRoute)
+
+Router.use('/auth', authRoute)
 
 export const APIs_V1 = Router

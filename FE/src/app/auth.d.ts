@@ -5,6 +5,7 @@ declare module 'next-auth' {
     user?: {
       _id?: string;
       isAdmin?: boolean;
+      refreshToken?: string;
     } & DefaultSession['user'];
   }
   export interface User {
@@ -13,5 +14,6 @@ declare module 'next-auth' {
     email?: string
     isAdmin?: boolean
     access_token?: string
+    refreshToken?: string;
   }
 }

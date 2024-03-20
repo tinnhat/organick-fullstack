@@ -19,7 +19,8 @@ export default function Header({}: Props) {
   const handleShowCart = () => {
     setShowCart(true)
   }
-
+  console.log(session)
+  
   return (
     <header className='header'>
       <div className='container'>

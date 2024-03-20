@@ -15,7 +15,7 @@ export const generateToken = (user: User) => {
       isAdmin: user.isAdmin,
       isConfirmed: user.isConfirmed
     },
-    env.JWT_SECRET || 'somethingsecret',
+    env.JWT_SECRET!,
     {
       expiresIn: JWT.expiresIn
     }
@@ -28,10 +28,8 @@ export const generateRefreshToken = (user: User) => {
       _id: user._id,
       fullname: user.fullname,
       email: user.email,
-      isAdmin: user.isAdmin,
-      isConfirmed: user.isConfirmed
     },
-    env.JWT_SECRET || 'somethingsecret',
+    env.JWT_SECRET_REFRESH!,
     {
       expiresIn: JWT.expiresInRefresh
     }
