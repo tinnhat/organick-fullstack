@@ -19,7 +19,7 @@ type Product = {
   description: string | undefined
   additionInfo: string
   slug?: string
-  category?: string
+  category?: Category[]
   categoryId?: string
   quantity: number
   priceSale: number

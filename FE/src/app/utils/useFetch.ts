@@ -1,18 +1,16 @@
 import { jwtDecode } from 'jwt-decode'
-
 import dayjs from 'dayjs'
 import { signOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
-let useFetch = () => {
+const useFetch = () => {
   const { data: session, status, update } = useSession()
   let accessToken = session?.user.access_token
 
   let baseURL = 'http://localhost:8017/v1'
 
-  let originalRequest = async (url: string, config: any) => {
-    url = `${baseURL}${url}`
-    let response = await fetch(url, config)
+  let originalRequest = async (url: string, config: any = {}) => {
+    let response = await fetch(`${baseURL}${url}`, config)
     let data = await response.json()
     return { response, data }
   }
@@ -35,8 +33,7 @@ let useFetch = () => {
         headers: {
           'Content-Type': 'application/json',
           refreshToken: refreshToken,
-        },
-        body: JSON.stringify({ refresh: accessToken }),
+        }
       })
       let result = await response.json()
       //update lai session cua nextAuth
@@ -63,7 +60,7 @@ let useFetch = () => {
     }
 
     config['headers'] = {
-      ...config,
+      ...config.headers,
       Authorization: `Bearer ${accessToken}`,
     }
 

@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '~/config/mongodb'
 import { validateBeforeCreate } from '~/utils/algorithms'
+import { categoryModel } from './categoryModel'
 
 const PRODUCT_COLLECTION_NAME = 'products'
 const PRODUCT_SCHEMA = Joi.object({
@@ -39,22 +40,51 @@ const findOneByName = async (name: string) => {
   }
 }
 
+//tra them category name xai aggregate
 const findOneById = async (id: string) => {
+  console.log(id)
+  
   try {
     const result = await getDB()
       .collection(PRODUCT_COLLECTION_NAME)
-      .findOne({ _id: new ObjectId(id) })
-    return result
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(id), _destroy: false }
+        },
+        {
+          $lookup: {
+            from: categoryModel.CATEGORY_COLLECTION_NAME,
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'category'
+          }
+        }
+      ])
+      .toArray()
+    return result[0] || null
   } catch (error) {
     throw new Error(error as string)
   }
 }
 
+//tra them category name xai aggregate
 const getProducts = async () => {
   try {
-    const result = await getDB().collection(PRODUCT_COLLECTION_NAME).find({}).toArray()
+    const result = await getDB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .aggregate([
+        {
+          $lookup: {
+            from: categoryModel.CATEGORY_COLLECTION_NAME,
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'category'
+          }
+        }
+      ])
+      .toArray()
     if (!result) return null
-    return result
+    return result || null
   } catch (error) {
     throw new Error(error as string)
   }
