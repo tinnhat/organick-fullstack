@@ -142,6 +142,30 @@ const deleteUserById = async (id: string) => {
   }
 }
 
+const checkRefreshToken = async (refreshToken: string) => {
+  try {
+    const user = await userModel.checkRefreshToken(refreshToken)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Refresh Token not found')
+    }
+    const newRefreshToken = generateRefreshToken(user)
+    await userModel.updateRefreshToken(user._id, newRefreshToken)
+    //not show password when response
+    delete user.password
+    return responseData({
+      user: {
+        ...user,
+        refreshToken: newRefreshToken
+      },
+      accessToken: generateToken(user)
+    })
+    //update lai refresh token moi va access token moi
+    // await userModel.findAndRemove(id)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userServices = {
   createNew,
   login,
@@ -149,5 +173,6 @@ export const userServices = {
   editUserInfo,
   getUsers,
   verifyEmail,
-  deleteUserById
+  deleteUserById,
+  checkRefreshToken
 }

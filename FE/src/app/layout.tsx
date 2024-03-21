@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './_scrollbar.scss'
 import ToastContainer from './components/toast'
 import AuthContext from './providers'
+import QueryProviders from './reactQueryProviders'
 const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className}>
-        <AuthContext>{children}</AuthContext>
-        <ToastContainer />
+        <QueryProviders>
+          <AuthContext>{children}</AuthContext>
+          <ToastContainer />
+        </QueryProviders>
       </body>
     </html>
   )

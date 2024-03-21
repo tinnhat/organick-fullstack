@@ -99,12 +99,6 @@ const editUserInfo = async (req: any, res: Response, next: any) => {
   })
   try {
     if (checkPermission(req.user, req.params.id)) {
-      if (!req.body.fullname && !req.body.password) {
-        throw new ApiError(
-          StatusCodes.UNPROCESSABLE_ENTITY,
-          'Choose at least one field to update(password or fullname)'
-        )
-      }
       await check.validateAsync(req.body, { abortEarly: false })
       //validate true -> next sang controller
 

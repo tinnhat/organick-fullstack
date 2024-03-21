@@ -7,6 +7,7 @@ export const env = {
   APP_PORT: process.env.APP_PORT,
   BUILD_MODE: process.env.BUILD_MODE,
   JWT_SECRET: process.env.JWT_SECRET,
+  JWT_SECRET_REFRESH: process.env.JWT_SECRET_REFRESH,
   CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,

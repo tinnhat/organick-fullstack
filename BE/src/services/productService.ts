@@ -40,12 +40,10 @@ const getProducts = async () => {
 const getProductInfo = async (productId: string) => {
   try {
     const getProduct = await productModel.findOneById(productId)
-    //get category name to FE
-    const category = await categoryModel.findOneById(getProduct?.categoryId)
     if (!getProduct) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
-    return responseData({ ...getProduct, category: category?.name })
+    return responseData(getProduct)
   } catch (error) {
     throw error
   }
