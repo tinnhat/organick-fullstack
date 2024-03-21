@@ -5,8 +5,10 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import './style.scss'
 import { ProductsMock } from '@/app/common/mockData'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
+import { isEmpty } from 'lodash'
 
 type Props = {
   setShowCart: (value: boolean) => void
@@ -15,9 +17,15 @@ type Props = {
 const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export default function ModalCart({ setShowCart }: Props) {
-  const [showRedirect, setShowRedirect] = useState(false)
+  const [cart, setCart] = useState<any>()
   const router = useRouter()
-
+  const { data: user } = useQuery<any>({ queryKey: ['User Cart'] })
+  const [showRedirect, setShowRedirect] = useState(false)
+  useEffect(() => {
+    if (!isEmpty(user)) {
+      setCart(user)
+    }
+  }, [user])
   const handleCheckout = async () => {
     setShowRedirect(true)
     const res = await fetch('/api/checkout', {
@@ -48,6 +56,10 @@ export default function ModalCart({ setShowCart }: Props) {
         setShowRedirect(false)
       })
   }
+  
+  console.log(cart);
+  
+
   return (
     <section className='modalCart'>
       <div className='box-cart'>
@@ -56,37 +68,29 @@ export default function ModalCart({ setShowCart }: Props) {
           <FontAwesomeIcon icon={faXmark} className='icon' onClick={() => setShowCart(false)} />
         </div>
         <ul className='list-items'>
-          <li className='item'>
-            <div className='item-img'>
-              <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
-            </div>
-            <div className='item-info'>
-              <p className='item-name'>
-                Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
-                Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
-                Calabrese Broccoli
-              </p>
-              <p className='item-price'>$13.00</p>
-              <p className='item-action'>Remove</p>
-            </div>
-            <div className='item-quantity'>
-              <input type='number' defaultValue={1} min={1} max={999} />
-            </div>
-          </li>
-          <li className='item'>
-            <div className='item-img'>
-              <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
-            </div>
-            <div className='item-info'>
-              <p className='item-name'>Calabrese Broccoli</p>
-              <p className='item-price'>$13.00</p>
-              <p className='item-action'>Remove</p>
-            </div>
-            <div className='item-quantity'>
-              <input type='number' defaultValue={1} min={1} max={999} />
-            </div>
-          </li>
-          <li className='item'>
+          {!isEmpty(cart) && cart.map((item: any) => {
+            return (
+              <li className='item' key={item.id}>
+                <div className='item-img'>
+                  <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
+                </div>
+                <div className='item-info'>
+                  <p className='item-name'>
+                    Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
+                    Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli Calabrese Broccoli
+                    Calabrese Broccoli
+                  </p>
+                  <p className='item-price'>$13.00</p>
+                  <p className='item-action'>Remove</p>
+                </div>
+                <div className='item-quantity'>
+                  <input type='number' defaultValue={1} min={1} max={999} />
+                </div>
+              </li>
+            )
+          })}
+
+          {/* <li className='item'>
             <div className='item-img'>
               <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
             </div>
@@ -138,6 +142,19 @@ export default function ModalCart({ setShowCart }: Props) {
               <input type='number' defaultValue={1} min={1} max={999} />
             </div>
           </li>
+          <li className='item'>
+            <div className='item-img'>
+              <Image src={'/assets/img/product1.png'} alt='' width={60} height={60} />
+            </div>
+            <div className='item-info'>
+              <p className='item-name'>Calabrese Broccoli</p>
+              <p className='item-price'>$13.00</p>
+              <p className='item-action'>Remove</p>
+            </div>
+            <div className='item-quantity'>
+              <input type='number' defaultValue={1} min={1} max={999} />
+            </div>
+          </li> */}
         </ul>
         <div className='total'>
           <p className='total-text'>Total</p>

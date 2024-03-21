@@ -1,15 +1,26 @@
 'use client'
-import React, { useState } from 'react'
-import './style.scss'
-import Image from 'next/image'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Image from 'next/image'
+import { useState } from 'react'
 import { toast } from 'sonner'
-type Props = {}
+import LoadingCustom from '../loading'
+import './style.scss'
+import { useQueryClient } from '@tanstack/react-query'
+import client from '@/app/client'
+type Props = {
+  params: any
+}
 
-export default function SingleProductDetail({}: Props) {
+export default function SingleProductDetail({ params }: Props) {
+  const { data: product, isLoading } = useGetProductByIdQuery(params.id)
   const [isAdding, setIsAdding] = useState(false)
   const handleAddtoCart = () => {
+    client.setQueryData(['User Cart'], (initalValue: any) => {
+      const updatedValue = Array.isArray(initalValue) ? [...initalValue, product] : [product]
+      return updatedValue
+    })
     toast.success('Added to cart', {
       position: 'bottom-right',
       duration: 3000,
@@ -19,40 +30,30 @@ export default function SingleProductDetail({}: Props) {
       setIsAdding(false)
     }, 3500)
   }
+  if (isLoading) return <LoadingCustom />
   return (
     <section className='single-product'>
       <div className='container'>
         <div className='product-container'>
           <div className='img-box-product'>
-            <Image
-              src={'/assets/img/Photo.jpg'}
-              alt=''
-              className='img-box-product__img'
-              layout='fill'
-            />
-            <div className='product-sold-out'>Sold out</div>
+            <Image src={product.image} alt='' className='img-box-product__img' layout='fill' />
+            {product.quantity === 0 && <div className='product-sold-out'>Sold out</div>}
           </div>
           <div className='product-info'>
-            <p className='product-name'>Health Pistachios</p>
+            <p className='product-name'>{product.name}</p>
             <div className='rating-box'>
-              <FontAwesomeIcon icon={faStar} />
-              <FontAwesomeIcon icon={faStar} />
-              <FontAwesomeIcon icon={faStar} />
-              <FontAwesomeIcon icon={faStar} />
-              <FontAwesomeIcon icon={faStar} />
+              {new Array(product.star).map((item, index: number) => (
+                <FontAwesomeIcon key={index} icon={faStar} />
+              ))}
             </div>
             <p className='product-price'>
-              <span>$20.00</span>$13.00
+              {product.sale && <span>${product.sale}</span>}${product.price}
             </p>
             <p className='product-quantity'>
-              Quantity: <span>999</span> - Product in stock
+              Quantity: <span>{product.quantity}</span> - Product in stock
             </p>
-            <p className='product-info-text'>
-              Simply dummy text of the printing and typesetting industry. Lorem had ceased to been
-              the industry's standard dummy text ever since the 1500s, when an unknown printer took
-              a galley.
-            </p>
-            <p className='product-category'>Vegetable</p>
+            <p className='product-info-text'>{product.description}</p>
+            <p className='product-category'>{product.category[0]?.name}</p>
             <div className='box-quantity'>
               <p>Quantity: </p>
               <input min={1} max={999} type='number' defaultValue={1} />

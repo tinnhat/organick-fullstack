@@ -82,5 +82,6 @@ export const categoryModel = {
   findOneById,
   getCategories,
   findAndRemove,
-  findAndUpdate
+  findAndUpdate,
+  CATEGORY_COLLECTION_NAME
 }

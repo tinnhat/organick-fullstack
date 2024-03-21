@@ -6,11 +6,11 @@ import { productValidation } from '~/validations/productValidation'
 
 const Router = express.Router()
 
-Router.get('/', Auth, AdminAuth, productController.getProducts)
+Router.get('/', productController.getProducts)
 
 Router.post('/', Auth, AdminAuth, productValidation.createNew, productController.createNew)
 
-Router.get('/:id', Auth, AdminAuth, productValidation.getProductInParams, productController.getProductInfo)
+Router.get('/:id', productValidation.getProductInParams, productController.getProductInfo)
 
 Router.put('/:id', Auth, AdminAuth, productValidation.editProductInfo, productController.editProductInfo)
 

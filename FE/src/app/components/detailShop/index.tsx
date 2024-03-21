@@ -1,15 +1,17 @@
 'use client'
-import Image from 'next/image'
-import React, { useState } from 'react'
-import './style.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
-import { faMagnifyingGlass, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
-import Select from 'react-select'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { products } from './mockDataProducts'
+import { faArrowDown, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Rating from '@mui/material/Rating'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import Select from 'react-select'
+import LoadingCustom from '../loading'
+import { products } from './mockDataProducts'
+import './style.scss'
 
 type Props = {}
 
@@ -23,13 +25,21 @@ const options = [
 ]
 
 export default function DetailShop({}: Props) {
+  const { data: allProducts, isLoading } = useGetProductsQuery()
+  console.log(allProducts)
   const router = useRouter()
   const [quantityDefaultShow, setQuantityDefaultShow] = useState(8)
-  const [items, setItems] = useState(products)
+  const [items, setItems] = useState<Product[]>([])
   const [star, setStar] = React.useState<number | null>(2)
   const fetchMoreData = () => {
     setQuantityDefaultShow(prev => prev + 8)
-    setItems(prev => [...prev, ...products])
+    setItems((prev: any) => [...prev, ...allProducts])
+  }
+  useEffect(() => {
+    setItems(allProducts)
+  }, [allProducts])
+  if (isLoading) {
+    return <LoadingCustom />
   }
   return (
     <section className='detail-shop'>
@@ -83,30 +93,42 @@ export default function DetailShop({}: Props) {
               loader={<h4>Loading...</h4>}
             >
               <div className='row-products'>
-                {items.map((product, index) => (
-                  <div
-                    className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
-                    key={index}
-                    onClick={() => router.push(`/shop/${product._id}`)}
-                  >
-                    <div className='product-tag'>{product.tag}</div>
-                    <Image src={product.img} alt='' className='product-img' layout='fill' />
-                    <p className='product-name'>{product.name}</p>
-                    <div className='straight'></div>
-                    <div className='price-start-box'>
-                      <div className='price-box'>
-                        <p className='price-old'>{product.price}</p>
-                        <p className='price-sale'>{product.salePrice}</p>
+                {items &&
+                  items.map((product: Product, index: number) => (
+                    <div
+                      className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
+                      key={index}
+                      onClick={() => router.push(`/shop/${product._id}`)}
+                    >
+                      <div className='product-tag'>
+                        {product.category && product.category[0].name}
                       </div>
-                      <div className='start-box'>
-                        {Array.from({ length: product.rating }).map((val, idx) => (
-                          <FontAwesomeIcon icon={faStar} key={idx} />
-                        ))}
+                      {typeof product.image === 'string' || product.image instanceof Buffer ? (
+                        <Image
+                          src={product.image.toString()}
+                          alt=''
+                          className='product-img'
+                          layout='fill'
+                        />
+                      ) : (
+                        <div>No image available</div>
+                      )}
+                      <p className='product-name'>{product.name}</p>
+                      <div className='straight'></div>
+                      <div className='price-start-box'>
+                        <div className='price-box'>
+                          <p className='price-old'>${product.priceSale}</p>
+                          <p className='price-sale'>${product.price}</p>
+                        </div>
+                        <div className='start-box'>
+                          {Array.from({ length: product.star }).map((val, idx) => (
+                            <FontAwesomeIcon icon={faStar} key={idx} />
+                          ))}
+                        </div>
                       </div>
+                      {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
                     </div>
-                    {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
-                  </div>
-                ))}
+                  ))}
               </div>
             </InfiniteScroll>
           </div>

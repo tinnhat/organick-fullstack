@@ -1,17 +1,19 @@
 'use client'
 import { faBars, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
-import { signOut, useSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
 
 type Props = {}
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
+  const { data: user } = useQuery<any>({ queryKey: ['User Cart'] })
   const pathName = usePathname()
   const { data: session } = useSession()
   const [showCart, setShowCart] = useState(false)
@@ -20,7 +22,7 @@ export default function Header({}: Props) {
     setShowCart(true)
   }
   console.log(session)
-  
+
   return (
     <header className='header'>
       <div className='container'>
@@ -57,7 +59,7 @@ export default function Header({}: Props) {
           <div className='header-box-cart'>
             <div className='cart-box' onClick={handleShowCart}>
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
-              <p className='cart-box-number'>Cart(0)</p>
+              <p className='cart-box-number'>Cart({user ? user.length : 0})</p>
             </div>
             {session ? (
               <div className='avatar-box'>
