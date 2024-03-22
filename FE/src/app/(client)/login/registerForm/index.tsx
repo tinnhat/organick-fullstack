@@ -1,11 +1,12 @@
 import ErrorField from '@/app/components/errorField'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useMutation } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import * as yup from 'yup'
-
+import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
 type Props = {
   setShowRegister: (value: boolean) => void
 }
@@ -30,6 +31,8 @@ const validationSchema = yup.object({
   confirmPassword: yup.string().oneOf([yup.ref('password'), undefined], 'Passwords must match'),
 })
 export default function RegisterForm({ setShowRegister }: Props) {
+  const initialValues: Info = { email: '', fullname: '', password: '', confirmPassword: '' }
+	const {mutateAsync: register} = useRegisterMutation()
   const [file, setFile] = useState<any>()
   const handleChangeImage = (e: any) => {
     const selectedFile = e.target.files[0]
@@ -40,7 +43,11 @@ export default function RegisterForm({ setShowRegister }: Props) {
       // Use fileUrl as needed
     }
   }
-  const initialValues: Info = { email: '', fullname: '', password: '', confirmPassword: '' }
+
+  const handleSubmitForm = async (values: any, actions: any) => {
+    console.log(values)
+    register(values)
+  }
 
   return (
     <div className='box'>
@@ -49,12 +56,7 @@ export default function RegisterForm({ setShowRegister }: Props) {
         validateOnChange={true}
         validationSchema={validationSchema}
         initialValues={initialValues}
-        onSubmit={(values, actions) => {
-          console.log(values)
-          setTimeout(() => {
-            actions.setSubmitting(false)
-          }, 1000)
-        }}
+        onSubmit={handleSubmitForm}
       >
         {({ isSubmitting, errors, values, touched, handleChange }) => {
           const { email, fullname, password, confirmPassword } = values

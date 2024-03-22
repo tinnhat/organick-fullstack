@@ -1,7 +1,7 @@
 'use client'
 import { useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
-import { faArrowDown, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Rating from '@mui/material/Rating'
 import Image from 'next/image'
@@ -12,35 +12,66 @@ import Select from 'react-select'
 import LoadingCustom from '../loading'
 import { products } from './mockDataProducts'
 import './style.scss'
+import ErrorFetchingProduct from '../errorFetchingProduct/indext'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
 
 type Props = {}
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-  { value: '123', label: 'Vanilzzz  9la' },
-  { value: '123ww', label: 'Vanzzzilla' },
-  { value: 'www', label: 'aa' },
-]
-
 export default function DetailShop({}: Props) {
-  const { data: allProducts, isLoading } = useGetProductsQuery()
-  console.log(allProducts)
+  const { data: allProducts, isLoading, isError } = useGetProductsQuery()
+  const { data: allCategories } = useGetCategoriesQuery()
   const router = useRouter()
-  const [quantityDefaultShow, setQuantityDefaultShow] = useState(8)
+  const [categories, setCategories] = useState([])
+  const [optionCategory, setOptionCategory] = useState<any>(null)
+  const [search, setSearch] = useState('')
+  const [quantityDefaultShow, setQuantityDefaultShow] = useState(4)
   const [items, setItems] = useState<Product[]>([])
-  const [star, setStar] = React.useState<number | null>(2)
+  const [star, setStar] = React.useState<number | null>(0)
+  const [showFilter, setShowFilter] = useState(true)
   const fetchMoreData = () => {
-    setQuantityDefaultShow(prev => prev + 8)
+    setQuantityDefaultShow(prev => prev + 4)
     setItems((prev: any) => [...prev, ...allProducts])
   }
   useEffect(() => {
     setItems(allProducts)
   }, [allProducts])
+
+  useEffect(() => {
+    if (!allCategories) return
+    setCategories(allCategories.map((item: Category) => ({ value: item._id, label: item.name })))
+  }, [allCategories])
+
+  useEffect(() => {
+    if (!optionCategory) return
+    // setItems(allProducts.filter((product: any) => product.categoryId === optionCategory.value))
+    // const newItems = allProducts.filter((product: any) =>
+    //   optionCategory.some((category: any) => category.value === product.categoryId)
+    // )
+    // setItems(newItems)
+  }, [optionCategory])
+
   if (isLoading) {
     return <LoadingCustom />
   }
+
+  if (isError) {
+    return <ErrorFetchingProduct />
+  }
+
+  const handleSortDesc = () => {
+    setItems(allProducts.sort((a: any, b: any) => b.price - a.price))
+    setShowFilter(true)
+  }
+  const handleSortAsc = () => {
+    setItems(allProducts.sort((a: any, b: any) => a.price - b.price))
+    setShowFilter(false)
+  }
+
+  const handleSearch = () => {
+    console.log(search)
+    
+  }
+
   return (
     <section className='detail-shop'>
       <div className='container'>
@@ -49,40 +80,51 @@ export default function DetailShop({}: Props) {
           <div className='container-filter'>
             <div className='filter-box'>
               {/* sort by price - asc or desc */}
-              {/* <button className='btn-price'>Price - ASC <FontAwesomeIcon icon={faArrowUp} /></button> */}
-              <button className='btn-price'>
-                Price - DESC <FontAwesomeIcon icon={faArrowDown} />
-              </button>
+              {showFilter ? (
+                <button className='btn-price' onClick={handleSortAsc}>
+                  Price - ASC <FontAwesomeIcon icon={faArrowUp} />
+                </button>
+              ) : (
+                <button className='btn-price' onClick={handleSortDesc}>
+                  Price - DESC <FontAwesomeIcon icon={faArrowDown} />
+                </button>
+              )}
               {/* sort by rating - click to show 0 -> 5 start */}
               <div className='rating-box'>
                 <span>Rating:</span>
-                {/* <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} /> */}
                 <Rating
                   name='simple-controlled'
                   value={star}
                   onChange={(event, newValue) => {
                     setStar(newValue)
+                    setItems(allProducts.filter((product: any) => product.star === newValue))
                   }}
                 />
               </div>
               {/* sort by category - select option */}
               <Select
-                defaultValue={[options[1], options[2]]}
                 isMulti
                 name='colors'
-                options={options}
+                options={categories}
                 className='basic-multi-select'
                 classNamePrefix='select'
                 placeholder='Choose category'
+                onChange={choice => setOptionCategory(choice)}
               />
             </div>
             <div className='search-box'>
-              <input type='text' />
-              <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
+              <input
+                type='text'
+                placeholder='Search'
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+              <FontAwesomeIcon
+                style={{ cursor: 'pointer' }}
+                icon={faMagnifyingGlass}
+                className='icon'
+                onClick={handleSearch}
+              />
             </div>
           </div>
           <div className='container-products'>
@@ -98,10 +140,10 @@ export default function DetailShop({}: Props) {
                     <div
                       className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
                       key={index}
-                      onClick={() => router.push(`/shop/${product._id}`)}
+                      onClick={() => router.push(`/shop/${product.slug}/${product._id}`)}
                     >
                       <div className='product-tag'>
-                        {product.category && product.category[0].name}
+                        {product.category && product.category[0]?.name}
                       </div>
                       {typeof product.image === 'string' || product.image instanceof Buffer ? (
                         <Image

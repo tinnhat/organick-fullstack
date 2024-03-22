@@ -21,6 +21,12 @@
     padding: 20px;
     border-radius: 6px;
     width: 460px;
+    .empty-cart{
+      text-align: center;
+      margin: 40px 0;
+      font-weight: 500;
+      font-size: 1.2em;
+    }
 
     .title-box {
       display: flex;
