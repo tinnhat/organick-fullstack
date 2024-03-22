@@ -11,7 +11,7 @@ export default function Cancel({}: Props) {
   const route = useRouter()
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(true)
-
+  const [order, setOrderCancel] = useState<any>()
   useEffect(() => {
     const session_id = searchParams.get('session_id')
     const fetchData = async () => {
@@ -19,7 +19,9 @@ export default function Cancel({}: Props) {
         method: 'GET',
       })
       const result = await res.json()
-      console.log(result)
+      console.log(result.session);
+      
+      setOrderCancel(result.session)
       setIsLoading(false)
     }
     console.log(session_id)
@@ -41,169 +43,44 @@ export default function Cancel({}: Props) {
             <h2 className='cancel-thank'>Your order has been cancelled</h2>
             <div className='box-order'>
               <ul className='list-item'>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>
-                      Green & Tasty Lemon Green & Tasty Lemon Green & Tasty Lemon Green & Tasty
-                      Lemon Green & Tasty Lemon Green & Tasty LemonGreen & Tasty Lemon Green & Tasty
-                      Lemon Green & Tasty Lemon
-                    </p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                <li className='item'>
-                  <div className='item-img'>
-                    <Image
-                      src={'/assets/img/port1.png'}
-                      alt=''
-                      className='item-img__img'
-                      layout='fill'
-                    />
-                  </div>
-                  <div className='item-info'>
-                    <p className='item-name'>Green & Tasty Lemon</p>
-                    <div className='item-sub-box'>
-                      <p className='item-quantity'>
-                        Quantity: <span>10</span>
-                      </p>
-                      <p className='item-price'>
-                        Price: <span>$20.00</span>
-                      </p>
-                    </div>
-                  </div>
-                </li>
+                {order?.line_items?.data?.map((item: any) => {
+                  const { product } = item.price
+                  return (
+                    <li className='item' key={item.id}>
+                      <div className='item-img'>
+                        <Image
+                          src={product.images[0]}
+                          alt=''
+                          className='item-img__img'
+                          layout='fill'
+                        />
+                      </div>
+                      <div className='item-info'>
+                        <p className='item-name'>{product.name}</p>
+                        <div className='item-sub-box'>
+                          <p className='item-quantity'>
+                            Quantity: <span>{item.quantity}</span>
+                          </p>
+                          <p className='item-price'>
+                            Price: <span>${item.price.unit_amount / 100}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
             <div className='info-checkout'>
               <div className='price-box'>
                 <p className='sub-total'>
-                  Subtotal <span>$20.00</span>
+                  Subtotal <span>${order.amount_subtotal / 100}</span>
                 </p>
                 <p className='tax'>
                   Tax <span>$0.00</span>
                 </p>
                 <p className='total'>
-                  Total <span>$20.00</span>
+                  Total <span>${order.amount_total / 100}</span>
                 </p>
               </div>
             </div>

@@ -28,7 +28,6 @@ export default function ModalCart({ setShowCart }: Props) {
       setCart(user)
     }
   }, [user])
-  console.log(path)
 
   const handleCheckout = async () => {
     setShowRedirect(true)
@@ -39,7 +38,7 @@ export default function ModalCart({ setShowCart }: Props) {
       },
       body: JSON.stringify({
         // day la cho truyen product thanh toan
-        products: [{ ...ProductsMock[2], quantityCheckout: 2 }],
+        products: cart,
       }),
     })
       .then(async res => {
