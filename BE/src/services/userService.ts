@@ -46,7 +46,7 @@ const login = async (reqBody: any) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Email not found')
     }
     if (!getNewUser.isConfirmed) {
-      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Please confirm your email')
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Account is not confirmed, Please confirm your account')
     }
     if (getNewUser._destroy) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'User is deleted, Please contact admin')
