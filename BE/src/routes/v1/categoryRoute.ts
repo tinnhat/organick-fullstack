@@ -7,7 +7,7 @@ import { categoryValidation } from '~/validations/categoryValidation'
 
 const Router = express.Router()
 
-Router.get('/', Auth, AdminAuth, categoryController.getCategories)
+Router.get('/', categoryController.getCategories)
 
 Router.post('/', Auth, AdminAuth, categoryValidation.createNew, categoryController.createNew)
 

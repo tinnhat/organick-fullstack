@@ -15,8 +15,7 @@ const webhookHandler = async (req: NextRequest) => {
     try {
       event = stripe.webhooks.constructEvent(buf, sig, webhookSecret)
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Unknown error'
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       // On error, log and return the error message.
       if (err! instanceof Error) console.log(err)
       console.log(`❌ Error message: ${errorMessage}`)
@@ -24,37 +23,48 @@ const webhookHandler = async (req: NextRequest) => {
       return NextResponse.json(
         {
           error: {
-            message: `Webhook Error: ${errorMessage}`,
-          },
+            message: `Webhook Error: ${errorMessage}`
+          }
         },
         { status: 400 }
       )
     }
 
-    // Successfully constructed event.
-    console.log('✅ Success:', event.id)
-
     // getting to the data we want from the event
     const subscription = event.data.object as Stripe.Subscription
     const subscriptionId = subscription.id
-    console.log(event.type);
-    
     switch (event.type) {
-    case 'customer.subscription.created':
-      console.log('true');
-      
-      console.log(subscription, subscriptionId);
-      
-      break
-    case 'customer.subscription.deleted':
-      console.log('true');
-
-      console.log(subscription, subscriptionId);
-
+    case 'checkout.session.completed':
+      const checkoutSession = await stripe.checkout.sessions.retrieve(subscriptionId, {
+        expand: ['line_items', 'line_items.data.price.product']
+      })
+      const data = {
+        phone: checkoutSession.custom_fields[0].numeric?.value,
+        address: checkoutSession.custom_fields[1].text?.value,
+        note: checkoutSession.custom_fields[2].text?.value,
+        totalPrice: checkoutSession.amount_total! / 100,
+        listProducts: checkoutSession.line_items?.data.map((item: any) => {
+          const { product } = item.price
+          return {
+            id: item.price.id,
+            quantity: item.quantity
+          }
+        }),
+        isPaid: true
+      }
+      //call api update database
+      const order = await fetch(`http://localhost:8017/v1/orders/checkout/${checkoutSession.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      const test = await order.json()
+      console.log('find by session id', test);
       break
 
     default:
-      console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`)
       break
     }
 
@@ -65,7 +75,7 @@ const webhookHandler = async (req: NextRequest) => {
       {
         error: {
           message: 'Method Not Allowed'
-        },
+        }
       },
       { status: 405 }
     ).headers.set('Allow', 'POST')

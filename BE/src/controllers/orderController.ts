@@ -23,6 +23,16 @@ const getOrders = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getOrdersByUser = async (req: Request, res: Response, next: any) => {
+  try {
+    const orders = await orderServices.getOrdersByUser(req.params.id)
+    res.status(StatusCodes.OK).json(orders)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 const getOrderInfo = async (req: Request, res: Response, next: any) => {
   try {
     const order = await orderServices.getOrderInfo(req.params.id)
@@ -43,6 +53,17 @@ const editOrderInfo = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const updateOrderInfo = async (req: Request, res: Response, next: any) => {
+  try {
+    const order = await orderServices.updateOrderInfo(req.params.id, req.body)
+    res.status(StatusCodes.OK).json(order)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
+
 const deleteOrderById = async (req: Request, res: Response, next: any) => {
   try {
     const product = await orderServices.deleteOrderById(req.params.id)
@@ -58,5 +79,7 @@ export const orderController = {
   getOrders,
   getOrderInfo,
   editOrderInfo,
-  deleteOrderById
+  updateOrderInfo,
+  deleteOrderById,
+  getOrdersByUser
 }

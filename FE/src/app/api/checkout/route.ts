@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
-const HOST = 'https://organick-fullstack.vercel.app'
+const HOST = 'http://localhost:3000'
 const getActiveProducts = async () => {
   const products = await stripe.products.list()
   const availableProducts = products.data.filter((product: any) => product.active)
@@ -10,6 +10,8 @@ const getActiveProducts = async () => {
 export const POST = async (request: any) => {
   //products do client gui len co the la mang
   const { products } = await request.json()
+  //check quantity product
+
   //get nhung product dang active
   let activeProducts = await getActiveProducts()
   try {
@@ -17,10 +19,11 @@ export const POST = async (request: any) => {
       const stripeProduct = activeProducts.find(
         (activeProduct: any) => activeProduct.id === product._id
       )
+      //chua co product
       if (stripeProduct === undefined) {
-        const newProduct = await stripe.products.create({
+        await stripe.products.create({
           id: product._id,
-          active: product._destroy,
+          active: true,
           name: product.name,
           description: product.description,
           default_price_data: {
@@ -30,28 +33,23 @@ export const POST = async (request: any) => {
           images: [product.image],
           url: product.slug,
         })
-      } else {
-        await stripe.products.update(stripeProduct.id, {
-          active: product._destroy,
-          images: [product.image],
-        })
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log('error: ', error)
   }
-
   activeProducts = await getActiveProducts()
   let stripeItems: any = []
   for (const product of products) {
     const stripeProduct = activeProducts.find(
       (activeProduct: any) => activeProduct.id === product._id
     )
+
     if (stripeProduct) {
       //push product thanh toan len stripe de show UI checkout
-      stripeItems.push({
+      await stripeItems.push({
         price: stripeProduct?.default_price,
-        quantity: product?.quantityCheckout,
+        quantity: product?.quantityAddCart,
       })
     }
   }
@@ -88,6 +86,9 @@ export const POST = async (request: any) => {
         optional: true,
       },
     ],
+    metadata: {
+      userId: '12312312312313123131',
+    },
   })
   if (!session) {
     return NextResponse.json({
@@ -100,4 +101,3 @@ export const POST = async (request: any) => {
 
   return NextResponse.json({ session }, { status: 200 })
 }
-
