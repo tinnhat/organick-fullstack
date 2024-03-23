@@ -89,8 +89,24 @@ const editProductInfo = async (req: any, res: Response, next: any) => {
   }
 }
 
+const checkList = async (req: any, res: Response, next: any) => {
+  try {
+    const productList = req.body.products
+    if (productList && productList.length > 0) {
+      next()
+    } else {
+      throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'List product is not empty')
+    }
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 export const productValidation = {
   createNew,
   getProductInParams,
-  editProductInfo
+  editProductInfo,
+  checkList
 }

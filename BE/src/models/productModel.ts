@@ -42,8 +42,6 @@ const findOneByName = async (name: string) => {
 
 //tra them category name xai aggregate
 const findOneById = async (id: string) => {
-  console.log(id)
-  
   try {
     const result = await getDB()
       .collection(PRODUCT_COLLECTION_NAME)

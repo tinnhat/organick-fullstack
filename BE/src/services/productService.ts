@@ -82,10 +82,27 @@ const deleteProductById = async (id: string) => {
   }
 }
 
+const checkList = async (data: any) => {
+  try {
+    const allProducts = await productModel.getProducts()
+    //check quantity of product
+    for (let i = 0; i < data.products.length; i++) {
+      const product = allProducts.find((item: any) => item._id.toString() === data.products[i]._id.toString())
+      if (data.products[i].quantityAddCart > product.quantity) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, `Quantity of product ${product.name} in stock is not enough`)
+      }
+    }
+    return data.products
+  } catch (error) {
+    throw error
+  }
+}
+
 export const productServices = {
   createNew,
   getProducts,
   getProductInfo,
   editProductInfo,
-  deleteProductById
+  deleteProductById,
+  checkList
 }

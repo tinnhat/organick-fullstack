@@ -10,6 +10,8 @@ const getActiveProducts = async () => {
 export const POST = async (request: any) => {
   //products do client gui len co the la mang
   const { products } = await request.json()
+  //check quantity product
+
   //get nhung product dang active
   let activeProducts = await getActiveProducts()
   try {
@@ -17,6 +19,7 @@ export const POST = async (request: any) => {
       const stripeProduct = activeProducts.find(
         (activeProduct: any) => activeProduct.id === product._id
       )
+      //chua co product
       if (stripeProduct === undefined) {
         await stripe.products.create({
           id: product._id,
@@ -41,11 +44,8 @@ export const POST = async (request: any) => {
     const stripeProduct = activeProducts.find(
       (activeProduct: any) => activeProduct.id === product._id
     )
-    console.log('stripeProduct', stripeProduct)
 
     if (stripeProduct) {
-      console.log('vo day', stripeProduct)
-
       //push product thanh toan len stripe de show UI checkout
       await stripeItems.push({
         price: stripeProduct?.default_price,
@@ -86,6 +86,9 @@ export const POST = async (request: any) => {
         optional: true,
       },
     ],
+    metadata: {
+      userId: '12312312312313123131',
+    },
   })
   if (!session) {
     return NextResponse.json({

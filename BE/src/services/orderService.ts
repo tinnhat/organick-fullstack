@@ -18,12 +18,12 @@ const createNew = async (reqBody: any) => {
     //check xem product co ton tai hay khong
 
     for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i].id)
+      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
       if (!product) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
       } else {
         //co product -> check so luong
-        if (product.quantity < reqBody.listProducts[i].quantity) {
+        if (product.quantity < reqBody.listProducts[i].quantityAddCart) {
           throw new ApiError(StatusCodes.NOT_FOUND, `Quantity of product: "${product.name}" in stock is not enough`)
         }
       }
@@ -35,9 +35,9 @@ const createNew = async (reqBody: any) => {
     })
     //update product quantity in stock
     for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i])
-      const newQuantity = product.quantity - reqBody.listProducts[i].quantity
-      await productModel.findAndUpdate(reqBody.listProducts[i], { quantity: newQuantity })
+      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
+      const newQuantity = product.quantity - reqBody.listProducts[i].quantityAddCart
+      await productModel.findAndUpdate(reqBody.listProducts[i]._id, { quantity: newQuantity })
     }
     const getOrder = await orderModel.findOneById(createdOrder.insertedId)
     return responseData(getOrder)
@@ -122,6 +122,17 @@ const editOrderInfo = async (id: string, data: any) => {
   }
 }
 
+const updateOrderInfo = async (id: string, data: any) => {
+  try {
+    const getOrder = await orderModel.findOneBySessionId(id)
+    console.log('find by session id', getOrder)
+    console.log('data update', data)
+    return responseData(getOrder)
+  } catch (error) {
+    throw error
+  }
+}
+
 const deleteOrderById = async (id: string) => {
   try {
     const category = await orderModel.findOneById(id)
@@ -143,5 +154,6 @@ export const orderServices = {
   getOrders,
   getOrderInfo,
   editOrderInfo,
-  deleteOrderById
+  deleteOrderById,
+  updateOrderInfo
 }

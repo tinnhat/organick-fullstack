@@ -52,10 +52,21 @@ const deleteProductById = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const checkList = async (req: Request, res: Response, next: any) => {
+  try {
+    const product = await productServices.checkList(req.body)
+    res.status(StatusCodes.OK).json(product)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 export const productController = {
   createNew,
   getProducts,
   getProductInfo,
   editProductInfo,
-  deleteProductById
+  deleteProductById,
+  checkList
 }

@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import client from '@/app/client'
 import ErrorFetchingProduct from '../errorFetchingProduct/indext'
 import RelatedProduct from '../relatedProduct'
+import { cloneDeep } from 'lodash'
 type Props = {
   params: any
 }
@@ -21,26 +22,44 @@ export default function SingleProductDetail({ params }: Props) {
   const [isAdding, setIsAdding] = useState(false)
   const handleAddtoCart = () => {
     if (productRef.current) {
+      if (productRef.current.value === 0) return
+      if (productRef.current.value > product.quantity) {
+        toast.error('Quantity in stock is not enough', {
+          position: 'bottom-right',
+          duration: 3000,
+        })
+        return
+      }
       client.setQueryData(['User Cart'], (initalValue: any) => {
         const updatedValue = Array.isArray(initalValue)
           ? [
-            ...initalValue,
-            {
-              ...product,
-              quantityAddCart: productRef.current!.value
-            }
-          ]
+              ...initalValue,
+              {
+                ...product,
+                quantityAddCart: +productRef.current!.value,
+              },
+            ]
           : [
-            {
-              ...product,
-              quantityAddCart: productRef.current!.value
-            }
-          ]
-        return updatedValue
+              {
+                ...product,
+                quantityAddCart: +productRef.current!.value,
+              },
+            ]
+        const arrValue = cloneDeep(updatedValue).reduce((acc: any, item: any) => {
+          const existingItem = acc.find((i: any) => i._id === item._id)
+          if (existingItem) {
+            existingItem.quantityAddCart += item.quantityAddCart
+          } else {
+            acc.push(item)
+          }
+          return acc
+        }, [])
+        return arrValue
       })
+      productRef.current.value = 0
       toast.success('Added to cart', {
         position: 'bottom-right',
-        duration: 3000
+        duration: 3000,
       })
       setIsAdding(true)
       setTimeout(() => {
@@ -76,13 +95,27 @@ export default function SingleProductDetail({ params }: Props) {
               <p className='product-category'>{product.category[0]?.name}</p>
               <div className='box-quantity'>
                 <p>Quantity: </p>
-                <input ref={productRef} min={1} max={999} type='number' defaultValue={1} />
-                <button disabled={isAdding} className='btn btn-add-cart' onClick={handleAddtoCart}>
-                  Add to Cart
-                </button>
-                {/* <button disabled={isAdding} className='btn btn-add-cart sold-out'>
-                Add to Cart
-              </button> */}
+                <input
+                  disabled={product.quantity === 0 || isAdding}
+                  ref={productRef}
+                  min={1}
+                  max={999}
+                  type='number'
+                  defaultValue={1}
+                />
+                {product.quantity === 0 ? (
+                  <button disabled={isAdding} className='btn btn-add-cart sold-out'>
+                    Add to Cart
+                  </button>
+                ) : (
+                  <button
+                    disabled={isAdding}
+                    className='btn btn-add-cart'
+                    onClick={handleAddtoCart}
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </div>
             </div>
           </div>
