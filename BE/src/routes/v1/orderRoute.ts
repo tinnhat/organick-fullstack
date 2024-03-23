@@ -10,11 +10,14 @@ const Router = express.Router()
 
 Router.get('/', Auth, AdminAuth, orderController.getOrders)
 
-Router.post('/', Auth, AdminAuth, orderValidation.createNew, orderController.createNew)
+Router.post('/', Auth, orderValidation.createNew, orderController.createNew)
 
 Router.get('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.getOrderInfo)
 
 Router.put('/:id', Auth, AdminAuth, orderValidation.editOrderInfo, orderController.editOrderInfo)
+
+Router.put('/checkout/:id', orderValidation.updateOrderInfo, orderController.updateOrderInfo)
+
 
 Router.delete('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.deleteOrderById)
 

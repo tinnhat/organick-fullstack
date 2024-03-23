@@ -76,7 +76,6 @@ export const uploadImage = async (file: any, folder: string) => {
 }
 
 export const checkPermission = (user: any, userId: string) => {
-  console.log(user._id, userId)
   if (user.isAdmin === false) {
     if (user._id.toString() !== userId) {
       return false

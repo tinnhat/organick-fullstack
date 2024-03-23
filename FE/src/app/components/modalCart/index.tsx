@@ -10,6 +10,9 @@ import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { cloneDeep, isEmpty } from 'lodash'
 import client from '@/app/client'
+import { useCreateOrderMutation } from '@/app/utils/hooks/ordersHooks'
+import useFetch from '@/app/utils/useFetch'
+import { useSession } from 'next-auth/react'
 
 type Props = {
   setShowCart: (value: boolean) => void
@@ -18,6 +21,9 @@ type Props = {
 const asyncStripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export default function ModalCart({ setShowCart }: Props) {
+  const { data: session } = useSession()
+  const fetchApi = useFetch()
+  const { mutateAsync: createOrder } = useCreateOrderMutation(fetchApi)
   const path = usePathname()
   const [cart, setCart] = useState<any>()
   const router = useRouter()
@@ -31,6 +37,30 @@ export default function ModalCart({ setShowCart }: Props) {
 
   const handleCheckout = async () => {
     setShowRedirect(true)
+    //check quantity truoc
+    const checkQuantity = await fetch('http://localhost:8017/v1/products/checkList', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        products: cart.map((product: any) => {
+          return {
+            _id: product._id,
+            quantityAddCart: product.quantityAddCart,
+          }
+        }),
+      }),
+    })
+    const result = await checkQuantity.json()
+    if (result.hasOwnProperty('message')) {
+      toast.error(result.message, {
+        position: 'top-center',
+      })
+      setShowRedirect(false)
+      return
+    }
+    //neu du quantituy cho nguyen list product thi process tiep sang checkout cua stripe
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: {
@@ -46,7 +76,25 @@ export default function ModalCart({ setShowCart }: Props) {
       })
       .then(async data => {
         if (data.session) {
-          router.push(data.session.url)
+          console.log(data.session);
+          //call api create order truoc khi redirect user sang page checkout
+          const dataCreateOrder = {
+            userId: session?.user._id,
+            address: '',
+            phone: '',
+            listProducts: cart.map((product: any) => {
+              return {
+                _id: product._id,
+                quantityAddCart: product.quantityAddCart,
+              }
+            }),
+            totalPrice: 999,
+            stripeCheckoutLink: data.session.url,
+            checkOutSessionId: data.session.id,
+          }
+          const result = await createOrder(dataCreateOrder)
+          // su dung webhook de update lai trang thai cua don hang -> isPaid = true
+          result && router.push(data.session.url)
         }
       })
       .catch(err => {
@@ -61,7 +109,12 @@ export default function ModalCart({ setShowCart }: Props) {
   }
 
   // console.log(cart)
-  const handleChangeQuantityInCart = (e:any,item: any) => {
+  const handleChangeQuantityInCart = (e: any, item: any) => {
+    console.log(e.target.value)
+    if (!e.target.value) {
+      handleRemoveProduct(item)
+      return
+    }
     client.setQueryData(['User Cart'], (initalValue: any) => {
       const newValue = cloneDeep(initalValue)
       const index = newValue.findIndex((i: any) => i._id === item._id)
@@ -77,6 +130,9 @@ export default function ModalCart({ setShowCart }: Props) {
       const result = newValue.filter((i: any) => i._id !== item._id)
       setCart(result)
       return result
+    })
+    toast.success(`Remove product ${item.name} successfully`, {
+      position: 'top-center',
     })
   }
 
@@ -115,14 +171,21 @@ export default function ModalCart({ setShowCart }: Props) {
                         <Image src={item.image} alt='' width={60} height={60} />
                       </div>
                       <div className='item-info'>
-                        <p className='item-name'>
-                          {item.name}
-                        </p>
+                        <p className='item-name'>{item.name}</p>
                         <p className='item-price'>${item.price}</p>
-                        <p className='item-action' onClick={() => handleRemoveProduct(item)} >Remove</p>
+                        <p className='item-action' onClick={() => handleRemoveProduct(item)}>
+                          Remove
+                        </p>
                       </div>
                       <div className='item-quantity'>
-                        <input value={item.quantityAddCart} type='number' defaultValue={1} min={1} max={999} onChange={(e) => handleChangeQuantityInCart(e,item)} />
+                        <input
+                          value={item.quantityAddCart}
+                          type='number'
+                          defaultValue={1}
+                          min={1}
+                          max={999}
+                          onChange={e => handleChangeQuantityInCart(e, item)}
+                        />
                       </div>
                     </li>
                   )
@@ -132,7 +195,7 @@ export default function ModalCart({ setShowCart }: Props) {
               <p className='total-text'>Total</p>
               <p className='total-price'>$13.00 USD</p>
             </div>
-            <button className='btn-continue' onClick={handleCheckout}>
+            <button className='btn-continue' onClick={showRedirect ? () => {} : handleCheckout}>
               {showRedirect ? 'Redirecting...' : 'Continue to Checkout'}
             </button>
           </>

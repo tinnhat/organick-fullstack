@@ -6,7 +6,6 @@ const Router = express.Router()
 
 //validate refresh co hay khong
 Router.post('/refresh', async (req: Request, res: Response) => {
-  if (!req.body.refresh) return res.sendStatus(StatusCodes.UNAUTHORIZED)
   const refreshtoken: any = req.headers.refreshtoken
   // check trong db xem cos refresh token nay khong
   //neu co thi gui lai access token moi va cap nhat refresh token moi cho user
