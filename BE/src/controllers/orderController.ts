@@ -23,6 +23,16 @@ const getOrders = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getOrdersByUser = async (req: Request, res: Response, next: any) => {
+  try {
+    const orders = await orderServices.getOrdersByUser(req.params.id)
+    res.status(StatusCodes.OK).json(orders)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 const getOrderInfo = async (req: Request, res: Response, next: any) => {
   try {
     const order = await orderServices.getOrderInfo(req.params.id)
@@ -70,5 +80,6 @@ export const orderController = {
   getOrderInfo,
   editOrderInfo,
   updateOrderInfo,
-  deleteOrderById
+  deleteOrderById,
+  getOrdersByUser
 }
