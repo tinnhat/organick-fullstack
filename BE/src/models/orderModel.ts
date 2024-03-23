@@ -13,7 +13,6 @@ const ORDER_SCHEMA = Joi.object({
   totalPrice: Joi.number().required().min(1).max(9999),
   status: Joi.string().required(),
   isPaid: Joi.boolean().default(false),
-  listProductsWaiting: Joi.array().default([]),
   stripeCheckoutLink: Joi.string().default('').optional(),
   checkOutSessionId: Joi.string().default('').optional(),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
@@ -44,7 +43,6 @@ const findOneById = async (id: string) => {
 
 const findOneBySessionId = async (id: string) => {
   try {
-
     const result = await getDB().collection(ORDER_COLLECTION_NAME).findOne({ checkOutSessionId: id })
     return result
   } catch (error) {
@@ -55,6 +53,48 @@ const findOneBySessionId = async (id: string) => {
 const getOrders = async () => {
   try {
     const result = await getDB().collection(ORDER_COLLECTION_NAME).find({}).toArray()
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const getOrdersByUser = async (id: string) => {
+  try {
+    const result = await getDB()
+      .collection(ORDER_COLLECTION_NAME)
+      .aggregate([
+        {
+          $match: {
+            userId: new ObjectId(id)
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            let: {
+              listProducts: '$listProducts'
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $in: [
+                      {
+                        $toString: '$_id'
+                      },
+                      '$$listProducts._id'
+                    ]
+                  }
+                }
+              },
+            ],
+            as: 'listDetailProducts'
+          }
+        }
+      ])
+      .toArray()
     if (!result) return null
     return result
   } catch (error) {
@@ -92,5 +132,6 @@ export const orderModel = {
   findOneBySessionId,
   getOrders,
   findAndRemove,
-  findAndUpdate
+  findAndUpdate,
+  getOrdersByUser
 }

@@ -9,19 +9,23 @@ import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
 import { useQuery } from '@tanstack/react-query'
+import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
 
 type Props = {}
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
-  const { data: user } = useQuery<any>({ queryKey: ['User Cart'] })
-  const pathName = usePathname()
+  const fetchApi = useFetch()
+  const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session } = useSession()
+  const { data: userInfo } = useGetUserInfoQuery(fetchApi, session?.user._id)
+  const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
   const handleShowCart = () => {
     setShowCart(true)
   }
-  console.log(session)
+  console.log(userInfo)
 
   return (
     <header className='header'>
@@ -59,13 +63,13 @@ export default function Header({}: Props) {
           <div className='header-box-cart'>
             <div className='cart-box' onClick={handleShowCart}>
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
-              <p className='cart-box-number'>Cart({user ? user.length : 0})</p>
+              <p className='cart-box-number'>Cart({userCart ? userCart.length : 0})</p>
             </div>
             {session ? (
               <div className='avatar-box'>
                 <Image
                   priority
-                  src={'/assets/img/avatar.jpg'}
+                  src={userInfo && userInfo.avatar}
                   alt=''
                   className='avatar-img'
                   width={50}
