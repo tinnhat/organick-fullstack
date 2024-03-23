@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useCreateOrderMutation = (fetchApi: any) =>
   useMutation({
@@ -9,6 +9,21 @@ export const useCreateOrderMutation = (fetchApi: any) =>
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+      })
+      const result = res.data
+      return result.data
+    },
+  })
+
+export const useGetOrdersOfUserQuery = (fetchApi: any, id: string) =>
+  useQuery({
+    queryKey: ['orders of user', id],
+    queryFn: async () => {
+      const res = await fetchApi(`/orders/user/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
       const result = res.data
       return result.data

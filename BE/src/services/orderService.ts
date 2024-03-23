@@ -55,6 +55,15 @@ const getOrders = async () => {
   }
 }
 
+const getOrdersByUser = async (userId: string) => {
+  try {
+    const allOrder = await orderModel.getOrdersByUser(userId)
+    return responseData(allOrder)
+  } catch (error) {
+    throw error
+  }
+}
+
 const getOrderInfo = async (orderId: string) => {
   try {
     const getOrder = await orderModel.findOneById(orderId)
@@ -125,9 +134,23 @@ const editOrderInfo = async (id: string, data: any) => {
 const updateOrderInfo = async (id: string, data: any) => {
   try {
     const getOrder = await orderModel.findOneBySessionId(id)
-    console.log('find by session id', getOrder)
-    console.log('data update', data)
-    return responseData(getOrder)
+    if (!getOrder) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
+    }
+    const changeData = {
+      ...getOrder,
+      address: data.address,
+      phone: data.phone,
+      note: data.note,
+      isPaid: data.isPaid,
+      totalPrice: data.totalPrice,
+      stripeCheckoutLink: '',
+      updatedAt: Date.now()
+    }
+    await orderModel.findAndUpdate(getOrder._id, changeData)
+    const newOrder = await orderModel.findOneById(getOrder._id)
+
+    return responseData(newOrder)
   } catch (error) {
     throw error
   }
@@ -155,5 +178,6 @@ export const orderServices = {
   getOrderInfo,
   editOrderInfo,
   deleteOrderById,
-  updateOrderInfo
+  updateOrderInfo,
+  getOrdersByUser
 }

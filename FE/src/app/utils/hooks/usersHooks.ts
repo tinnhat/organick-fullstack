@@ -1,6 +1,19 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+export const useGetUserInfoQuery = (fetchApi: any, id: string) =>
+  useQuery({
+    queryKey: ['User Information'],
+    queryFn: async () => {
+      const res = await fetchApi(`/users/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      return res.data.data
+    },
+  })
 export const useRegisterMutation = () =>
   useMutation({
     mutationFn: async ({

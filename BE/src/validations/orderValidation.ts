@@ -71,6 +71,21 @@ const getOrderInParams = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getOrdersByUser = async (req: Request, res: Response, next: any) => {
+  try {
+    const orderId = req.params.id
+    if (orderId) {
+      next()
+    } else {
+      throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'User id is required')
+    }
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 const editOrderInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
     address: Joi.string().optional().min(1).max(255).trim().strict(),
@@ -131,5 +146,6 @@ export const orderValidation = {
   createNew,
   getOrderInParams,
   editOrderInfo,
-  updateOrderInfo
+  updateOrderInfo,
+  getOrdersByUser
 }

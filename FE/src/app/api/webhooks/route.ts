@@ -38,7 +38,6 @@ const webhookHandler = async (req: NextRequest) => {
       const checkoutSession = await stripe.checkout.sessions.retrieve(subscriptionId, {
         expand: ['line_items', 'line_items.data.price.product']
       })
-      console.log(checkoutSession.id)
       const data = {
         phone: checkoutSession.custom_fields[0].numeric?.value,
         address: checkoutSession.custom_fields[1].text?.value,
@@ -54,14 +53,14 @@ const webhookHandler = async (req: NextRequest) => {
         isPaid: true
       }
       //call api update database
-      const res = await fetch(`http://localhost:8017/v1/orders/checkout/${checkoutSession.id}`, {
+      const order = await fetch(`http://localhost:8017/v1/orders/checkout/${checkoutSession.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
-      const test = await res.json()
+      const test = await order.json()
       console.log('find by session id', test);
       break
 
