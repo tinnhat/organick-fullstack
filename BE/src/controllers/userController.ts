@@ -72,6 +72,16 @@ const verifyEmail = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const changePassword = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.changePassword(req.params.id, req.body)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+  }
+}
+
 export const userController = {
   createNew,
   login,
@@ -79,5 +89,6 @@ export const userController = {
   editUserInfo,
   getUsers,
   verifyEmail,
-  deleteUserById
+  deleteUserById,
+  changePassword
 }
