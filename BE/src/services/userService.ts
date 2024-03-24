@@ -91,13 +91,37 @@ const editUserInfo = async (id: string, data: any, reqFile: any) => {
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    if (data.password) {
-      data.password = hashSync(data.password)
-    }
+    console.log(data);
+    
     const changeData = {
-      ...data,
+      fullname: data.fullname,
       updatedAt: Date.now(),
       avatar: reqFile ? await uploadImage(reqFile, 'organick/users') : user.avatar
+    }
+    await userModel.findAndUpdate(id, changeData)
+    //get latest data
+    const userUpdated = await userModel.findOneById(id)
+    //not show password when response
+    delete userUpdated.password
+    return responseData(userUpdated)
+  } catch (error) {
+    throw error
+  }
+}
+
+const changePassword = async (id: string, data: any) => {
+  try {
+    const user = await userModel.findOneById(id)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    //check password
+    if (!bcrypt.compareSync(data.password, user.password)) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Password is incorrect')
+    }
+    const changeData = {
+      password: hashSync(data.newPassword),
+      updatedAt: Date.now(),
     }
     await userModel.findAndUpdate(id, changeData)
     //get latest data
@@ -174,5 +198,6 @@ export const userServices = {
   getUsers,
   verifyEmail,
   deleteUserById,
-  checkRefreshToken
+  checkRefreshToken,
+  changePassword
 }

@@ -8,13 +8,15 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
 import useFetch from '@/app/utils/useFetch'
+import client from '@/app/client'
 
 type Props = {}
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
+  client.invalidateQueries({ queryKey: ['User Information'] })
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session } = useSession()

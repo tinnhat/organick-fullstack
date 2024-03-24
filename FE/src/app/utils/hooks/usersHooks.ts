@@ -14,6 +14,7 @@ export const useGetUserInfoQuery = (fetchApi: any, id: string) =>
       return res.data.data
     },
   })
+
 export const useRegisterMutation = () =>
   useMutation({
     mutationFn: async ({
@@ -39,5 +40,45 @@ export const useRegisterMutation = () =>
         return
       }
       return result.data
+    },
+  })
+
+export const useUpdateUserInfoMutation = (fetchApi: any, id: string) =>
+  useMutation({
+    mutationFn: async ({ fullname, file }: { fullname: string; file: any }) => {
+      const data = new FormData()
+      data.append('fullname', fullname)
+      if (file) {
+        data.append('file', file)
+      }
+      const res = await fetchApi(`/users/${id}`, {
+        method: 'PUT',
+        body: data,
+      })
+
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
+
+      return res.data.data
+    },
+  })
+
+export const useUpdatePasswordMutation = (fetchApi: any, id: string) =>
+  useMutation({
+    mutationFn: async ({ password, newPassword }: { password: string; newPassword: string }) => {
+      const res = await fetchApi(`/users/change-password/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password, newPassword }),
+      })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
     },
   })

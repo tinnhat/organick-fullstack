@@ -8,6 +8,7 @@ import { products } from '@/app/components/detailShop/mockDataProducts'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useSession } from 'next-auth/react'
 import useFetch from '@/app/utils/useFetch'
+import { useRouter } from 'next/navigation'
 import { useGetOrdersOfUserQuery } from '@/app/utils/hooks/ordersHooks'
 import ErrorFetchingProduct from '@/app/components/errorFetchingProduct/indext'
 import LoadingCustom from '@/app/components/loading'
@@ -15,6 +16,7 @@ import moment from 'moment'
 type Props = {}
 
 export default function OrderHistory({}: Props) {
+  const router = useRouter()
   const fetchApi = useFetch()
   const { data: session } = useSession()
   const {
@@ -38,7 +40,6 @@ export default function OrderHistory({}: Props) {
           if (product) product.quantityAddCart = order.listProducts[i].quantityAddCart
         }
       })
-      console.log(ordersByUser)
       setItems(ordersByUser)
     }
   }, [ordersByUser])
@@ -72,9 +73,7 @@ export default function OrderHistory({}: Props) {
                     <p className='order-id'>
                       ID: <span>{order._id}</span>
                     </p>
-                    <p className='order-date'>
-                      - {moment(order.createdAt).format('MM-DD-YYYY')}
-                    </p>
+                    <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
                     <p className='order-status'>{order.status}</p>
                   </div>
                   {order.listDetailProducts.map((product: any) => (
@@ -109,7 +108,14 @@ export default function OrderHistory({}: Props) {
                     <div className='total'>Total: ${order.totalPrice}</div>
                   </div>
                   <div className='action-for-order'>
-                    {order.isPaid ? null : <button className='btn-checkout'>Checkout</button>}
+                    {order.isPaid ? null : (
+                      <button
+                        className='btn-checkout'
+                        onClick={() => router.push(order.stripeCheckoutLink)}
+                      >
+                        Checkout
+                      </button>
+                    )}
                     {order.status === 'Complete' ? null : (
                       <button className='btn-cancel'>Cancel Order</button>
                     )}

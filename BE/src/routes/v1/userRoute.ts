@@ -15,6 +15,10 @@ Router.post('/', userValidation.createNew, userController.createNew)
 //verify
 Router.post('/verify-email', userValidation.verifyEmail, userController.verifyEmail)
 
+//change password
+Router.put('/change-password/:id', Auth, userValidation.changePassword, userController.changePassword)
+
+
 //login
 Router.post('/login', userValidation.login, userController.login)
 

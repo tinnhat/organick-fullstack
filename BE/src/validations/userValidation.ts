@@ -95,7 +95,7 @@ const getUserInParams = async (req: Request, res: Response, next: any) => {
 const editUserInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
     fullname: Joi.string().optional().min(3).max(50).trim().strict(),
-    password: Joi.string().optional().min(6).max(50).trim().strict()
+    file: Joi.any().optional()
   })
   try {
     if (checkPermission(req.user, req.params.id)) {
@@ -131,10 +131,33 @@ const verifyEmail = async (req: any, res: Response, next: any) => {
   }
 }
 
+const changePassword = async (req: any, res: Response, next: any) => {
+  const check = Joi.object({
+    password: Joi.string().required().messages({
+      'string.base': 'password must be a string',
+      'any.required': 'password is required'
+    }),
+    newPassword: Joi.string().required().messages({
+      'string.base': 'newPassword must be a string',
+      'any.required': 'newPassword is required'
+    })
+  })
+  try {
+    await check.validateAsync(req.body, { abortEarly: false })
+    //validate true -> next sang controller
+    next()
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 export const userValidation = {
   createNew,
   login,
   getUserInParams,
   editUserInfo,
-  verifyEmail
+  verifyEmail,
+  changePassword
 }
