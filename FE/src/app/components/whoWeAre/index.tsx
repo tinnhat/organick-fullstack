@@ -7,7 +7,7 @@ export default function WhoWeAre({}: Props) {
   return (
     <section className='whoWeAre'>
       <div className='whoWeAre-picture-box'>
-        <Image src={'/assets/img/whoweare.png'} alt='' width={200} height={200} />
+        <Image src={'/assets/img/whoweare.webp'} alt='' width={200} height={200} />
       </div>
       <div className='whoWeAre-content-box'>
         <div className='content-box' data-aos='fade-up' data-aos-duration='500'>

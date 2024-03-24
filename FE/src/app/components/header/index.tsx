@@ -16,7 +16,6 @@ import client from '@/app/client'
 type Props = {}
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
 export default function Header({}: Props) {
-  client.invalidateQueries({ queryKey: ['User Information'] })
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session } = useSession()
@@ -27,7 +26,7 @@ export default function Header({}: Props) {
   const handleShowCart = () => {
     setShowCart(true)
   }
-  console.log(userInfo)
+
 
   return (
     <header className='header'>

@@ -26,7 +26,7 @@ export default function Offer({}: Props) {
           <div className='row-products' data-aos='fade-up' data-aos-duration='500'>
             <div className='product-box'>
               <div className='product-tag'>Vegetable</div>
-              <Image src={'/assets/img/product1.png'} alt='' className='product-img' layout='fill' />
+              <Image src={'/assets/img/product1.webp'} alt='' className='product-img' layout='fill' />
               <p className='product-name'>Calabrese Broccoli</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -45,7 +45,7 @@ export default function Offer({}: Props) {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Fresh</div>
-              <Image src={'/assets/img/product2.png'} alt='' className='product-img' layout='fill' />
+              <Image src={'/assets/img/product2.webp'} alt='' className='product-img' layout='fill' />
               <p className='product-name'>Fresh Banana Fruites</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -64,7 +64,7 @@ export default function Offer({}: Props) {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Millets</div>
-              <Image src={'/assets/img/product3.png'} alt='' className='product-img' layout='fill' />
+              <Image src={'/assets/img/product3.webp'} alt='' className='product-img' layout='fill' />
               <p className='product-name'>White Nuts</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -83,7 +83,7 @@ export default function Offer({}: Props) {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Vegetable</div>
-              <Image src={'/assets/img/product4.png'} alt='' className='product-img' layout='fill' />
+              <Image src={'/assets/img/product4.webp'} alt='' className='product-img' layout='fill' />
               <p className='product-name'>Vegan Red Tomato</p>
               <div className='straight'></div>
               <div className='price-start-box'>

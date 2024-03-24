@@ -8,7 +8,7 @@ type Props = {}
 export default function Services({}: Props) {
   return (
     <div className='service'>
-      <BannerImg pic={'/assets/img/servicesBanner.jpg'} />
+      <BannerImg pic={'/assets/img/servicesBanner.webp'} />
       <ServicesInfo />
       <Videos />
     </div>

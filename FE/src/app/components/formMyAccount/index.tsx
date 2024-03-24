@@ -15,6 +15,7 @@ import * as yup from 'yup'
 import { Form, Formik } from 'formik'
 import ErrorField from '../errorField'
 import { toast } from 'sonner'
+import client from '@/app/client'
 
 type Props = {}
 
@@ -47,7 +48,7 @@ const validationSchemaInfoPassword = yup.object({
 
 export default function FormMyAccount({}: Props) {
   const fetchApi = useFetch()
-  const { data: session } = useSession()
+  const { data: session, update } = useSession()
   const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)
   const { mutateAsync: updatePassword } = useUpdatePasswordMutation(fetchApi, session?.user._id)
   const { mutateAsync: updateInfo } = useUpdateUserInfoMutation(fetchApi, session?.user._id)
@@ -72,7 +73,15 @@ export default function FormMyAccount({}: Props) {
     const result = await updateInfo({ fullname: values.fullname, file })
     if (result) {
       //update lai fullname trong nextAuth -> update()
-      //refresh page
+      await update({
+        ...session,
+        user: {
+          ...session!.user,
+          fullname: values.fullname,
+        },
+      })
+      // Update avatar data in React Query cache
+      client.setQueryData(['User Information'], result);
     }
   }
 

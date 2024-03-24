@@ -221,7 +221,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                               borderRadius: 0,
                               border: '1px solid #ccc',
                             }}
-                            src={'/assets/img/product1.png'}
+                            src={'/assets/img/product1.webp'}
                           />
                         </TableCell>
                         <TableCell>
@@ -329,7 +329,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                         {...props}
                         key={option._id}
                       >
-                        <Avatar sx={{ width: 40, height: 40 }} src={'/images/users/user2.jpg'} />
+                        <Avatar sx={{ width: 40, height: 40 }} src={'/images/users/user2.webp'} />
                         <Typography sx={{ ml: 1 }}>{option.fullname}</Typography>
                       </Box>
                     )}

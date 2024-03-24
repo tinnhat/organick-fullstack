@@ -7,40 +7,40 @@ type Props = {}
 export default function Portfolio({}: Props) {
   return (
     <div className='portfolio'>
-      <BannerImg pic={'/assets/img/portfolioBanner.png'} />
+      <BannerImg pic={'/assets/img/portfolioBanner.webp'} />
       <div className='container'>
         <div className='portfolio-container'>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port1.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port1.webp'} alt='' className='box-info__img' layout='fill' />
             <p className='box-info__name'>Green & Tasty Lemon</p>
             <p className='box-info__tag'>Fruits</p>
           </div>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port2.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port2.webp'} alt='' className='box-info__img' layout='fill' />
 
             <p className='box-info__name'>Organic Carrot</p>
             <p className='box-info__tag'>Farmer</p>
           </div>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port3.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port3.webp'} alt='' className='box-info__img' layout='fill' />
 
             <p className='box-info__name'>Organic Betel Leaf</p>
             <p className='box-info__tag'>Leaf</p>
           </div>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port4.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port4.webp'} alt='' className='box-info__img' layout='fill' />
 
             <p className='box-info__name'>Black Raspberry</p>
             <p className='box-info__tag'>Farmer</p>
           </div>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port5.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port5.webp'} alt='' className='box-info__img' layout='fill' />
 
             <p className='box-info__name'>Honey Orange</p>
             <p className='box-info__tag'>Farmer</p>
           </div>
           <div className='box-info' data-aos='fade-up' data-aos-duration='1000'>
-            <Image src={'/assets/img/port6.png'} alt='' className='box-info__img' layout='fill' />
+            <Image src={'/assets/img/port6.webp'} alt='' className='box-info__img' layout='fill' />
 
             <p className='box-info__name'>Green & Tasty Lemon</p>
             <p className='box-info__tag'>Fruits</p>

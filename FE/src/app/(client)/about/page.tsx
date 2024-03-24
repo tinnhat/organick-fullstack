@@ -9,7 +9,7 @@ type Props = {}
 export default function AboutPage({}: Props) {
   return (
     <div className='about-page'>
-      <BannerImg pic={'/assets/img/aboutBanner.png'} />
+      <BannerImg pic={'/assets/img/aboutBanner.webp'} />
       <About />
       <WhyChooseUs />
       <Team />

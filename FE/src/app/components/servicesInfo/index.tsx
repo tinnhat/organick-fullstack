@@ -35,7 +35,7 @@ export default function ServicesInfo({}: Props) {
               </div>
             </div>
             <div className='center-box'>
-              <Image src={'/assets/img/snack-services.png'} alt='' className='center-box__img' layout='fill' />
+              <Image src={'/assets/img/snack-services.webp'} alt='' className='center-box__img' layout='fill' />
             </div>
             <div className='box text-left'>
               <div className='child-box'>

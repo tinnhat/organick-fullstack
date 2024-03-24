@@ -119,7 +119,7 @@ export default function AddProductCus({ cart, setCart }: Props) {
                         borderRadius: '0px',
                         border: '1px solid #eee',
                       }}
-                      src={'/images/users/user2.jpg'}
+                      src={'/images/users/user2.webp'}
                     />
                   </Grid>
                   <Grid xs={6} md={6}>

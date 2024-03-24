@@ -13,6 +13,8 @@ import { useGetOrdersOfUserQuery } from '@/app/utils/hooks/ordersHooks'
 import ErrorFetchingProduct from '@/app/components/errorFetchingProduct/indext'
 import LoadingCustom from '@/app/components/loading'
 import moment from 'moment'
+import { useDebounce } from '@uidotdev/usehooks'
+import { cloneDeep } from 'lodash'
 type Props = {}
 
 export default function OrderHistory({}: Props) {
@@ -26,6 +28,26 @@ export default function OrderHistory({}: Props) {
   } = useGetOrdersOfUserQuery(fetchApi, session?.user._id)
   const [ordersDefaultShow, setOrdersDefaultShow] = useState(8)
   const [items, setItems] = useState(ordersByUser || [])
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
+  const [status, setStatus] = useState([
+    {
+      text: 'All',
+      active: true,
+    },
+    {
+      text: 'Pending',
+      active: false,
+    },
+    {
+      text: 'Cancel',
+      active: false,
+    },
+    {
+      text: 'Success',
+      active: false,
+    },
+  ])
   const fetchMoreData = () => {
     setOrdersDefaultShow(prev => prev + 8)
     setItems((prev: any) => [...prev, ...ordersByUser])
@@ -43,6 +65,38 @@ export default function OrderHistory({}: Props) {
       setItems(ordersByUser)
     }
   }, [ordersByUser])
+
+  useEffect(() => {
+    const newOrderShow = cloneDeep(items)
+    if (debouncedSearch) {
+      const filtered = newOrderShow.filter((item: User) => {
+        return item._id.includes(search)
+      })
+      console.log(filtered)
+      // setItems(filtered)
+    }
+  }, [debouncedSearch, items, search])
+
+  const handleChangeFilter = (item: any) => {
+    if (item.text === 'All') {
+      setItems(ordersByUser)
+    } else {
+      const ordersFilter = ordersByUser?.filter((order: any) => {
+        return order.status === item.text
+      })
+      setItems(ordersFilter)
+    }
+    setStatus((prev: any) => {
+      return prev.map((val: any) => {
+        if (val.text === item.text) {
+          val.active = true
+        } else {
+          val.active = false
+        }
+        return val
+      })
+    })
+  }
   if (isLoading) return <LoadingCustom />
   return (
     <div className='order-history'>
@@ -50,79 +104,95 @@ export default function OrderHistory({}: Props) {
         <div className='order-history-container'>
           <p className='order-history-title'>Order History</p>
           <div className='order-history-options'>
-            <div className='option active'>All Orders</div>
-            <div className='option'>Pending</div>
-            <div className='option'>Cancel</div>
-            <div className='option'>Completed</div>
+            {status.map((item, index) => {
+              return (
+                <div
+                  className={`option ${item.active ? 'active' : ''}`}
+                  onClick={() => handleChangeFilter(item)}
+                  key={index}
+                >
+                  {item.text}
+                </div>
+              )
+            })}
           </div>
           <div className='search-box'>
-            <input type='text' placeholder='Enter your id of order' />
+            <input
+              type='text'
+              placeholder='Enter your id of order'
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
             <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
             {/* <FontAwesomeIcon icon={faX} className='icon' /> */}
           </div>
           <ul className='list-orders'>
-            <InfiniteScroll
-              dataLength={ordersDefaultShow}
-              next={fetchMoreData}
-              hasMore={true}
-              loader={<h4>Loading...</h4>}
-            >
-              {items.map((order: any) => (
-                <li className='order' key={order._id}>
-                  <div className='order-header-info'>
-                    <p className='order-id'>
-                      ID: <span>{order._id}</span>
-                    </p>
-                    <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
-                    <p className='order-status'>{order.status}</p>
-                  </div>
-                  {order.listDetailProducts.map((product: any) => (
-                    <div className='product-info' key={product._id}>
-                      <Image src={product.image} alt='' width={100} height={100} />
-                      <div className='product-straight'>
-                        <p className='product-name'>{product.name}</p>
-                        <p className='product-quantity'>x{product.quantityAddCart}</p>
-                      </div>
-                      <p className='product-price'>${product.price}</p>
+            {items.length > 0 ? (
+              <InfiniteScroll
+                dataLength={ordersDefaultShow}
+                next={fetchMoreData}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+              >
+                {items.map((order: any) => (
+                  <li className='order' key={order._id}>
+                    <div className='order-header-info'>
+                      <p className='order-id'>
+                        ID: <span>{order._id}</span>
+                      </p>
+                      <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
+                      <p className={`order-status ${order.status}`}>{order.status}</p>
                     </div>
-                  ))}
-                  <div className='order-more-info'>
-                    <div className='box-address'>
-                      <div className='address'>
-                        <p>
-                          <span>Address:</span> {order.address}
-                        </p>
+                    {order.listDetailProducts.map((product: any) => (
+                      <div className='product-info' key={product._id}>
+                        <Image src={product.image} alt='' width={100} height={100} />
+                        <div className='product-straight'>
+                          <p className='product-name'>{product.name}</p>
+                          <p className='product-quantity'>x{product.quantityAddCart}</p>
+                        </div>
+                        <p className='product-price'>${product.price}</p>
                       </div>
-                      <div className='phone'>
-                        <p>
-                          <span>Phone:</span> {order.phone}
-                        </p>
+                    ))}
+                    <div className='order-more-info'>
+                      <div className='box-address'>
+                        <div className='address'>
+                          <p>
+                            <span>Address:</span> {order.address}
+                          </p>
+                        </div>
+                        <div className='phone'>
+                          <p>
+                            <span>Phone:</span> {order.phone}
+                          </p>
+                        </div>
+                        <div className='note'>
+                          <p>
+                            <span>Note:</span> {order.note ? order.note : 'No note'}
+                          </p>
+                        </div>
                       </div>
-                      <div className='note'>
-                        <p>
-                          <span>Note:</span> {order.note ? order.note : 'No note'}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className='total'>Total: ${order.totalPrice}</div>
-                  </div>
-                  <div className='action-for-order'>
-                    {order.isPaid ? null : (
-                      <button
-                        className='btn-checkout'
-                        onClick={() => router.push(order.stripeCheckoutLink)}
-                      >
-                        Checkout
-                      </button>
-                    )}
-                    {order.status === 'Complete' ? null : (
-                      <button className='btn-cancel'>Cancel Order</button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </InfiniteScroll>
+                      <div className='total'>Total: ${order.totalPrice}</div>
+                    </div>
+                    <div className='action-for-order'>
+                      {order.isPaid ? null : (
+                        <button
+                          className='btn-checkout'
+                          onClick={() => router.push(order.stripeCheckoutLink)}
+                        >
+                          Checkout
+                        </button>
+                      )}
+                      {order.status === 'Complete' ? null : (
+                        <button className='btn-cancel'>Cancel Order</button>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </InfiniteScroll>
+            ) : (
+              <p className='no-order'>No order</p>
+            )}
           </ul>
         </div>
       </div>

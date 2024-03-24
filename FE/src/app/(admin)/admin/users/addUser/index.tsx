@@ -108,7 +108,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
           <br />
           <Avatar
             alt='avatar'
-            src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.jpg'}
+            src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.webp'}
             sx={{ height: 80, width: 80, mt: 2, mb: 2, border: '1px solid #ccc' }}
           />
         </Box>

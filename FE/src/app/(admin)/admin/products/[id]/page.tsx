@@ -120,7 +120,7 @@ export default function OrderDetail({}: Props) {
             <br />
             <Avatar
               alt='avatar'
-              src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.jpg'}
+              src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.webp'}
               sx={{
                 height: 200,
                 width: 200,

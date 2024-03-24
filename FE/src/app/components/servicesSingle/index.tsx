@@ -10,7 +10,7 @@ export default function ServiceSingle({}: Props) {
       <div className='container'>
         <div className='ss-container'>
           <Image
-            src={'/assets/img/PhotoSS.png'}
+            src={'/assets/img/PhotoSS.webp'}
             alt=''
             className='ss-img'
             layout='fill'
@@ -32,7 +32,7 @@ export default function ServiceSingle({}: Props) {
             </p>
             <div className='ss-box__img'>
               <div className='box-img'>
-                <Image src={'/assets/img/pic1.png'} alt='' className='box-img__img' layout='fill' />
+                <Image src={'/assets/img/pic1.webp'} alt='' className='box-img__img' layout='fill' />
               </div>
               <div className='box-content'>
                 <p className='box-content__title'>Why Organic</p>
@@ -51,7 +51,7 @@ export default function ServiceSingle({}: Props) {
                 </p>
               </div>
               <div className='box-img'>
-                <Image src={'/assets/img/pic2.jpg'} alt='' className='box-img__img' layout='fill' />
+                <Image src={'/assets/img/pic2.webp'} alt='' className='box-img__img' layout='fill' />
               </div>
             </div>
             <p className='ss-box__sub-title'>We farm your land</p>

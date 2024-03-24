@@ -77,7 +77,7 @@ export default function RegisterForm({ setShowRegister }: Props) {
                   alt='Avatar'
                   width={100}
                   height={100}
-                  src={file ? file : '/images/users/avatar-default.jpg'}
+                  src={file ? file : '/images/users/avatar-default.webp'}
                 />
                 {file && (
                   <p className='clear-img' onClick={() => setFile('')}>

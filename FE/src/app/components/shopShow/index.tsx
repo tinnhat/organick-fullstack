@@ -19,7 +19,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Vegetable</div>
                 <Image
-                  src={'/assets/img/product1.png'}
+                  src={'/assets/img/product1.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -43,7 +43,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Fresh</div>
                 <Image
-                  src={'/assets/img/product2.png'}
+                  src={'/assets/img/product2.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -67,7 +67,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Millets</div>
                 <Image
-                  src={'/assets/img/product3.png'}
+                  src={'/assets/img/product3.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -91,7 +91,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Vegetable</div>
                 <Image
-                  src={'/assets/img/product4.png'}
+                  src={'/assets/img/product4.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -115,7 +115,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Health</div>
                 <Image
-                  src={'/assets/img/product5.png'}
+                  src={'/assets/img/product5.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -139,7 +139,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Nuts</div>
                 <Image
-                  src={'/assets/img/product6.png'}
+                  src={'/assets/img/product6.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -163,7 +163,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Fresh</div>
                 <Image
-                  src={'/assets/img/product7.png'}
+                  src={'/assets/img/product7.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
@@ -187,7 +187,7 @@ export default function ShopShow({}: Props) {
               <div className='product-box'>
                 <div className='product-tag'>Fresh</div>
                 <Image
-                  src={'/assets/img/product8.png'}
+                  src={'/assets/img/product8.webp'}
                   alt=''
                   className='product-img'
                   layout='fill'
