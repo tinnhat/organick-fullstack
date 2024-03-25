@@ -54,6 +54,7 @@
         }
       }
       .search-box {
+        display: flex;
         height: 40px;
         width: 30%;
         position: relative;
@@ -66,6 +67,7 @@
           border-radius: 4px;
           font-size: 14px;
           background-color: #fff;
+
           &:focus {
             border: 1px solid $green-leaf-color;
           }
@@ -73,9 +75,13 @@
         .icon {
           position: absolute;
           top: 50%;
-          right: 10px;
+          right: 50px;
           transform: translateY(-50%);
         }
+      }
+      .icon-clear{
+        padding: 10px;
+        font-size: 20px;
       }
     }
     .container-products {

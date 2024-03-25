@@ -14,7 +14,6 @@ Router.post('/', Auth, orderValidation.createNew, orderController.createNew)
 
 Router.get('/user/:id', Auth, orderValidation.getOrdersByUser, orderController.getOrdersByUser)
 
-
 Router.get('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.getOrderInfo)
 
 Router.put('/:id', Auth, AdminAuth, orderValidation.editOrderInfo, orderController.editOrderInfo)

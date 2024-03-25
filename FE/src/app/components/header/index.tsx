@@ -1,6 +1,9 @@
 'use client'
+import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
 import { faBars, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useQuery } from '@tanstack/react-query'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,10 +11,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
 import './style.scss'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
-import useFetch from '@/app/utils/useFetch'
-import client from '@/app/client'
+import { DotLoader } from 'react-spinners'
 
 type Props = {}
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
@@ -19,7 +19,7 @@ export default function Header({}: Props) {
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session } = useSession()
-  const { data: userInfo } = useGetUserInfoQuery(fetchApi, session?.user._id)
+  const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)
   const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
@@ -27,6 +27,7 @@ export default function Header({}: Props) {
     setShowCart(true)
   }
 
+  console.log(session)
 
   return (
     <header className='header'>
@@ -68,18 +69,22 @@ export default function Header({}: Props) {
             </div>
             {session ? (
               <div className='avatar-box'>
-                <Image
-                  priority
-                  src={userInfo && userInfo.avatar}
-                  alt=''
-                  className='avatar-img'
-                  width={50}
-                  height={50}
-                  style={{
-                    borderRadius: '50%',
-                    cursor: 'pointer',
-                  }}
-                />
+                {isLoading ? (
+                  <DotLoader size={20} color='#274c5b' />
+                ) : (
+                  <Image
+                    priority
+                    src={userInfo?.avatar}
+                    alt=''
+                    className='avatar-img'
+                    width={50}
+                    height={50}
+                    style={{
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
                 <div className='avatar-menu'>
                   <div className='item' onClick={() => router.push('/my-account')}>
                     My account

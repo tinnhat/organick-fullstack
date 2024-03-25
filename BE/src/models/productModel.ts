@@ -6,7 +6,7 @@ import { categoryModel } from './categoryModel'
 
 const PRODUCT_COLLECTION_NAME = 'products'
 const PRODUCT_SCHEMA = Joi.object({
-  name: Joi.string().required().min(1).max(20).trim().strict(),
+  name: Joi.string().required().min(1).max(255).trim().strict(),
   description: Joi.string().required().min(1).trim().strict(),
   image: Joi.string().required().uri().trim().strict(),
   price: Joi.number().required().min(1).max(9999),
@@ -66,8 +66,9 @@ const findOneById = async (id: string) => {
 }
 
 //tra them category name xai aggregate
-const getProducts = async () => {
+const getProducts = async (page: number, pageSize: number) => {
   try {
+    const skip = (page - 1) * pageSize
     const result = await getDB()
       .collection(PRODUCT_COLLECTION_NAME)
       .aggregate([
@@ -78,7 +79,9 @@ const getProducts = async () => {
             foreignField: '_id',
             as: 'category'
           }
-        }
+        },
+        { $skip: skip },
+        { $limit: pageSize }
       ])
       .toArray()
     if (!result) return null

@@ -14,7 +14,9 @@ const createNew = async (req: Request, res: Response, next: any) => {
 
 const getProducts = async (req: Request, res: Response, next: any) => {
   try {
-    const products = await productServices.getProducts()
+    const page = Number(req.query.page)
+    const pageSize = Number(req.query.pageSize)
+    const products = await productServices.getProducts(page, pageSize)
     res.status(StatusCodes.OK).json(products)
   } catch (error) {
     next(error)

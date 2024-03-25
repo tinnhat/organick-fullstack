@@ -60,8 +60,9 @@ const getOrders = async () => {
   }
 }
 
-const getOrdersByUser = async (id: string) => {
+const getOrdersByUser = async (id: string, page: number, pageSize: number) => {
   try {
+    const skip = (page - 1) * pageSize
     const result = await getDB()
       .collection(ORDER_COLLECTION_NAME)
       .aggregate([
@@ -88,11 +89,13 @@ const getOrdersByUser = async (id: string) => {
                     ]
                   }
                 }
-              },
+              }
             ],
             as: 'listDetailProducts'
           }
-        }
+        },
+        { $skip: skip },
+        { $limit: pageSize }
       ])
       .toArray()
     if (!result) return null

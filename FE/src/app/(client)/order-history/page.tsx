@@ -26,7 +26,7 @@ export default function OrderHistory({}: Props) {
     isLoading,
     isError,
   } = useGetOrdersOfUserQuery(fetchApi, session?.user._id)
-  const [ordersDefaultShow, setOrdersDefaultShow] = useState(8)
+  const [ordersDefaultShow, setOrdersDefaultShow] = useState(12)
   const [items, setItems] = useState(ordersByUser || [])
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
@@ -44,13 +44,14 @@ export default function OrderHistory({}: Props) {
       active: false,
     },
     {
-      text: 'Success',
+      text: 'Complete',
       active: false,
     },
   ])
   const fetchMoreData = () => {
-    setOrdersDefaultShow(prev => prev + 8)
-    setItems((prev: any) => [...prev, ...ordersByUser])
+    setOrdersDefaultShow(prev => prev + 12)
+    //call api get more product
+    // setItems((prev: any) => [...prev, ...ordersByUser])
   }
   useEffect(() => {
     if (ordersByUser) {

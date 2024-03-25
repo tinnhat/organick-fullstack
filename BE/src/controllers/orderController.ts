@@ -25,7 +25,9 @@ const getOrders = async (req: Request, res: Response, next: any) => {
 
 const getOrdersByUser = async (req: Request, res: Response, next: any) => {
   try {
-    const orders = await orderServices.getOrdersByUser(req.params.id)
+    const page = Number(req.query.page)
+    const pageSize = Number(req.query.pageSize)
+    const orders = await orderServices.getOrdersByUser(req.params.id, page, pageSize)
     res.status(StatusCodes.OK).json(orders)
   } catch (error) {
     next(error)

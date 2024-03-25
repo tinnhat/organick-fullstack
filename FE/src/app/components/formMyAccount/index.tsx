@@ -82,6 +82,9 @@ export default function FormMyAccount({}: Props) {
       })
       // Update avatar data in React Query cache
       client.setQueryData(['User Information'], result);
+      toast.success('Change information successfully', {
+        position: 'top-center',
+      })
     }
   }
 
