@@ -14,23 +14,43 @@ export const useGetUserInfoQuery = (fetchApi: any, id: string) =>
       return res.data.data
     },
   })
+
+export const useGetUserInfoByIdQuery = (fetchApi: any, id: string) =>
+  useQuery({
+    queryKey: ['User Information by id', id],
+    queryFn: async () => {
+      const res = await fetchApi(`/users/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      return res.data.data
+    },
+  })
 export const useRegisterMutation = () =>
   useMutation({
     mutationFn: async ({
       email,
       password,
       fullname,
+      isAdmin = false,
+      isConfirmed = false,
       file,
     }: {
       email: string
       password: string
       fullname: string
+      isAdmin?: boolean
+      isConfirmed?: boolean
       file: any
     }) => {
       const data = new FormData()
       data.append('fullname', fullname)
       data.append('email', email)
       data.append('password', password)
+      if (isAdmin) data.append('isAdmin', isAdmin.toString())
+      if (isConfirmed) data.append('isConfirmed', isConfirmed.toString())
       if (file) data.append('file', file)
 
       const res = await fetch('http://localhost:8017/v1/users', {
@@ -49,9 +69,24 @@ export const useRegisterMutation = () =>
 
 export const useUpdateUserInfoMutation = (fetchApi: any, id: string) =>
   useMutation({
-    mutationFn: async ({ fullname, file }: { fullname: string; file: any }) => {
+    mutationFn: async ({
+      fullname,
+      file,
+      isAdmin = false,
+      isConfirmed = false,
+      _destroy = false,
+    }: {
+      fullname: string
+      file: any
+      isAdmin?: boolean
+      isConfirmed?: boolean
+      _destroy?: boolean
+    }) => {
       const data = new FormData()
       data.append('fullname', fullname)
+      if (isAdmin) data.append('isAdmin', isAdmin.toString())
+      if (isConfirmed) data.append('isConfirmed', isConfirmed.toString())
+      if (_destroy) data.append('_destroy', _destroy.toString())
       if (file) {
         data.append('file', file)
       }
@@ -112,5 +147,25 @@ export const useDeleteUserMutation = (fetchApi: any) =>
         return
       }
       return result.data.data
+    },
+  })
+
+export const useResetPasswordUserQuery = (fetchApi: any) =>
+  useMutation({
+    mutationFn: async (email: string) => {
+      const res = await fetchApi('/users/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
     },
   })

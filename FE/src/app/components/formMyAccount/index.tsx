@@ -56,7 +56,7 @@ export default function FormMyAccount({}: Props) {
   const [file, setFile] = useState<any>()
   const handleChangeImage = (e: any) => {
     const selectedFile = e.target.files[0]
-      setFile(selectedFile)
+    setFile(selectedFile)
   }
   const initialValuesUser: Info = { fullname: '', email: '' }
   const initialValuesUserPassword: InfoPassword = {

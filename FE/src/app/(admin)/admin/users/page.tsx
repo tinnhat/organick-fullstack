@@ -110,7 +110,7 @@ export default function Users({}: Props) {
       _id: row._id,
       fullname: row.fullname,
       email: row.email,
-      isConfirm: row.isConfirm ? 'Confirmed' : 'Unconfirmed',
+      isConfirmed: row.isConfirmed ? 'Confirmed' : 'Unconfirmed',
       isAdmin: row.isAdmin ? 'Admin' : 'User',
       updateAt: moment(row.updateAt).format('DD/MM/YYYY HH:mm:ss'),
       createdAt: moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss'),
@@ -256,6 +256,8 @@ export default function Users({}: Props) {
                                   '&.MuiTableRow-root:hover': {
                                     backgroundColor: 'rgba(0,0,0,0.05)',
                                   },
+                                  backgroundColor: user._destroy ? 'rgba(0,0,0,0.05)' : 'inherit',
+                                  opacity: user._destroy ? 0.8 : 1,
                                 }}
                                 onClick={() => router.push(`/admin/users/${user._id}`)}
                               >
@@ -270,7 +272,7 @@ export default function Users({}: Props) {
                                   </Box>
                                 </TableCell>
                                 <TableCell>
-                                  <Checkbox checked={user.isConfirm} />
+                                  <Checkbox checked={user.isConfirmed} />
                                 </TableCell>
                                 <TableCell>
                                   <Checkbox checked={user.isAdmin} />

@@ -8,7 +8,7 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdCategory)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -18,7 +18,7 @@ const getCategories = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(categories)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -28,7 +28,7 @@ const getCategoryInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -38,7 +38,7 @@ const editCategoryInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -48,7 +48,7 @@ const deleteCategoryById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 

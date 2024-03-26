@@ -1,3 +1,5 @@
+import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
   Avatar,
   Box,
@@ -12,16 +14,12 @@ import {
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
+import { styled } from '@mui/material/styles'
+import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import { useFormik, Formik, Field, Form } from 'formik'
+import { toast } from 'sonner'
 import * as yup from 'yup'
 import TextFieldPassword from '../../components/password'
-import Image from 'next/image'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import { styled } from '@mui/material/styles'
-import { values } from 'lodash'
-import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
-import { toast } from 'sonner'
 
 type Props = {
   open: boolean
@@ -34,7 +32,7 @@ type MyFormValues = {
   password: string
   confirmPassword: string
   isAdmin: boolean
-  isConfirm: boolean
+  isConfirmed: boolean
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -76,13 +74,14 @@ export default function AddUser({ open, toggleDrawer, refetch }: Props) {
     password: '',
     confirmPassword: '',
     isAdmin: false,
-    isConfirm: false,
+    isConfirmed: false,
   }
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
   }
 
   const handleSubmit = async (values: any, actions: any) => {
+    console.log(values);
     const result = await register({ ...values, file })
     if (result) {
       actions.resetForm()
@@ -146,7 +145,7 @@ export default function AddUser({ open, toggleDrawer, refetch }: Props) {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
-            const { email, fullname, password, confirmPassword, isAdmin, isConfirm } = values
+            const { email, fullname, password, confirmPassword, isAdmin, isConfirmed } = values
             return (
               <Form>
                 <Stack spacing={2}>
@@ -217,10 +216,10 @@ export default function AddUser({ open, toggleDrawer, refetch }: Props) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={isConfirm}
-                              value={isConfirm}
+                              checked={isConfirmed}
+                              value={isConfirmed}
                               onChange={handleChange}
-                              name='isConfirm'
+                              name='isConfirmed'
                             />
                           }
                           label='Confirm'

@@ -27,7 +27,7 @@ export const generateRefreshToken = (user: User) => {
     {
       _id: user._id,
       fullname: user.fullname,
-      email: user.email,
+      email: user.email
     },
     env.JWT_SECRET_REFRESH!,
     {
@@ -99,4 +99,16 @@ export const slugify = (val: string) => {
     .replace(/[^a-z0-9 -]/g, '') // remove non-alphanumeric characters
     .replace(/\s+/g, '-') // replace spaces with hyphens
     .replace(/-+/g, '-') // remove consecutive hyphens
+}
+
+export const generateRandomPassword = () => {
+  let pass = ''
+  const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz0123456789@#$'
+
+  for (let i = 1; i <= 8; i++) {
+    const char = Math.floor(Math.random() * str.length + 1)
+    pass += str.charAt(char)
+  }
+
+  return pass
 }

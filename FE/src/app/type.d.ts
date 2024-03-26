@@ -36,7 +36,7 @@ type User = {
   fullname: string
   email: string
   password?: string
-  isConfirm: boolean
+  isConfirmed: boolean
   isAdmin: boolean
   updateAt: Date | string
   createdAt: Date | string
