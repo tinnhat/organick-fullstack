@@ -19,6 +19,15 @@ import * as yup from 'yup'
 import BaseCard from '../../components/shared/BaseCard'
 import { useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import useFetch from '@/app/utils/useFetch'
+import {
+  useGetUserInfoByIdQuery,
+  useResetPasswordUserQuery,
+  useUpdateUserInfoMutation,
+} from '@/app/utils/hooks/usersHooks'
+import Loading from '../../loading'
+import { toast } from 'sonner'
+import client from '@/app/client'
 
 type Props = {}
 
@@ -26,7 +35,7 @@ type MyFormValues = {
   email: string
   fullname: string
   isAdmin: boolean
-  isConfirm: boolean
+  isConfirmed: boolean
   _destroy: boolean
 }
 
@@ -49,22 +58,49 @@ const validationSchema = yup.object({
     .min(4, 'Name should be of minimum 4 characters length'),
 })
 
-export default function OrderDetail({}: Props) {
+export default function UserDetail({}: Props) {
   const [file, setFile] = useState<File | undefined>(undefined)
+  const fetchApi = useFetch()
   const params = useParams()
   const route = useRouter()
-
+  const { data: userInfo, isLoading } = useGetUserInfoByIdQuery(fetchApi, params.id.toString())
+  const { mutateAsync: updateInfo } = useUpdateUserInfoMutation(fetchApi, params.id.toString())
+  const { mutateAsync: resetPassword } = useResetPasswordUserQuery(fetchApi)
   const initialValues: MyFormValues = {
     email: '',
     fullname: '',
     isAdmin: false,
-    isConfirm: false,
+    isConfirmed: false,
     _destroy: false,
   }
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
   }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    console.log(values)
+    const result = await updateInfo({
+      ...values,
+      file,
+    })
+    if (result) {
+      client.setQueryData(['User Information by id', params.id.toString()], result)
+      toast.success('User updated successfully', { position: 'bottom-right' })
+      setFile(undefined)
+    }
+  }
+
+  const handleResetPassword = async () => {
+    try {
+      await resetPassword(userInfo.email)
+      toast.success('Password reset successfully', { position: 'bottom-right' })
+    } catch (error) {
+      toast.error('Something went wrong', { position: 'bottom-right' })
+    }
+  }
+
+  if (isLoading) return <Loading />
 
   return (
     <div>
@@ -89,7 +125,7 @@ export default function OrderDetail({}: Props) {
             <br />
             <Avatar
               alt='avatar'
-              src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.jpg'}
+              src={file ? URL.createObjectURL(file!) : userInfo?.avatar}
               sx={{ height: 80, width: 80, mt: 2, mb: 2, border: '1px solid #ccc' }}
             />
           </Box>
@@ -107,16 +143,20 @@ export default function OrderDetail({}: Props) {
           <Formik
             validateOnChange={true}
             validationSchema={validationSchema}
-            initialValues={initialValues}
-            onSubmit={(values, actions) => {
-              console.log(values)
-              setTimeout(() => {
-                actions.setSubmitting(false)
-              }, 1000)
-            }}
+            enableReinitialize={true}
+            initialValues={
+              {
+                email: userInfo.email,
+                fullname: userInfo.fullname,
+                isAdmin: userInfo.isAdmin,
+                isConfirmed: userInfo.isConfirmed,
+                _destroy: userInfo._destroy,
+              } || initialValues
+            }
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting, errors, values, touched, handleChange }) => {
-              const { email, fullname, isAdmin, isConfirm, _destroy } = values
+              const { email, fullname, isAdmin, isConfirmed, _destroy } = values
               return (
                 <Form>
                   <Grid container spacing={2}>
@@ -140,7 +180,7 @@ export default function OrderDetail({}: Props) {
                         value={fullname}
                         onChange={handleChange}
                         error={touched.fullname && Boolean(errors.fullname)}
-                        helperText={touched.fullname && errors.fullname}
+                        helperText={touched.fullname && (errors.fullname as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -172,10 +212,10 @@ export default function OrderDetail({}: Props) {
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  checked={isConfirm}
-                                  value={isConfirm}
+                                  checked={isConfirmed}
+                                  value={isConfirmed}
                                   onChange={handleChange}
-                                  name='isConfirm'
+                                  name='isConfirmed'
                                 />
                               }
                               label='Confirm'
@@ -206,7 +246,9 @@ export default function OrderDetail({}: Props) {
                     <Button type='submit' disabled={isSubmitting} variant='contained'>
                       Save
                     </Button>
-                    <Button variant='contained'>Reset password</Button>
+                    <Button variant='contained' onClick={handleResetPassword}>
+                      Reset password
+                    </Button>
                     <Button variant='outlined' onClick={() => route.back()}>
                       Back
                     </Button>

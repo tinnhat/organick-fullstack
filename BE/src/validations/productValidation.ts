@@ -5,9 +5,9 @@ import ApiError from '~/utils/ApiError'
 
 const createNew = async (req: Request, res: Response, next: NextFunction) => {
   const check = Joi.object({
-    name: Joi.string().required().min(1).max(20).trim().strict().messages({
+    name: Joi.string().required().min(1).max(255).trim().strict().messages({
       'string.min': 'Name must be at least 1 characters long',
-      'string.max': 'Name must be at most 10 characters long',
+      'string.max': 'Name must be at most 50 characters long',
       'string.trim': 'Name must not have leading or trailing spaces',
       'string.base': 'Name must be a string',
       'any.required': 'Name is required',

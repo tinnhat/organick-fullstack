@@ -8,17 +8,19 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdProduct)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
 const getProducts = async (req: Request, res: Response, next: any) => {
   try {
-    const products = await productServices.getProducts()
+    const page = Number(req.query.page)
+    const pageSize = Number(req.query.pageSize)
+    const products = await productServices.getProducts(page, pageSize)
     res.status(StatusCodes.OK).json(products)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -28,7 +30,7 @@ const getProductInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -38,7 +40,7 @@ const editProductInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -48,7 +50,7 @@ const deleteProductById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -58,7 +60,7 @@ const checkList = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 

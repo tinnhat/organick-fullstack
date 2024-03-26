@@ -18,7 +18,7 @@ export default function Counter({}: Props) {
           </p>
           <div className='counter-people' data-aos='fade-up' data-aos-duration='1200'>
             <Image
-              src={'/assets/img/avatar.jpg'}
+              src={'/assets/img/avatar.webp'}
               alt=''
               className='avatar-counter'
               width={200}

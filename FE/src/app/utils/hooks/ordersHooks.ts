@@ -15,11 +15,11 @@ export const useCreateOrderMutation = (fetchApi: any) =>
     },
   })
 
-export const useGetOrdersOfUserQuery = (fetchApi: any, id: string) =>
+export const useGetOrdersOfUserQuery = (fetchApi: any, id: string, page: number, pageSize: number) =>
   useQuery({
     queryKey: ['orders of user', id],
     queryFn: async () => {
-      const res = await fetchApi(`/orders/user/${id}`, {
+      const res = await fetchApi(`/orders/user/${id}/?page=${page}&pageSize=${pageSize}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

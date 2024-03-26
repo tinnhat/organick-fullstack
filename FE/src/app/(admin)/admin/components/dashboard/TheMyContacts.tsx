@@ -12,25 +12,25 @@ import Badge from '@mui/material/Badge'
 
 const contacts = [
   {
-    img: '/images/users/1.jpg',
+    img: '/images/users/1.webp',
     title: 'Oliver Jake',
     subtext: 'info@oliver.com',
     status: 'primary.main'
   },
   {
-    img: '/images/users/2.jpg',
+    img: '/images/users/2.webp',
     title: 'Jack Connor',
     subtext: 'info@jack.com',
     status: 'secondary.main'
   },
   {
-    img: '/images/users/3.jpg',
+    img: '/images/users/3.webp',
     title: 'Harry Callum',
     subtext: 'info@harry.com',
     status: 'error.main'
   },
   {
-    img: '/images/users/4.jpg',
+    img: '/images/users/4.webp',
     title: 'Jacob Reece',
     subtext: 'info@jacob.com',
     status: 'warning.main'

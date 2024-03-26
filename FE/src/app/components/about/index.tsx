@@ -38,7 +38,7 @@ export default function About({}: Props) {
             <div className='about-sub-box'>
               <p className='about-sub-icon'>
                 <Image
-                  src={'/assets/img/Group2.png'}
+                  src={'/assets/img/Group2.webp'}
                   alt=''
                   className='sub-box-icon'
                   width={50}

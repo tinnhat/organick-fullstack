@@ -199,7 +199,7 @@ export default function OrderDetail({}: Props) {
                                 borderRadius: 0,
                                 border: '1px solid #ccc',
                               }}
-                              src={'/assets/img/product1.png'}
+                              src={'/assets/img/product1.webp'}
                             />
                           </TableCell>
                           <TableCell>

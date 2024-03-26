@@ -6,7 +6,7 @@ type Props = {}
 export default function ErrorFetchingProduct({}: Props) {
   return (
     <div className='error-fetching-container'>
-      <Image width={300} height={300} alt='' src='/images/backgrounds/error.png' />
+      <Image width={300} height={300} alt='' src='/images/backgrounds/error.webp' />
       <h1>
         <span>500</span> <br />
         Internal server error

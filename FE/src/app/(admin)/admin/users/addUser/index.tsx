@@ -1,3 +1,5 @@
+import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
   Avatar,
   Box,
@@ -12,17 +14,17 @@ import {
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
+import { styled } from '@mui/material/styles'
+import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import { useFormik, Formik, Field, Form } from 'formik'
+import { toast } from 'sonner'
 import * as yup from 'yup'
 import TextFieldPassword from '../../components/password'
-import Image from 'next/image'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import { styled } from '@mui/material/styles'
 
 type Props = {
   open: boolean
   toggleDrawer: (val: boolean) => void
+  refetch: () => void
 }
 type MyFormValues = {
   email: string
@@ -30,7 +32,7 @@ type MyFormValues = {
   password: string
   confirmPassword: string
   isAdmin: boolean
-  isConfirm: boolean
+  isConfirmed: boolean
 }
 
 const VisuallyHiddenInput = styled('input')({
@@ -58,8 +60,9 @@ const validationSchema = yup.object({
   confirmPassword: yup.string().oneOf([yup.ref('password'), undefined], 'Passwords must match'),
 })
 
-export default function AddUser({ open, toggleDrawer }: Props) {
+export default function AddUser({ open, toggleDrawer, refetch }: Props) {
   const [file, setFile] = useState<File | undefined>(undefined)
+  const { mutateAsync: register } = useRegisterMutation()
 
   const handleClose = () => {
     toggleDrawer(false)
@@ -71,10 +74,22 @@ export default function AddUser({ open, toggleDrawer }: Props) {
     password: '',
     confirmPassword: '',
     isAdmin: false,
-    isConfirm: false,
+    isConfirmed: false,
   }
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    console.log(values);
+    const result = await register({ ...values, file })
+    if (result) {
+      actions.resetForm()
+      toggleDrawer(false)
+      refetch()
+      setFile(undefined)
+      toast.success('User added successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -108,7 +123,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
           <br />
           <Avatar
             alt='avatar'
-            src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.jpg'}
+            src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.webp'}
             sx={{ height: 80, width: 80, mt: 2, mb: 2, border: '1px solid #ccc' }}
           />
         </Box>
@@ -127,15 +142,10 @@ export default function AddUser({ open, toggleDrawer }: Props) {
           validateOnChange={true}
           validationSchema={validationSchema}
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values)
-            setTimeout(() => {
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
-            const { email, fullname, password, confirmPassword, isAdmin, isConfirm } = values
+            const { email, fullname, password, confirmPassword, isAdmin, isConfirmed } = values
             return (
               <Form>
                 <Stack spacing={2}>
@@ -206,10 +216,10 @@ export default function AddUser({ open, toggleDrawer }: Props) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              checked={isConfirm}
-                              value={isConfirm}
+                              checked={isConfirmed}
+                              value={isConfirmed}
                               onChange={handleChange}
-                              name='isConfirm'
+                              name='isConfirmed'
                             />
                           }
                           label='Confirm'

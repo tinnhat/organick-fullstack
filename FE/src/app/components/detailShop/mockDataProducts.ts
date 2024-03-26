@@ -2,7 +2,7 @@ export const products = [
   {
     _id: 1,
     name: 'Calabrese Broccoli',
-    img: '/assets/img/product1.png',
+    img: '/assets/img/product1.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Vegetable Vegetable Vegetable',
@@ -12,7 +12,7 @@ export const products = [
   {
     _id: 2,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product2.png',
+    img: '/assets/img/product2.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -23,7 +23,7 @@ export const products = [
   {
     _id: 3,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product3.png',
+    img: '/assets/img/product3.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -34,7 +34,7 @@ export const products = [
   {
     _id: 4,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product1.png',
+    img: '/assets/img/product1.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -45,7 +45,7 @@ export const products = [
   {
     _id: 5,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product2.png',
+    img: '/assets/img/product2.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -56,7 +56,7 @@ export const products = [
   {
     _id: 6,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product3.png',
+    img: '/assets/img/product3.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -67,7 +67,7 @@ export const products = [
   {
     _id: 47,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product1.png',
+    img: '/assets/img/product1.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',
@@ -78,7 +78,7 @@ export const products = [
   {
     _id: 58,
     name: 'Fresh Broccoli',
-    img: '/assets/img/product2.png',
+    img: '/assets/img/product2.webp',
     price: '$20.00',
     salePrice: '$13.00',
     tag: 'Fresh',

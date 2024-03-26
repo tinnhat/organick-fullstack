@@ -4,9 +4,16 @@ import CryptoJS from 'crypto-js'
 /* eslint-disable no-useless-catch */
 import { userModel } from '~/models/userModel'
 import ApiError from '~/utils/ApiError'
-import { generateRefreshToken, generateToken, responseData, uploadImage } from '~/utils/algorithms'
+import {
+  generateRandomPassword,
+  generateRefreshToken,
+  generateToken,
+  responseData,
+  uploadImage
+} from '~/utils/algorithms'
 import { DEFAULT_AVATAR } from '~/utils/constants'
 import sendVerificationMail from '~/utils/mail/sendVertificationMail'
+import resetPasswordMail from '~/utils/mail/resetPasswordEmail'
 
 /* eslint-disable no-useless-catch */
 const createNew = async (reqBody: any, reqFile: any) => {
@@ -91,10 +98,8 @@ const editUserInfo = async (id: string, data: any, reqFile: any) => {
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    console.log(data);
-    
     const changeData = {
-      fullname: data.fullname,
+      ...data,
       updatedAt: Date.now(),
       avatar: reqFile ? await uploadImage(reqFile, 'organick/users') : user.avatar
     }
@@ -121,7 +126,7 @@ const changePassword = async (id: string, data: any) => {
     }
     const changeData = {
       password: hashSync(data.newPassword),
-      updatedAt: Date.now(),
+      updatedAt: Date.now()
     }
     await userModel.findAndUpdate(id, changeData)
     //get latest data
@@ -160,7 +165,8 @@ const deleteUserById = async (id: string) => {
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    await userModel.findAndRemove(id)
+    const result = await userModel.findAndRemove(id)
+    return responseData(result)
   } catch (error) {
     throw error
   }
@@ -190,6 +196,28 @@ const checkRefreshToken = async (refreshToken: string) => {
   }
 }
 
+const resetPassword = async (data: any) => {
+  try {
+    const user = await userModel.findOneByEmail(data)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    const newPassword = generateRandomPassword()
+
+    const result = await userModel.findAndUpdate(user._id, {
+      password: hashSync(newPassword),
+      updatedAt: Date.now()
+    })
+    //send email
+    await resetPasswordMail(user, newPassword)
+    //not show password when response
+    delete result.password
+    return responseData(result)
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userServices = {
   createNew,
   login,
@@ -199,5 +227,6 @@ export const userServices = {
   verifyEmail,
   deleteUserById,
   checkRefreshToken,
-  changePassword
+  changePassword,
+  resetPassword
 }

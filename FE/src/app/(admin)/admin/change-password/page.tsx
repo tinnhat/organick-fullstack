@@ -6,6 +6,10 @@ import TextField from '@mui/material/TextField'
 import BaseCard from '../components/shared/BaseCard'
 import * as yup from 'yup'
 import { Form, Formik } from 'formik'
+import { useUpdatePasswordMutation } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
+import { signOut, useSession } from 'next-auth/react'
+import { toast } from 'sonner'
 
 type Props = {}
 
@@ -28,8 +32,25 @@ const validationSchema = yup.object({
 })
 
 export default function ChangePassword({}: Props) {
+  const fetchApi = useFetch()
+  const { data: session } = useSession()
   const initialValues: InfoPassword = { password: '', newPassword: '', confirmPassword: '' }
-
+  const { mutateAsync: updatePassword } = useUpdatePasswordMutation(fetchApi, session?.user._id)
+  const handleChangePassword = async (values: any, actions: any) => {
+    const result = await updatePassword({
+      password: values.password,
+      newPassword: values.newPassword,
+    })
+    if (result) {
+      toast.success('Change password successfully, please login again', {
+        position: 'top-center',
+      })
+      actions.resetForm()
+      setTimeout(() => {
+        signOut({ callbackUrl: '/login' })
+      }, 3000)
+    }
+  }
   return (
     <div className='change-password'>
       <Grid container spacing={3}>
@@ -40,12 +61,7 @@ export default function ChangePassword({}: Props) {
                 validateOnChange={true}
                 validationSchema={validationSchema}
                 initialValues={initialValues}
-                onSubmit={(values, actions) => {
-                  console.log(values)
-                  setTimeout(() => {
-                    actions.setSubmitting(false)
-                  }, 1000)
-                }}
+                onSubmit={handleChangePassword}
               >
                 {({ isSubmitting, errors, values, touched, handleChange }) => {
                   const { password, newPassword, confirmPassword } = values
@@ -61,6 +77,7 @@ export default function ChangePassword({}: Props) {
                           value={password}
                           onChange={handleChange}
                           error={touched.password && Boolean(errors.password)}
+                          helperText={touched.password && errors.password}
                         />
                         <TextField
                           sx={{ width: '50%' }}
@@ -71,6 +88,7 @@ export default function ChangePassword({}: Props) {
                           value={newPassword}
                           onChange={handleChange}
                           error={touched.newPassword && Boolean(errors.newPassword)}
+                          helperText={touched.newPassword && errors.newPassword}
                         />
                         <TextField
                           sx={{ width: '50%' }}
@@ -81,6 +99,7 @@ export default function ChangePassword({}: Props) {
                           value={confirmPassword}
                           onChange={handleChange}
                           error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                          helperText={touched.confirmPassword && errors.confirmPassword}
                         />
                       </Stack>
                       <Button

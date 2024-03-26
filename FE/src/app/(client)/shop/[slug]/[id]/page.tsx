@@ -8,7 +8,7 @@ type Props = {
 export default function DetailProduct({ params }: Props) {
   return (
     <section className='shop-single'>
-      <BannerImg pic={'/assets/img/shop-single.jpg'} />
+      <BannerImg pic={'/assets/img/shop-single.webp'} />
       <SingleProductDetail params={params} />
     </section>
   )

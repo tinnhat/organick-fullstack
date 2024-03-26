@@ -8,7 +8,7 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdUser)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -18,7 +18,7 @@ const login = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(createdUser)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -28,7 +28,7 @@ const getUserInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -38,7 +38,7 @@ const editUserInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -48,7 +48,7 @@ const deleteUserById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -58,7 +58,7 @@ const getUsers = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -68,7 +68,7 @@ const verifyEmail = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -78,7 +78,17 @@ const changePassword = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
+  }
+}
+
+const resetPassword = async (req: Request, res: Response, next: any) => {
+  try {
+    const user = await userServices.resetPassword(req.body.email)
+    res.status(StatusCodes.OK).json(user)
+  } catch (error) {
+    next(error)
+    
   }
 }
 
@@ -90,5 +100,6 @@ export const userController = {
   getUsers,
   verifyEmail,
   deleteUserById,
-  changePassword
+  changePassword,
+  resetPassword
 }

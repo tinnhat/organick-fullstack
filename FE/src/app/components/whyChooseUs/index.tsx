@@ -28,7 +28,7 @@ export default function WhyChooseUs({}: Props) {
             </p>
           </div>
           <div className='choos-img-box'>
-            <Image src={'/assets/img/whyChooseUs.png'} alt='' className='choos-img' layout='fill' />
+            <Image src={'/assets/img/whyChooseUs.webp'} alt='' className='choos-img' layout='fill' />
           </div>
         </div>
         <div className='choos-info-box'>
@@ -41,21 +41,21 @@ export default function WhyChooseUs({}: Props) {
           </div>
           <div className='tab'>
             <div className='box-icon'>
-              <Image src={'/assets/img/Icon-choose-2.png'} alt='' width={50} height={50} />
+              <Image src={'/assets/img/Icon-choose-2.webp'} alt='' width={50} height={50} />
             </div>
             <p className='tab-title'>Return Policy</p>
             <p className='tab-text'>Simply dummy text of the printintypesetting industry.</p>
           </div>
           <div className='tab'>
             <div className='box-icon'>
-              <Image src={'/assets/img/Icon-choose-3.png'} alt='' width={50} height={50} />
+              <Image src={'/assets/img/Icon-choose-3.webp'} alt='' width={50} height={50} />
             </div>
             <p className='tab-title'>Return Policy</p>
             <p className='tab-text'>Simply dummy text of the printintypesetting industry.</p>
           </div>
           <div className='tab'>
             <div className='box-icon'>
-              <Image src={'/assets/img/Icon-choose-4.png'} alt='' width={50} height={50} />
+              <Image src={'/assets/img/Icon-choose-4.webp'} alt='' width={50} height={50} />
             </div>
             <p className='tab-title'>Return Policy</p>
             <p className='tab-text'>Simply dummy text of the printintypesetting industry.</p>

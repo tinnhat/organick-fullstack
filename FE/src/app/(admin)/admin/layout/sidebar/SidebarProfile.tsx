@@ -1,8 +1,16 @@
 /* eslint-disable quotes */
+import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { useSession } from 'next-auth/react'
+import { DotLoader } from 'react-spinners'
 export const SidebarProfile = () => {
+  const fetchApi = useFetch()
+  const { data: session } = useSession()
+  const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)
+
   return (
     <Box
       sx={{
@@ -10,12 +18,20 @@ export const SidebarProfile = () => {
         borderRadius: '0 !important',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'top center'
+        backgroundPosition: 'top center',
       }}
     >
       <>
         <Box px='12px' py='28px' borderRadius='0 !important'>
-          <Avatar alt='Remy Sharp' src={'/images/users/user2.jpg'} sx={{ height: 50, width: 50 }} />
+          {isLoading ? (
+            <DotLoader size={20} color='#274c5b' />
+          ) : (
+            <Avatar
+              alt={userInfo?.fullname}
+              src={userInfo?.avatar}
+              sx={{ height: 50, width: 50 }}
+            />
+          )}
         </Box>
 
         <Box
@@ -30,10 +46,10 @@ export const SidebarProfile = () => {
             sx={{
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              overflow: 'hidden'
+              overflow: 'hidden',
             }}
           >
-            Julia Roberts
+            {userInfo?.fullname}
           </Typography>
         </Box>
       </>

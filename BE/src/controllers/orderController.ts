@@ -9,7 +9,7 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdOrder)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -19,17 +19,19 @@ const getOrders = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(orders)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
 const getOrdersByUser = async (req: Request, res: Response, next: any) => {
   try {
-    const orders = await orderServices.getOrdersByUser(req.params.id)
+    const page = Number(req.query.page)
+    const pageSize = Number(req.query.pageSize)
+    const orders = await orderServices.getOrdersByUser(req.params.id, page, pageSize)
     res.status(StatusCodes.OK).json(orders)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -39,7 +41,7 @@ const getOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -49,7 +51,7 @@ const editOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -59,7 +61,7 @@ const updateOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 
@@ -70,7 +72,7 @@ const deleteOrderById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    // res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ errors: error.message })
+    
   }
 }
 

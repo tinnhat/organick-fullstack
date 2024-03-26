@@ -58,12 +58,19 @@
       }
     }
     .list-orders {
-      padding: 0;
+      padding: 10px 0;
+      .loading{
+        text-align: center;
+        color: $text-bold-color;
+        margin-top: 20px;
+      }
       .order {
-        margin: 10px 0;
+        margin: 20px 0;
         background-color: #fff;
         padding: 10px;
         border-radius: 4px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        
         .order-id {
           span {
             color: $green-leaf-color;
@@ -79,10 +86,18 @@
           }
           .order-status {
             margin-left: auto;
-            background-color: red;
             padding: 4px;
             border-radius: 4px;
             color: $white-color;
+            &.Pending {
+              background-color: #f1c40f;
+            }
+            &.Cancel {
+              background-color: #e74c3ced;
+            }
+            &.Complete {
+              background-color: #27ae60;
+            }
           }
         }
         .product-info {
@@ -136,17 +151,25 @@
             border: none;
             margin-right: 10px;
           }
-          .btn-cancel{
+          .btn-cancel {
             background-color: $text-bold-color;
             color: $white-color;
             outline: none;
             border-radius: 4px;
             padding: 10px;
             border: none;
-            
           }
         }
       }
+    }
+    .no-order {
+      text-align: center;
+      color: $text-bold-color;
+      font-weight: 500;
+      margin-top: 20px;
+      font-size: 20px;
+      margin-bottom: 20px;
+
     }
   }
 }

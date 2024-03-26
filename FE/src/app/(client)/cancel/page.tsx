@@ -39,8 +39,8 @@ export default function Cancel({}: Props) {
       ) : (
         <div className='container'>
           <div className='cancel-container'>
-            <p className='cancel-title'>Payment cancelled</p>
-            <h2 className='cancel-thank'>Your order has been cancelled</h2>
+            <p className='cancel-title'>Payment Information</p>
+            <h2 className='cancel-thank'>Your order is pending</h2>
             <div className='box-order'>
               <ul className='list-item'>
                 {order?.line_items?.data?.map((item: any) => {

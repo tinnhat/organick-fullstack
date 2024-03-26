@@ -1,7 +1,7 @@
-import img1 from 'src/assets/images/profile/user-1.jpg'
-import img2 from 'src/assets/images/profile/user-2.jpg'
-import img3 from 'src/assets/images/profile/user-3.jpg'
-import img4 from 'src/assets/images/profile/user-4.jpg'
+import img1 from 'src/assets/images/profile/user-1.webp'
+import img2 from 'src/assets/images/profile/user-2.webp'
+import img3 from 'src/assets/images/profile/user-3.webp'
+import img4 from 'src/assets/images/profile/user-4.webp'
 
 import icon1 from 'src/assets/images/svgs/icon-account.svg'
 import icon2 from 'src/assets/images/svgs/icon-inbox.svg'

@@ -12,13 +12,13 @@ const ProfileCard = () => {
     <Card variant='outlined' sx={{ p: 0 }}>
       <CardMedia
         sx={{ height: 225 }}
-        image='/images/backgrounds/login-register.jpg'
+        image='/images/backgrounds/login-register.webp'
         title='green iguana'
       />
       <CardContent>
         <Box textAlign='center' mt='-80px'>
           <Avatar
-            src='/images/users/1.jpg'
+            src='/images/users/1.webp'
             sx={{ width: 100, height: 100, m: '0 auto' }}
           />
           <Typography variant='h5' mt={4}>

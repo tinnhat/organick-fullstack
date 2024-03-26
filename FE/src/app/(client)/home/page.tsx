@@ -1,12 +1,14 @@
-import About from '@/app/components/about'
-import Blog from '@/app/components/blog'
-import Counter from '@/app/components/counter'
-import Gallery from '@/app/components/gallery'
-import HeaderBanner from '@/app/components/headerBanner'
-import Offer from '@/app/components/offer'
-import OfferBanner from '@/app/components/offerBanner'
-import ShopShow from '@/app/components/shopShow'
-import WhoWeAre from '@/app/components/whoWeAre'
+import dynamic from 'next/dynamic'
+
+const HeaderBanner = dynamic(() => import('@/app/components/headerBanner'))
+const OfferBanner = dynamic(() => import('@/app/components/offerBanner'))
+const About = dynamic(() => import('@/app/components/about'))
+const ShopShow = dynamic(() => import('@/app/components/shopShow'))
+const Counter = dynamic(() => import('@/app/components/counter'))
+const Offer = dynamic(() => import('@/app/components/offer'))
+const WhoWeAre = dynamic(() => import('@/app/components/whoWeAre'))
+const Gallery = dynamic(() => import('@/app/components/gallery'))
+const Blog = dynamic(() => import('@/app/components/blog'))
 
 export default function Home() {
   return (

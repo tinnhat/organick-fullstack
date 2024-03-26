@@ -44,7 +44,10 @@ const findOneById = async (id: string) => {
 
 const getCategories = async () => {
   try {
-    const result = await getDB().collection(CATEGORY_COLLECTION_NAME).find({}).toArray()
+    const result = await getDB()
+      .collection(CATEGORY_COLLECTION_NAME)
+      .aggregate([{ $sort: { _destroy: 1 } }])
+      .toArray()
     if (!result) return null
     return result
   } catch (error) {

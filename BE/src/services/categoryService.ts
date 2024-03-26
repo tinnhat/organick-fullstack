@@ -64,7 +64,8 @@ const deleteCategoryById = async (id: string) => {
     if (!category) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
     }
-    await categoryModel.findAndRemove(id)
+    const result = await categoryModel.findAndRemove(id)
+    return responseData(result)
   } catch (error) {
     throw error
   }

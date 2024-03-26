@@ -28,9 +28,9 @@ const createNew = async (reqBody: any, reqFile: any) => {
   }
 }
 
-const getProducts = async () => {
+const getProducts = async (page: number, pageSize: number) => {
   try {
-    const allProducts = await productModel.getProducts()
+    const allProducts = await productModel.getProducts(page, pageSize)
     return responseData(allProducts)
   } catch (error) {
     throw error
@@ -76,7 +76,8 @@ const deleteProductById = async (id: string) => {
     if (!product) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
-    await productModel.findAndRemove(id)
+    const result = await productModel.findAndRemove(id)
+    return responseData(result)
   } catch (error) {
     throw error
   }
@@ -84,7 +85,7 @@ const deleteProductById = async (id: string) => {
 
 const checkList = async (data: any) => {
   try {
-    const allProducts = await productModel.getProducts()
+    const allProducts = await productModel.getProducts(1, 1000)
     //check quantity of product
     for (let i = 0; i < data.products.length; i++) {
       const product = allProducts.find((item: any) => item._id.toString() === data.products[i]._id.toString())

@@ -7,7 +7,7 @@ type Props = {}
 export default function Quality({}: Props) {
   return (
     <div className='quality'>
-      <BannerImg pic={'/assets/img/qualityBanner.png'} />
+      <BannerImg pic={'/assets/img/qualityBanner.webp'} />
       <ServiceSingle />
     </div>
   )

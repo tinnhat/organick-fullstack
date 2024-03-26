@@ -55,9 +55,9 @@ const getOrders = async () => {
   }
 }
 
-const getOrdersByUser = async (userId: string) => {
+const getOrdersByUser = async (userId: string, page: number, pageSize: number) => {
   try {
-    const allOrder = await orderModel.getOrdersByUser(userId)
+    const allOrder = await orderModel.getOrdersByUser(userId, page, pageSize)
     return responseData(allOrder)
   } catch (error) {
     throw error
