@@ -19,7 +19,7 @@ export default function Header({}: Props) {
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session } = useSession()
-  const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)
+  const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user?._id)
   const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
   const router = useRouter()
@@ -65,7 +65,7 @@ export default function Header({}: Props) {
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
               <p className='cart-box-number'>Cart({userCart ? userCart.length : 0})</p>
             </div>
-            {session ? (
+            {session!?.user ? (
               <div className='avatar-box'>
                 {isLoading ? (
                   <DotLoader size={20} color='#274c5b' />
@@ -96,7 +96,7 @@ export default function Header({}: Props) {
                     </div>
                   )}
                   <div className='item' onClick={() => signOut()}>
-                    Sign out
+                    Logout
                   </div>
                 </div>
               </div>

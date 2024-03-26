@@ -30,7 +30,7 @@ export default function LoginForm({ setShowRegister }: Props) {
           })
           return
         }
-        router.push('/')
+        location.replace('/')
       }
     } catch (error) {
       console.log(error)

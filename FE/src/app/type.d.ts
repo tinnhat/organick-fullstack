@@ -38,6 +38,7 @@ type User = {
   password?: string
   isConfirmed: boolean
   isAdmin: boolean
+  avatar: string
   updateAt: Date | string
   createdAt: Date | string
   _destroy: boolean

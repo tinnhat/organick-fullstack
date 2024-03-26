@@ -124,7 +124,7 @@ ul {
           .item {
             cursor: pointer;
             word-wrap: none;
-            padding: 10px;
+            padding:  6px 10px;
             transition: all 0.2s linear;
             &:hover {
               background-color: $white-color;
