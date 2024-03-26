@@ -59,6 +59,11 @@
     }
     .list-orders {
       padding: 10px 0;
+      .loading{
+        text-align: center;
+        color: $text-bold-color;
+        margin-top: 20px;
+      }
       .order {
         margin: 20px 0;
         background-color: #fff;

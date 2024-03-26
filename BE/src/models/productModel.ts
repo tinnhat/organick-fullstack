@@ -81,7 +81,8 @@ const getProducts = async (page: number, pageSize: number) => {
           }
         },
         { $skip: skip },
-        { $limit: pageSize }
+        { $limit: pageSize },
+        { $sort: { _destroy: 1 } }
       ])
       .toArray()
     if (!result) return null

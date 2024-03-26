@@ -36,7 +36,8 @@ const createNew = async (req: Request, res: Response, next: any) => {
     isAdmin: Joi.boolean().valid(true, false).messages({
       'any.required': 'isAdmin is required',
       'any.only': 'isAdmin must be true'
-    })
+    }),
+    file: Joi.any().optional()
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })

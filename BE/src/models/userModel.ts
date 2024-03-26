@@ -21,6 +21,7 @@ const USER_SCHEMA = Joi.object({
 
 const createNew = async (data: any) => {
   try {
+    delete data.file
     const validData = await validateBeforeCreate(data, USER_SCHEMA)
     const createdUser = await getDB().collection(USER_COLLECTION_NAME).insertOne(validData)
     return createdUser
@@ -75,7 +76,10 @@ const saveRefreshToken = async (userId: string, refreshToken: string) => {
 
 const getUsers = async () => {
   try {
-    const result = await getDB().collection(USER_COLLECTION_NAME).find({}).toArray()
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .aggregate([{ $sort: { _destroy: 1 } }])
+      .toArray()
     if (!result) return null
     return result
   } catch (error) {

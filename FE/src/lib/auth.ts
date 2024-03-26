@@ -55,8 +55,6 @@ export const authOptions: AuthOptions = {
     },
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
-
-
         return {
           ...token,
           ...session.user

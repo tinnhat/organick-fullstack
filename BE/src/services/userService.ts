@@ -91,8 +91,6 @@ const editUserInfo = async (id: string, data: any, reqFile: any) => {
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    console.log(data);
-    
     const changeData = {
       fullname: data.fullname,
       updatedAt: Date.now(),
@@ -160,7 +158,8 @@ const deleteUserById = async (id: string) => {
     if (!user) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    await userModel.findAndRemove(id)
+    const result = await userModel.findAndRemove(id)
+    return responseData(result)
   } catch (error) {
     throw error
   }

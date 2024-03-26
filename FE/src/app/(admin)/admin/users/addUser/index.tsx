@@ -19,10 +19,14 @@ import TextFieldPassword from '../../components/password'
 import Image from 'next/image'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { styled } from '@mui/material/styles'
+import { values } from 'lodash'
+import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
+import { toast } from 'sonner'
 
 type Props = {
   open: boolean
   toggleDrawer: (val: boolean) => void
+  refetch: () => void
 }
 type MyFormValues = {
   email: string
@@ -58,8 +62,9 @@ const validationSchema = yup.object({
   confirmPassword: yup.string().oneOf([yup.ref('password'), undefined], 'Passwords must match'),
 })
 
-export default function AddUser({ open, toggleDrawer }: Props) {
+export default function AddUser({ open, toggleDrawer, refetch }: Props) {
   const [file, setFile] = useState<File | undefined>(undefined)
+  const { mutateAsync: register } = useRegisterMutation()
 
   const handleClose = () => {
     toggleDrawer(false)
@@ -75,6 +80,17 @@ export default function AddUser({ open, toggleDrawer }: Props) {
   }
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    const result = await register({ ...values, file })
+    if (result) {
+      actions.resetForm()
+      toggleDrawer(false)
+      refetch()
+      setFile(undefined)
+      toast.success('User added successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -127,12 +143,7 @@ export default function AddUser({ open, toggleDrawer }: Props) {
           validateOnChange={true}
           validationSchema={validationSchema}
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values)
-            setTimeout(() => {
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
             const { email, fullname, password, confirmPassword, isAdmin, isConfirm } = values

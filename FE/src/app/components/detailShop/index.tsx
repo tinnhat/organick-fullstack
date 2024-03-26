@@ -28,7 +28,7 @@ type Props = {}
 export default function DetailShop({}: Props) {
   const [page, setPage] = useState(1)
   const [quantityDefaultShow, setQuantityDefaultShow] = useState(16)
-  const { data: allProducts, isLoading, isError } = useGetProductsQuery(1)
+  const { data: allProducts, isLoading, isError } = useGetProductsQuery(page, quantityDefaultShow)
   const { data: allCategories } = useGetCategoriesQuery()
   const router = useRouter()
   const [showLoadingMore, setShowLoadingMore] = useState(true)
@@ -42,8 +42,8 @@ export default function DetailShop({}: Props) {
   })
   const [showFilter, setShowFilter] = useState(true)
 
-  const newConcatProduct = useCallback(async (page: number) => {
-    const res = await fetch(`http://localhost:8017/v1/products/?page=${page}&pageSize=16`, {
+  const newConcatProduct = useCallback(async (page: number, pageSize: number) => {
+    const res = await fetch(`http://localhost:8017/v1/products/?page=${page}&pageSize=${pageSize}`, {
       method: 'GET',
     })
     const result = await res.json()
@@ -53,7 +53,7 @@ export default function DetailShop({}: Props) {
     if (!showLoadingMore) return
     setQuantityDefaultShow(prev => prev + 16)
     setPage(prev => prev + 1)
-    const result = await newConcatProduct(page + 1)
+    const result = await newConcatProduct(page + 1, quantityDefaultShow)
     if (result.length > 0) {
       //sort
       const newItems = cloneDeep([...items, ...result])

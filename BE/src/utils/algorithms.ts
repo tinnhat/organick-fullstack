@@ -63,6 +63,7 @@ export const uploadImage = async (file: any, folder: string) => {
     if (file.size > FILE_SIZE) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'File size exceeds the limit')
     } else if (FILE_ALLOW.includes(file.mimetype)) {
+      console.log(file)
       const b64 = Buffer.from(file.buffer).toString('base64')
       const dataURI = 'data:' + file.mimetype + ';base64,' + b64
       const cldRes = await handleUpload(dataURI, folder)

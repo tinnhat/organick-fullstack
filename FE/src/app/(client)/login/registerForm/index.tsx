@@ -7,6 +7,8 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import * as yup from 'yup'
 import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
+import { signIn } from 'next-auth/react'
+import { toast } from 'sonner'
 type Props = {
   setShowRegister: (value: boolean) => void
 }
@@ -32,21 +34,22 @@ const validationSchema = yup.object({
 })
 export default function RegisterForm({ setShowRegister }: Props) {
   const initialValues: Info = { email: '', fullname: '', password: '', confirmPassword: '' }
-	const {mutateAsync: register} = useRegisterMutation()
+  const { mutateAsync: register } = useRegisterMutation()
   const [file, setFile] = useState<any>()
   const handleChangeImage = (e: any) => {
     const selectedFile = e.target.files[0]
-    if (selectedFile) {
-      // setFile(selectedFile)
-      const fileUrl = URL.createObjectURL(selectedFile)
-      setFile(fileUrl)
-      // Use fileUrl as needed
-    }
+    setFile(selectedFile)
   }
 
   const handleSubmitForm = async (values: any, actions: any) => {
-    console.log(values)
-    register(values)
+    const result = await register({ ...values, file })
+    if (result) {
+      actions.resetForm()
+      setShowRegister(false)
+      toast.info('Please check your email to activate your account', {
+        position: 'bottom-right',
+      })
+    }
   }
 
   return (
@@ -77,7 +80,7 @@ export default function RegisterForm({ setShowRegister }: Props) {
                   alt='Avatar'
                   width={100}
                   height={100}
-                  src={file ? file : '/images/users/avatar-default.webp'}
+                  src={file ? URL.createObjectURL(file) : '/images/users/avatar-default.webp'}
                 />
                 {file && (
                   <p className='clear-img' onClick={() => setFile('')}>

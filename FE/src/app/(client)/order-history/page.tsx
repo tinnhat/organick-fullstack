@@ -3,7 +3,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import './style.scss'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { products } from '@/app/components/detailShop/mockDataProducts'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useSession } from 'next-auth/react'
@@ -20,13 +20,15 @@ type Props = {}
 export default function OrderHistory({}: Props) {
   const router = useRouter()
   const fetchApi = useFetch()
+  const [page, setPage] = useState(1)
+  const [ordersDefaultShow, setOrdersDefaultShow] = useState(10)
   const { data: session } = useSession()
   const {
     data: ordersByUser,
     isLoading,
     isError,
-  } = useGetOrdersOfUserQuery(fetchApi, session?.user._id)
-  const [ordersDefaultShow, setOrdersDefaultShow] = useState(12)
+  } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
+  const [showLoadingMore, setShowLoadingMore] = useState(true)
   const [items, setItems] = useState(ordersByUser || [])
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
@@ -48,10 +50,30 @@ export default function OrderHistory({}: Props) {
       active: false,
     },
   ])
-  const fetchMoreData = () => {
-    setOrdersDefaultShow(prev => prev + 12)
-    //call api get more product
-    // setItems((prev: any) => [...prev, ...ordersByUser])
+  const newConcatOrder = useCallback(
+    async (page: number, ordersDefaultShow: number) => {
+      const res = await fetchApi(
+        `/orders/user/${session?.user._id}/?page=${page}&pageSize=${ordersDefaultShow}`,
+        {
+          method: 'GET',
+        }
+      )
+      return res.data.data
+    },
+    [fetchApi, session?.user._id]
+  )
+  const fetchMoreData = async () => {
+    if (!showLoadingMore) return
+    setOrdersDefaultShow(prev => prev + 16)
+    setPage(prev => prev + 1)
+    const result = await newConcatOrder(page + 1, ordersDefaultShow)
+    console.log(result)
+    if (result.length === 0) {
+      setShowLoadingMore(false)
+      return
+    }
+    setItems((prev: any) => [...prev, ...result])
+    setShowLoadingMore(false)
   }
   useEffect(() => {
     if (ordersByUser) {
@@ -133,7 +155,7 @@ export default function OrderHistory({}: Props) {
                 dataLength={ordersDefaultShow}
                 next={fetchMoreData}
                 hasMore={true}
-                loader={<h4>Loading...</h4>}
+                loader={showLoadingMore && <h4 className='loading'>Loading...</h4>}
               >
                 {items.map((order: any) => (
                   <li className='order' key={order._id}>
@@ -190,6 +212,7 @@ export default function OrderHistory({}: Props) {
                     </div>
                   </li>
                 ))}
+                {showLoadingMore && <h4 className='loading'>Loading...</h4>}
               </InfiniteScroll>
             ) : (
               <p className='no-order'>No order</p>

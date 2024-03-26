@@ -9,10 +9,16 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Link from 'next/link'
 import { useState } from 'react'
-
+import { signOut, useSession } from 'next-auth/react'
+import useFetch from '@/app/utils/useFetch'
+import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
+import { DotLoader } from 'react-spinners'
 
 const Profile = () => {
+  const fetchApi = useFetch()
   const [anchorEl2, setAnchorEl2] = useState(null)
+  const { data: session } = useSession()
+  const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)
   const handleClick2 = (event: any) => {
     setAnchorEl2(event.currentTarget)
   }
@@ -30,19 +36,23 @@ const Profile = () => {
         aria-haspopup='true'
         sx={{
           ...(typeof anchorEl2 === 'object' && {
-            borderRadius: '9px'
-          })
+            borderRadius: '9px',
+          }),
         }}
         onClick={handleClick2}
       >
-        <Avatar
-          src={'/images/users/user2.webp'}
-          alt={'ProfileImg'}
-          sx={{
-            width: 35,
-            height: 35
-          }}
-        />
+        {isLoading ? (
+          <DotLoader size={20} color='#274c5b' />
+        ) : (
+          <Avatar
+            src={userInfo?.avatar}
+            alt={'ProfileImg'}
+            sx={{
+              width: 35,
+              height: 35,
+            }}
+          />
+        )}
       </IconButton>
       <Menu
         id='msgs-menu'
@@ -57,8 +67,8 @@ const Profile = () => {
             width: '360px',
             p: 2,
             pb: 2,
-            pt: 0
-          }
+            pt: 0,
+          },
         }}
       >
         <Box pt={0}>
@@ -76,7 +86,14 @@ const Profile = () => {
         </Box>
         <Divider />
         <Box mt={2}>
-          <Button fullWidth variant='contained' color='primary'>
+          <Button
+            onClick={() => {
+              signOut({ callbackUrl: '/home' })
+            }}
+            fullWidth
+            variant='contained'
+            color='primary'
+          >
             Logout
           </Button>
         </Box>

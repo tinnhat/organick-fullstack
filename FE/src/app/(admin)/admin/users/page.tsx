@@ -1,9 +1,12 @@
 'use client'
+import { useGetAllUsersQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
 import CloseIcon from '@mui/icons-material/Close'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
+import Checkbox from '@mui/material/Checkbox'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 import Table from '@mui/material/Table'
@@ -14,24 +17,24 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
-import BaseCard from '../components/shared/BaseCard'
-import AddUser from './addUser'
-import { useRouter } from 'next/navigation'
-import { UsersMock } from '@/app/common/mockData'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
-import DeleteUser from './deleteUser'
-import Checkbox from '@mui/material/Checkbox'
-import TypographyTooltip from '../components/typograhyTooltip'
+import { cloneDeep } from 'lodash'
+import moment from 'moment'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
+import BaseCard from '../components/shared/BaseCard'
+import TypographyTooltip from '../components/typograhyTooltip'
+import Loading from '../loading'
+import AddUser from './addUser'
+import DeleteUser from './deleteUser'
 
 type Props = {}
 
 export default function Users({}: Props) {
+  const fetchApi = useFetch()
+  const { data: allUsers, isLoading, refetch } = useGetAllUsersQuery(fetchApi)
   const [users, setUsers] = useState<User[]>([])
   const [usersShow, setUsersShow] = useState<User[]>([])
   const router = useRouter()
@@ -44,11 +47,12 @@ export default function Users({}: Props) {
     id: '',
   })
   const debouncedSearch = useDebounce(search, 300)
-
   useEffect(() => {
-    setUsers(UsersMock)
-    setUsersShow(UsersMock)
-  }, [])
+    if (allUsers) {
+      setUsers(allUsers)
+      setUsersShow(allUsers)
+    }
+  }, [allUsers])
 
   //use useEffect to watch value and debounce
   useEffect(() => {
@@ -76,7 +80,7 @@ export default function Users({}: Props) {
   }
 
   const visibleRows = React.useMemo(() => {
-    return usersShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    return usersShow && usersShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
   }, [page, rowsPerPage, usersShow])
 
   const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,8 +112,8 @@ export default function Users({}: Props) {
       email: row.email,
       isConfirm: row.isConfirm ? 'Confirmed' : 'Unconfirmed',
       isAdmin: row.isAdmin ? 'Admin' : 'User',
-      updateAt: row.updateAt.toString(),
-      createdAt: row.createdAt.toString(),
+      updateAt: moment(row.updateAt).format('DD/MM/YYYY HH:mm:ss'),
+      createdAt: moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss'),
       _destroy: row._destroy ? 'Deleted' : 'Active',
     }))
     /* generate worksheet and workbook */
@@ -123,6 +127,8 @@ export default function Users({}: Props) {
     /* create an XLSX file and try to save to Presidents.xlsx */
     XLSX.writeFile(workbook, 'Users.xlsx', { compression: true })
   }
+
+  if (isLoading) return <Loading />
 
   return (
     <>
@@ -146,7 +152,7 @@ export default function Users({}: Props) {
                   <Button
                     sx={{
                       mr: 'auto',
-                      ml: 2
+                      ml: 2,
                     }}
                     variant='contained'
                     color='secondary'
@@ -241,66 +247,69 @@ export default function Users({}: Props) {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {visibleRows.map((user: User) => (
-                            <TableRow
-                              key={user._id}
-                              sx={{
-                                cursor: 'pointer',
-                                '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                              }}
-                              onClick={() => router.push(`/admin/users/${user._id}`)}
-                            >
-                              <TableCell>
-                                <TypographyTooltip data={user._id} showToolTip={true} />
-                              </TableCell>
-                              <TableCell>
-                                <Box display='flex' alignItems='center'>
-                                  <Box>
-                                    <TypographyTooltip data={user.email} showToolTip={true} />
+                          {visibleRows &&
+                            visibleRows.map((user: User) => (
+                              <TableRow
+                                key={user._id}
+                                sx={{
+                                  cursor: 'pointer',
+                                  '&.MuiTableRow-root:hover': {
+                                    backgroundColor: 'rgba(0,0,0,0.05)',
+                                  },
+                                }}
+                                onClick={() => router.push(`/admin/users/${user._id}`)}
+                              >
+                                <TableCell>
+                                  <TypographyTooltip data={user._id} showToolTip={true} />
+                                </TableCell>
+                                <TableCell>
+                                  <Box display='flex' alignItems='center'>
+                                    <Box>
+                                      <TypographyTooltip data={user.email} showToolTip={true} />
+                                    </Box>
                                   </Box>
-                                </Box>
-                              </TableCell>
-                              <TableCell>
-                                <Checkbox checked={user.isConfirm} />
-                              </TableCell>
-                              <TableCell>
-                                <Checkbox checked={user.isAdmin} />
-                              </TableCell>
-                              <TableCell>
-                                <Checkbox checked={user._destroy} />
-                              </TableCell>
-                              <TableCell>
-                                <Typography
-                                  sx={{
-                                    maxWidth: 200,
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    WebkitLineClamp: '1',
-                                    WebkitBoxOrient: 'vertical',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                      transition: 'all 0.5s ease',
-                                      color: 'red',
-                                    },
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                  color='textSecondary'
-                                  fontSize='14px'
-                                >
-                                  <DeleteIcon onClick={e => deleteOrder(e, user._id)} />
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                                </TableCell>
+                                <TableCell>
+                                  <Checkbox checked={user.isConfirm} />
+                                </TableCell>
+                                <TableCell>
+                                  <Checkbox checked={user.isAdmin} />
+                                </TableCell>
+                                <TableCell>
+                                  <Checkbox checked={user._destroy} />
+                                </TableCell>
+                                <TableCell>
+                                  <Typography
+                                    sx={{
+                                      maxWidth: 200,
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      WebkitLineClamp: '1',
+                                      WebkitBoxOrient: 'vertical',
+                                      cursor: 'pointer',
+                                      '&:hover': {
+                                        transition: 'all 0.5s ease',
+                                        color: 'red',
+                                      },
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                    color='textSecondary'
+                                    fontSize='14px'
+                                  >
+                                    <DeleteIcon onClick={e => deleteOrder(e, user._id)} />
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            ))}
                         </TableBody>
                       </Table>
                     </TableContainer>
                     <TablePagination
                       rowsPerPageOptions={[5, 10, 25]}
                       component='div'
-                      count={usersShow.length}
+                      count={usersShow && usersShow.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}
@@ -313,8 +322,8 @@ export default function Users({}: Props) {
           </Grid>
         </Grid>
       </div>
-      <AddUser open={open} toggleDrawer={toggleDrawer} />
-      <DeleteUser showDelete={showDelete} setShowDelete={setShowDelete} />
+      <AddUser refetch={refetch} open={open} toggleDrawer={toggleDrawer} />
+      <DeleteUser refetch={refetch} showDelete={showDelete} setShowDelete={setShowDelete} />
     </>
   )
 }

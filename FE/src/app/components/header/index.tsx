@@ -27,8 +27,6 @@ export default function Header({}: Props) {
     setShowCart(true)
   }
 
-  console.log(session)
-
   return (
     <header className='header'>
       <div className='container'>
@@ -92,6 +90,11 @@ export default function Header({}: Props) {
                   <div className='item' onClick={() => router.push('/order-history')}>
                     Order History
                   </div>
+                  {userInfo?.isAdmin && (
+                    <div className='item' onClick={() => router.push('/admin')}>
+                      Admin
+                    </div>
+                  )}
                   <div className='item' onClick={() => signOut()}>
                     Sign out
                   </div>

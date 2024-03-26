@@ -76,7 +76,8 @@ const deleteProductById = async (id: string) => {
     if (!product) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
-    await productModel.findAndRemove(id)
+    const result = await productModel.findAndRemove(id)
+    return responseData(result)
   } catch (error) {
     throw error
   }
