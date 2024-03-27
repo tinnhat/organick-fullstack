@@ -1,4 +1,5 @@
 'use client'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Avatar,
   Box,
@@ -23,16 +24,15 @@ import {
   TextField,
   Tooltip,
   Typography,
-  styled,
 } from '@mui/material'
 import { Form, Formik } from 'formik'
 import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import BaseCard from '../../components/shared/BaseCard'
-import { useState } from 'react'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import AddProductCus from '../../components/addProductCus'
-import DeleteIcon from '@mui/icons-material/Delete'
+import useFetch from '@/app/utils/useFetch'
+import { useGetOrderDetailQuery } from '@/app/utils/hooks/ordersHooks'
+import Loading from '../../loading'
 
 type Props = {}
 
@@ -41,6 +41,12 @@ type MyFormValues = {
   phone: string
   note?: string
   _destroy: boolean
+}
+
+enum STATUS {
+  PENDING = 'Pending',
+  CANCEL = 'Cancel',
+  COMPLETE = 'Complete',
 }
 
 const styleOneColumn = {
@@ -76,12 +82,12 @@ export default function OrderDetail({}: Props) {
   const params = useParams()
   const route = useRouter()
   const [cart, setCart] = useState<Product[]>([])
-  const [showAddProduct, setShowAddProduct] = useState(false)
-  const [status, setStatus] = useState('');
-
+  const [status, setStatus] = useState('')
+  const fetchApi = useFetch()
+  const { data: orderDetail, isLoading } = useGetOrderDetailQuery(fetchApi, params.id.toString())
   const handleChangeStatus = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
-  };
+    setStatus(event.target.value as string)
+  }
   const initialValues: MyFormValues = {
     address: '',
     phone: '',
@@ -89,31 +95,33 @@ export default function OrderDetail({}: Props) {
     _destroy: false,
   }
 
+  useEffect(() => {
+    if (orderDetail) {
+      setStatus(orderDetail.status)
+      for (let i = 0; i < orderDetail.listProducts.length; i++) {
+        const findIndex = orderDetail.listProductsDetail.findIndex(
+          (item: Product) => item._id === orderDetail.listProducts[i]._id
+        )
+        if (findIndex !== -1) {
+          orderDetail.listProductsDetail[findIndex].quantityAddtoCart =
+            orderDetail.listProducts[i].quantityAddCart
+        }
+      }
+      setCart(orderDetail.listProductsDetail)
+    }
+  }, [orderDetail])
+
   const handleRemoveCart = (item: Product) => {
     setCart(cart.filter(cartItem => cartItem._id !== item._id))
   }
+  console.log(orderDetail)
+
+  if (isLoading) return <Loading />
 
   return (
     <div>
       <BaseCard title={`Order - ${params.id}`}>
         <>
-          <Box sx={{ mb: 2 }}>
-            {showAddProduct ? (
-              <Button variant='contained' color='error' onClick={() => setShowAddProduct(false)}>
-                Hide Add Products
-              </Button>
-            ) : (
-              <Button variant='contained' onClick={() => setShowAddProduct(true)}>
-                Add Products
-              </Button>
-            )}
-            {cart.length > 0 && (
-              <Button sx={{ ml: 2 }} variant='outlined' color='error' onClick={() => setCart([])}>
-                Clear Products
-              </Button>
-            )}
-          </Box>
-
           <Box sx={{ mb: 3 }}>
             <BaseCard title='Cart'>
               <TableContainer
@@ -142,6 +150,11 @@ export default function OrderDetail({}: Props) {
                           Name
                         </Typography>
                       </TableCell>
+                      <TableCell sx={{ width: 300 }}>
+                        <Typography color='textSecondary' variant='h6'>
+                          Category
+                        </Typography>
+                      </TableCell>
                       <TableCell sx={{ width: 100 }}>
                         <Typography color='textSecondary' variant='h6'>
                           Price
@@ -150,18 +163,6 @@ export default function OrderDetail({}: Props) {
                       <TableCell sx={{ width: 200 }}>
                         <Typography color='textSecondary' variant='h6'>
                           Quantity
-                        </Typography>
-                      </TableCell>
-                      <TableCell align='right' sx={{ width: 80 }}>
-                        <Typography
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                          }}
-                          color='textSecondary'
-                          variant='h6'
-                        >
-                          Action
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -176,112 +177,95 @@ export default function OrderDetail({}: Props) {
                         </TableCell>
                       </TableRow>
                     )}
-                    {cart
-                      .map(item => {
-                        return {
-                          ...item,
-                          quantityAddtoCart: 1,
-                        }
-                      })
-                      .map(item => (
-                        <TableRow
-                          key={item._id}
-                          sx={{
-                            cursor: 'pointer',
-                            '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                          }}
-                        >
-                          <TableCell>
-                            <Avatar
-                              sx={{
-                                width: 80,
-                                height: 80,
-                                borderRadius: 0,
-                                border: '1px solid #ccc',
-                              }}
-                              src={'/assets/img/product1.webp'}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Box display='flex' alignItems='center'>
-                              <Box>
-                                <TypographyCus data={item.name} showToolTip={true} />
-                              </Box>
+                    {cart.map(item => (
+                      <TableRow
+                        key={item._id}
+                        sx={{
+                          cursor: 'pointer',
+                          '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                        }}
+                      >
+                        <TableCell>
+                          <Avatar
+                            sx={{
+                              width: 80,
+                              height: 80,
+                              borderRadius: 0,
+                              border: '1px solid #ccc',
+                            }}
+                            src={'/assets/img/product1.webp'}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Box display='flex' alignItems='center'>
+                            <Box>
+                              <TypographyCus data={item.name} showToolTip={true} />
                             </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
-                              ${item.price}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                              }}
-                            >
-                              <Button>+</Button>
-                              <TextField
-                                value={item.quantityAddtoCart}
-                                InputProps={{
-                                  inputProps: {
-                                    max: 999,
-                                    min: 1,
-                                  },
-                                }}
-                                sx={{
-                                  mx: 1,
-                                  width: 70,
-                                  '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-                                    {
-                                      display: 'none',
-                                    },
-                                  '& input[type=number]': {
-                                    MozAppearance: 'textfield',
-                                  },
-                                }}
-                                type='number'
-                              />
-                              <Button>-</Button>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box display='flex' alignItems='center'>
+                            <Box>
+                              <TypographyCus data={item.category![0].name} showToolTip={true} />
                             </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Typography
-                              sx={{
-                                ...styleOneColumn,
-                                cursor: 'pointer',
-                                '&:hover': {
-                                  transition: 'all 0.5s ease',
-                                  color: 'red',
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
+                            ${item.price}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                            }}
+                          >
+                            <TextField
+                              value={item.quantityAddtoCart}
+                              InputProps={{
+                                inputProps: {
+                                  max: 999,
+                                  min: 1,
                                 },
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
                               }}
-                              color='textSecondary'
-                              fontSize='14px'
-                            >
-                              <DeleteIcon onClick={() => handleRemoveCart(item)} />
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                              sx={{
+                                mx: 1,
+                                width: 70,
+                                '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+                                  {
+                                    display: 'none',
+                                  },
+                                '& input[type=number]': {
+                                  MozAppearance: 'textfield',
+                                },
+                              }}
+                              type='number'
+                            />
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </TableContainer>
             </BaseCard>
           </Box>
-
-          {showAddProduct && (
-            <Box sx={{ mb: 2 }}>
-              <AddProductCus cart={cart} setCart={setCart} />
-            </Box>
-          )}
           <Formik
             validateOnChange={true}
             validationSchema={validationSchema}
-            initialValues={initialValues}
+            enableReinitialize={true}
+            initialValues={
+              {
+                address: orderDetail?.address,
+                phone: orderDetail?.phone,
+                note: orderDetail?.note,
+                totalPrice: orderDetail?.totalPrice,
+                _destroy: orderDetail?._destroy,
+                user: orderDetail?.user[0].email,
+              } || initialValues
+            }
             onSubmit={(values, actions) => {
               console.log(values)
               setTimeout(() => {
@@ -290,7 +274,7 @@ export default function OrderDetail({}: Props) {
             }}
           >
             {({ isSubmitting, errors, values, touched, handleChange }) => {
-              const { address, phone, note, _destroy } = values
+              const { address, phone, note, _destroy, user } = values
               return (
                 <Form>
                   <Grid container spacing={2}>
@@ -312,7 +296,7 @@ export default function OrderDetail({}: Props) {
                         id='user'
                         label='User'
                         variant='outlined'
-                        value={'user'}
+                        value={user}
                         disabled
                       />
                     </Grid>
@@ -325,7 +309,7 @@ export default function OrderDetail({}: Props) {
                         value={address}
                         onChange={handleChange}
                         error={touched.address && Boolean(errors.address)}
-                        helperText={touched.address && errors.address}
+                        helperText={touched.address && (errors.address as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -338,7 +322,7 @@ export default function OrderDetail({}: Props) {
                         value={phone}
                         onChange={handleChange}
                         error={touched.phone && Boolean(errors.phone)}
-                        helperText={touched.phone && errors.phone}
+                        helperText={touched.phone && (errors.phone as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -350,7 +334,7 @@ export default function OrderDetail({}: Props) {
                         value={note}
                         onChange={handleChange}
                         error={touched.note && Boolean(errors.note)}
-                        helperText={touched.note && errors.note}
+                        helperText={touched.note && (errors.note as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -363,9 +347,11 @@ export default function OrderDetail({}: Props) {
                           label='Status'
                           onChange={handleChangeStatus}
                         >
-                          <MenuItem value={10}>pending</MenuItem>
-                          <MenuItem value={20}>shipping</MenuItem>
-                          <MenuItem value={30}>complete</MenuItem>
+                          {Object.values(STATUS).map((item, index) => (
+                            <MenuItem key={index} value={item}>
+                              {item}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Grid>

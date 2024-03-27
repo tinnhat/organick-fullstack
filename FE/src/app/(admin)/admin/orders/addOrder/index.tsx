@@ -22,8 +22,12 @@ import * as yup from 'yup'
 import BaseCard from '../../components/shared/BaseCard'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddProductCus from '../../components/addProductCus'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { useGetAllUsersQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
+import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
+import { cloneDeep } from 'lodash'
 
 type Props = {
   open: boolean
@@ -66,6 +70,8 @@ const validationSchema = yup.object({
 })
 
 export default function AddOrder({ open, toggleDrawer }: Props) {
+  const fetchApi = useFetch()
+  const { data: allUser, isLoading } = useGetAllUsersQuery(fetchApi)
   const [cart, setCart] = useState<Product[]>([])
   const [user, setUser] = useState('')
   const [showAddProduct, setShowAddProduct] = useState(false)
@@ -106,6 +112,50 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
     }, 1000)
   }
 
+  const handleIncreaseQuantity = (item: Product) => {
+    const cloneCart: any = cloneDeep(cart)
+    const findIndexItem = cloneCart.findIndex((cartItem: any) => cartItem._id === item._id)
+    cloneCart[findIndexItem].quantityAddtoCart += 1
+    if (cloneCart[findIndexItem].quantityAddtoCart > item.quantity) {
+      toast.warning('Quantity not enough', { position: 'bottom-left' })
+      //reset ve 1
+      cloneCart[findIndexItem].quantityAddtoCart = 1
+    }
+    setCart([...cloneCart])
+  }
+
+  const totalPriceInCart = useMemo(() => {
+    return cart.reduce((acc, item) => {
+      return acc + item.price * item.quantityAddtoCart!
+    }, 0)
+  }, [cart])
+  const handleDecreaseQuantity = (item: Product) => {
+    const cloneCart: any = cloneDeep(cart)
+    const findIndexItem = cloneCart.findIndex((cartItem: any) => cartItem._id === item._id)
+    cloneCart[findIndexItem].quantityAddtoCart -= 1
+    if (cloneCart[findIndexItem].quantityAddtoCart < 1) {
+      handleRemoveCart(item)
+    }
+    setCart([...cloneCart])
+  }
+  const handleQuantityChange = (e: any, item: Product) => {
+    if (e.target.value === '') {
+      toast.warning('Quantity at least 1', { position: 'bottom-left' })
+    }
+    if (e.target.value > item.quantity) {
+      toast.warning('Quantity not enough', { position: 'bottom-left' })
+      //reset ve 1
+      e.target.value = 1
+    }
+    console.log(e.target.value)
+    console.log(item)
+    const cloneCart: any = cloneDeep(cart)
+    const findIndexItem = cloneCart.findIndex((cartItem: any) => cartItem._id === item._id)
+    cloneCart[findIndexItem].quantityAddtoCart = Number(e.target.value)
+    setCart([...cloneCart])
+  }
+
+  if (isLoading) return <div>Loading...</div>
   return (
     <Drawer
       sx={{
@@ -198,97 +248,103 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                       </Typography>
                     </TableRow>
                   )}
-                  {cart
-                    .map(item => {
-                      return {
-                        ...item,
-                        quantityAddtoCart: 1,
-                      }
-                    })
-                    .map(item => (
-                      <TableRow
-                        key={item._id}
-                        sx={{
-                          cursor: 'pointer',
-                          '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-                        }}
-                      >
-                        <TableCell>
-                          <Avatar
-                            sx={{
-                              width: 80,
-                              height: 80,
-                              borderRadius: 0,
-                              border: '1px solid #ccc',
-                            }}
-                            src={'/assets/img/product1.webp'}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Box display='flex' alignItems='center'>
-                            <Box>
-                              <TypographyCus data={item.name} showToolTip={true} />
-                            </Box>
+                  {cart.map(item => (
+                    <TableRow
+                      key={item._id}
+                      sx={{
+                        cursor: 'pointer',
+                        '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                      }}
+                    >
+                      <TableCell>
+                        <Avatar
+                          sx={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 0,
+                            border: '1px solid #ccc',
+                          }}
+                          src={item.image?.toString()}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Box display='flex' alignItems='center'>
+                          <Box>
+                            <TypographyCus data={item.name} showToolTip={true} />
                           </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
-                            ${item.price}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                            }}
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Typography sx={styleOneColumn} color='textSecondary' fontSize='14px'>
+                          ${item.price}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Button
+                            sx={{ mx: 1 }}
+                            onClick={() => handleIncreaseQuantity(item)}
+                            variant='contained'
                           >
-                            <Button>+</Button>
-                            <TextField
-                              value={item.quantityAddtoCart}
-                              InputProps={{
-                                inputProps: {
-                                  max: 999,
-                                  min: 1,
-                                },
-                              }}
-                              sx={{
-                                mx: 1,
-                                width: 70,
-                                '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-                                  {
-                                    display: 'none',
-                                  },
-                                '& input[type=number]': {
-                                  MozAppearance: 'textfield',
-                                },
-                              }}
-                              type='number'
-                            />
-                            <Button>-</Button>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Typography
-                            sx={{
-                              ...styleOneColumn,
-                              cursor: 'pointer',
-                              '&:hover': {
-                                transition: 'all 0.5s ease',
-                                color: 'red',
+                            +
+                          </Button>
+                          <TextField
+                            value={item.quantityAddtoCart}
+                            InputProps={{
+                              inputProps: {
+                                max: 999,
+                                min: 1,
                               },
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
                             }}
-                            color='textSecondary'
-                            fontSize='14px'
+                            sx={{
+                              mx: 1,
+                              width: 70,
+                              '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+                                {
+                                  display: 'none',
+                                },
+                              '& input[type=number]': {
+                                MozAppearance: 'textfield',
+                              },
+                            }}
+                            type='number'
+                            onChange={e => handleQuantityChange(e, item)}
+                          />
+                          <Button
+                            sx={{ mx: 1 }}
+                            onClick={() => handleDecreaseQuantity(item)}
+                            variant='contained'
                           >
-                            <DeleteIcon onClick={() => handleRemoveCart(item)} />
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            -
+                          </Button>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Typography
+                          sx={{
+                            ...styleOneColumn,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              transition: 'all 0.5s ease',
+                              color: 'red',
+                            },
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          color='textSecondary'
+                          fontSize='14px'
+                        >
+                          <DeleteIcon onClick={() => handleRemoveCart(item)} />
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -315,9 +371,10 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                   <Autocomplete
                     id='user-select'
                     fullWidth
-                    options={UsersMock}
+                    options={allUser}
                     autoHighlight
                     onChange={(event: any, newValue: any) => {
+                      console.log(newValue)
                       setUser(newValue)
                     }}
                     getOptionLabel={option => option.fullname}
@@ -329,8 +386,10 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                         {...props}
                         key={option._id}
                       >
-                        <Avatar sx={{ width: 40, height: 40 }} src={'/images/users/user2.webp'} />
-                        <Typography sx={{ ml: 1 }}>{option.fullname}</Typography>
+                        <Avatar sx={{ width: 40, height: 40 }} src={option.avatar} />
+                        <Typography sx={{ ml: 1 }}>
+                          {option.email} - {option.fullname}
+                        </Typography>
                       </Box>
                     )}
                     renderInput={params => (
@@ -383,8 +442,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                     id='totalPrice'
                     label='Total Price'
                     variant='outlined'
-                    value={totalPrice}
-                    onChange={handleChange}
+                    value={totalPriceInCart}
                     disabled
                   />
                   <Box sx={{ display: 'flex' }}>

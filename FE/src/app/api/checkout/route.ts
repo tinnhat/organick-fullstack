@@ -58,7 +58,7 @@ export const POST = async (request: any) => {
     line_items: stripeItems,
     mode: 'payment',
     success_url: `${HOST}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${HOST}/cancel?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${HOST}/pending?session_id={CHECKOUT_SESSION_ID}`,
     custom_fields: [
       {
         key: 'phone',

@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { ObjectId } from 'mongodb'
 import { getDB } from '~/config/mongodb'
 import { validateBeforeCreate } from '~/utils/algorithms'
+import { userModel } from './userModel'
 
 const ORDER_COLLECTION_NAME = 'orders'
 const ORDER_SCHEMA = Joi.object({
@@ -34,7 +35,20 @@ const findOneById = async (id: string) => {
   try {
     const result = await getDB()
       .collection(ORDER_COLLECTION_NAME)
-      .findOne({ _id: new ObjectId(id) })
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(id) }
+        },
+        {
+          $lookup: {
+            from: userModel.USER_COLLECTION_NAME,
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user'
+          }
+        }
+      ])
+      .toArray()
     return result
   } catch (error) {
     throw new Error(error as string)

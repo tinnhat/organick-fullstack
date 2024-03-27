@@ -8,13 +8,15 @@ import {
   TextField,
   Tooltip,
   Typography,
-  ClickAwayListener
+  ClickAwayListener,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ProductsMock } from '@/app/common/mockData'
+import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
+import { cloneDeep } from 'lodash'
 
 type Props = {
   cart: Product[]
@@ -29,17 +31,45 @@ const styleOneColumn = {
   ml: 2,
 }
 
-export default function AddProductCus({ cart, setCart }: Props) {
+function AddProductCus({ cart, setCart }: Props) {
+  const { data: allProducts, isLoading } = useGetAllProductsQuery()
+  const [productsShow, setProductsShow] = useState<Product[]>([])
   const [search, setSearch] = useState('')
   const [show, setShow] = useState(false)
-
+  useEffect(() => {
+    if (allProducts) {
+      setProductsShow(allProducts)
+    }
+  }, [allProducts])
   const handleAddtoCart = (item: Product) => {
-    setCart([...cart, item])
+    const itemCart = cart.find((cartItem: Product) => cartItem._id === item._id)
+    if (itemCart) {
+      const cloneCart: any = cloneDeep(cart)
+      const findIndexItem = cloneCart.findIndex(
+        (cartItem: Product) => cartItem._id === itemCart._id
+      )
+      cloneCart[findIndexItem].quantityAddtoCart += 1
+      setCart([...cloneCart])
+      return
+    }
+    setCart([
+      ...cart,
+      {
+        ...item,
+        quantityAddtoCart: 1,
+      },
+    ])
   }
   const handleSearch = () => {
+    setShow(true)
     if (!search) {
       //show all product
+      setProductsShow(allProducts)
     } else {
+      const productFilter = allProducts?.filter((item: Product) => {
+        return item.name.toLowerCase().includes(search.toLowerCase())
+      })
+      setProductsShow(productFilter)
       //show theo filter
     }
   }
@@ -47,6 +77,9 @@ export default function AddProductCus({ cart, setCart }: Props) {
   const handleClickAway = () => {
     setShow(false)
   }
+
+  if (isLoading) return <div>Loading...</div>
+
   return (
     <Box
       sx={{
@@ -65,17 +98,7 @@ export default function AddProductCus({ cart, setCart }: Props) {
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
-              {search ? (
-                <CloseIcon
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    setSearch('')
-                    setShow(false)
-                  }}
-                />
-              ) : (
-                <SearchIcon sx={{ cursor: 'pointer' }} onClick={() => setShow(true)} />
-              )}
+              <SearchIcon sx={{ cursor: 'pointer' }} onClick={handleSearch} />
             </InputAdornment>
           ),
         }}
@@ -96,7 +119,7 @@ export default function AddProductCus({ cart, setCart }: Props) {
             }}
           >
             <Box sx={{ p: 2 }}>
-              {ProductsMock.map((item, index) => (
+              {productsShow.map((item: Product, index: number) => (
                 <Grid
                   key={item._id}
                   container
@@ -119,7 +142,7 @@ export default function AddProductCus({ cart, setCart }: Props) {
                         borderRadius: '0px',
                         border: '1px solid #eee',
                       }}
-                      src={'/images/users/user2.webp'}
+                      src={item.image?.toString()}
                     />
                   </Grid>
                   <Grid xs={6} md={6}>
@@ -163,3 +186,5 @@ export default function AddProductCus({ cart, setCart }: Props) {
     </Box>
   )
 }
+
+export default React.memo(AddProductCus)

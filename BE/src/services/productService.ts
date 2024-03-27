@@ -5,6 +5,14 @@ import { productModel } from '~/models/productModel'
 import ApiError from '~/utils/ApiError'
 import { responseData, slugify, uploadImage } from '~/utils/algorithms'
 /* eslint-disable no-useless-catch */
+import stripePackage from 'stripe'
+const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
+
+const getActiveProducts = async () => {
+  const products = await stripe.products.list()
+  const availableProducts = products.data.filter((product: any) => product.active)
+  return availableProducts
+}
 
 const createNew = async (reqBody: any, reqFile: any) => {
   try {
@@ -52,7 +60,9 @@ const getProductInfo = async (productId: string) => {
 
 const editProductInfo = async (id: string, data: any, reqFile: any) => {
   try {
+    //get list product active tren stripe xong cap nhat lai tren do
     const product = await productModel.findOneById(id)
+    const listProductActiveInStripe = await getActiveProducts()
     if (!product) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
@@ -68,7 +78,36 @@ const editProductInfo = async (id: string, data: any, reqFile: any) => {
       slug: slugify(data.name),
       _destroy: data._destroy === 'true' ? true : false
     }
+    //update vao DB
     await productModel.findAndUpdate(id, changeData)
+    //update vao stripe
+    const productUpdateInStripe: any = listProductActiveInStripe.find((item: any) => item.id === id)
+    //get price
+    const currentPrice = await await stripe.prices.retrieve(productUpdateInStripe.default_price)
+    if (currentPrice.unit_amount! / 100 !== data.price) {
+      //tao moi va cap nhat
+      const newPrice = await await stripe.prices.create({
+        currency: 'usd',
+        unit_amount: +data.price * 100,
+        product: productUpdateInStripe.id
+      })
+      //add new price for product
+      await stripe.products.update(productUpdateInStripe.id, {
+        name: data.name,
+        description: data.description,
+        images: [reqFile ? await uploadImage(reqFile, 'organick/products') : product.image],
+        default_price: newPrice.id, //update lai gia moi
+        url: slugify(data.name)
+      })
+    } else {
+      //update
+      await stripe.products.update(productUpdateInStripe.id, {
+        name: data.name,
+        description: data.description,
+        images: [reqFile ? await uploadImage(reqFile, 'organick/products') : product.image],
+        url: slugify(data.name)
+      })
+    }
     //get latest data
     const productUpdated = await productModel.findOneById(id)
     return responseData(productUpdated)

@@ -22,6 +22,7 @@ type Product = {
   category?: Category[]
   categoryId?: string
   quantity: number
+  quantityAddtoCart?: number
   priceSale: number
   price: number
   image: string | Buffer | undefined

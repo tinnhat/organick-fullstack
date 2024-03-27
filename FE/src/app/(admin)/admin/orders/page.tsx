@@ -1,5 +1,8 @@
 'use client'
+import { useGetOrdersQuery } from '@/app/utils/hooks/ordersHooks'
+import useFetch from '@/app/utils/useFetch'
 import CloseIcon from '@mui/icons-material/Close'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -14,23 +17,24 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
-import BaseCard from '../components/shared/BaseCard'
-import AddOrder from './addOrder'
-import { useRouter } from 'next/navigation'
-import { OrdersMock } from '@/app/common/mockData'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
-import DeleteOrder from './deleteOrder'
-import TypographyTooltip from '../components/typograhyTooltip'
+import { cloneDeep } from 'lodash'
+import moment from 'moment'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
+import BaseCard from '../components/shared/BaseCard'
+import TypographyTooltip from '../components/typograhyTooltip'
+import Loading from '../loading'
+import AddOrder from './addOrder'
+import DeleteOrder from './deleteOrder'
 
 type Props = {}
 
 export default function Orders({}: Props) {
+  const fetchApi = useFetch()
+  const { data: allOrders, isLoading } = useGetOrdersQuery(fetchApi)
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersShow, setOrdersShow] = useState<Order[]>([])
   const router = useRouter()
@@ -40,14 +44,16 @@ export default function Orders({}: Props) {
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [showDelete, setShowDelete] = useState({
     show: false,
-    id: '',
+    id: ''
   })
-  const debouncedSearch = useDebounce(search, 300)
+  const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
-    setOrders(OrdersMock)
-    setOrdersShow(OrdersMock)
-  }, [])
+    if (allOrders) {
+      setOrders(allOrders)
+      setOrdersShow(allOrders)
+    }
+  }, [allOrders])
 
   //use useEffect to watch value and debounce
   useEffect(() => {
@@ -87,7 +93,7 @@ export default function Orders({}: Props) {
     e.stopPropagation()
     setShowDelete({
       show: true,
-      id,
+      id
     })
   }
 
@@ -114,9 +120,9 @@ export default function Orders({}: Props) {
       phone: row.phone,
       note: row.note,
       status: row.status,
-      updateAt: row.updateAt.toString(),
-      createdAt: row.createdAt.toString(),
-      _destroy: row._destroy ? 'Deleted' : 'Active',
+      updateAt: moment(row.updateAt).format('DD/MM/YYYY HH:mm:ss'),
+      createdAt: moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss'),
+      _destroy: row._destroy ? 'Deleted' : 'Active'
     }))
     /* generate worksheet and workbook */
     const worksheet = XLSX.utils.json_to_sheet(rows)
@@ -129,7 +135,7 @@ export default function Orders({}: Props) {
     /* create an XLSX file and try to save to Presidents.xlsx */
     XLSX.writeFile(workbook, 'Orders.xlsx', { compression: true })
   }
-
+  if (isLoading) return <Loading />
 
   return (
     <>
@@ -144,7 +150,7 @@ export default function Orders({}: Props) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    mb: 2,
+                    mb: 2
                   }}
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
@@ -185,7 +191,7 @@ export default function Orders({}: Props) {
                             <SearchIcon sx={{ cursor: 'pointer' }} />
                           )}
                         </InputAdornment>
-                      ),
+                      )
                     }}
                   />
                 </Box>
@@ -195,15 +201,15 @@ export default function Orders({}: Props) {
                       sx={{
                         width: {
                           xs: '274px',
-                          sm: '100%',
-                        },
+                          sm: '100%'
+                        }
                       }}
                     >
                       <Table
                         aria-label='simple table'
                         sx={{
                           whiteSpace: 'nowrap',
-                          mt: 2,
+                          mt: 2
                         }}
                       >
                         <TableHead>
@@ -237,7 +243,7 @@ export default function Orders({}: Props) {
                               <Typography
                                 sx={{
                                   display: 'flex',
-                                  justifyContent: 'center',
+                                  justifyContent: 'center'
                                 }}
                                 color='textSecondary'
                                 variant='h6'
@@ -253,7 +259,7 @@ export default function Orders({}: Props) {
                               key={order._id}
                               sx={{
                                 cursor: 'pointer',
-                                '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                                '&.MuiTableRow-root:hover': { backgroundColor: 'rgba(0,0,0,0.05)' }
                               }}
                               onClick={() => router.push(`/admin/orders/${order._id}`)}
                             >
@@ -278,8 +284,13 @@ export default function Orders({}: Props) {
                                   sx={{
                                     pl: '4px',
                                     pr: '4px',
-                                    backgroundColor: 'red',
-                                    color: '#fff',
+                                    backgroundColor:
+                                      order.status === 'Pending'
+                                        ? '#f1c40f'
+                                        : order.status === 'Complete'
+                                          ? '#27ae60'
+                                          : '#e74c3ced',
+                                    color: '#fff'
                                   }}
                                   size='small'
                                   label={order.status}
@@ -287,7 +298,7 @@ export default function Orders({}: Props) {
                               </TableCell>
                               <TableCell>
                                 <TypographyTooltip
-                                  data={order.createdAt.toString()}
+                                  data={moment(order.createdAt).format('DD/MM/YYYY HH:mm:ss')}
                                   showToolTip={false}
                                 />
                               </TableCell>
@@ -302,11 +313,11 @@ export default function Orders({}: Props) {
                                     cursor: 'pointer',
                                     '&:hover': {
                                       transition: 'all 0.5s ease',
-                                      color: 'red',
+                                      color: 'red'
                                     },
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center',
+                                    justifyContent: 'center'
                                   }}
                                   color='textSecondary'
                                   fontSize='14px'

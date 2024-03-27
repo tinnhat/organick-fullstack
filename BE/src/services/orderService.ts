@@ -72,11 +72,12 @@ const getOrderInfo = async (orderId: string) => {
     }
     //get detail product
     const listProducts = []
-    for (let i = 0; i < getOrder.listProducts.length; i++) {
-      const product = await productModel.findOneById(getOrder.listProducts[i])
-      listProducts.push({ ...product, quantityInOrder: getOrder.listProducts[i].quantity })
+    for (let i = 0; i < getOrder[0].listProducts.length; i++) {
+      const product = await productModel.findOneById(getOrder[0].listProducts[i]._id)
+      listProducts.push({ ...product, quantityInOrder: getOrder[0].listProducts[i].quantity })
     }
-    return responseData({ ...getOrder, listProducts })
+
+    return responseData({ ...getOrder[0], listProductsDetail: listProducts })
   } catch (error) {
     throw error
   }
