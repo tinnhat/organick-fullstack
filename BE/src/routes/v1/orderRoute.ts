@@ -20,7 +20,6 @@ Router.put('/:id', Auth, AdminAuth, orderValidation.editOrderInfo, orderControll
 
 Router.put('/checkout/:id', orderValidation.updateOrderInfo, orderController.updateOrderInfo)
 
-
 Router.delete('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.deleteOrderById)
 
 export const orderRoute = Router

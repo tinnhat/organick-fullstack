@@ -8,7 +8,6 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdCategory)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -18,7 +17,6 @@ const getCategories = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(categories)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -28,7 +26,6 @@ const getCategoryInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -38,7 +35,6 @@ const editCategoryInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -48,7 +44,6 @@ const deleteCategoryById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 

@@ -112,7 +112,6 @@ const editOrderInfo = async (req: any, res: Response, next: any) => {
   }
 }
 
-
 const updateOrderInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
     address: Joi.string().optional().min(1).max(255).trim().strict(),

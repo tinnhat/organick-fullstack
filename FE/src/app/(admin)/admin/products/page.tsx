@@ -28,10 +28,13 @@ import DeleteProduct from './deleteProduct'
 import { Avatar, Checkbox } from '@mui/material'
 import TypographyTooltip from '../components/typograhyTooltip'
 import * as XLSX from 'xlsx'
+import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
+import Loading from '../loading'
 
 type Props = {}
 
 export default function Products({}: Props) {
+  const { data: allProduct, isLoading, refetch } = useGetAllProductsQuery()
   const [products, setProducts] = useState<Product[]>([])
   const [productsShow, setProductsShow] = useState<Product[]>([])
   const router = useRouter()
@@ -43,19 +46,21 @@ export default function Products({}: Props) {
     show: false,
     id: '',
   })
-  const debouncedSearch = useDebounce(search, 300)
+  const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
-    setProducts(ProductsMock)
-    setProductsShow(ProductsMock)
-  }, [])
+    if (allProduct) {
+      setProducts(allProduct)
+      setProductsShow(allProduct)
+    }
+  }, [allProduct])
 
   //use useEffect to watch value and debounce
   useEffect(() => {
     const newProductsShow = cloneDeep(products)
     if (debouncedSearch) {
       const filtered = newProductsShow.filter((item: Product) => {
-        return item.name.includes(search)
+        return item.name.toLowerCase().includes(search.toLowerCase())
       })
       setProductsShow(filtered)
       setPage(0)
@@ -132,6 +137,9 @@ export default function Products({}: Props) {
     XLSX.writeFile(workbook, 'Products.xlsx', { compression: true })
   }
 
+  if (isLoading) return <Loading />
+  console.log(visibleRows);
+  
   return (
     <>
       <div className='products'>
@@ -260,7 +268,7 @@ export default function Products({}: Props) {
                             >
                               <TableCell>
                                 <Avatar
-                                  alt='Remy Sharp'
+                                  alt={product.name}
                                   src={product.image?.toString()}
                                   sx={{
                                     height: 100,
@@ -282,7 +290,7 @@ export default function Products({}: Props) {
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyTooltip data='category' showToolTip={true} />
+                                    <TypographyTooltip data={product.category![0].name} showToolTip={true} />
                                   </Box>
                                 </Box>
                               </TableCell>
@@ -336,8 +344,8 @@ export default function Products({}: Props) {
           </Grid>
         </Grid>
       </div>
-      <AddProduct open={open} toggleDrawer={toggleDrawer} />
-      <DeleteProduct showDelete={showDelete} setShowDelete={setShowDelete} />
+      <AddProduct refetch={refetch} open={open} toggleDrawer={toggleDrawer} />
+      <DeleteProduct refetch={refetch} showDelete={showDelete} setShowDelete={setShowDelete} />
     </>
   )
 }

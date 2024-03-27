@@ -16,7 +16,9 @@ export const Auth = (req: any, res: Response, next: NextFunction) => {
         const user = await userModel.findOneById((decoded as JwtPayload)._id)
         if (user) {
           if (!user.isConfirmed) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Account is not confirmed, Please confirm your account' })
+            return res
+              .status(StatusCodes.UNAUTHORIZED)
+              .json({ message: 'Account is not confirmed, Please confirm your account' })
           }
           if (user._destroy) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'User is deleted, Please contact admin' })

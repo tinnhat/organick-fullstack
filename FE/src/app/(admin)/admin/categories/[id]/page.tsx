@@ -15,6 +15,12 @@ import {
   Grid,
   TextField,
 } from '@mui/material'
+import useFetch from '@/app/utils/useFetch'
+import {
+  useGetCategoryInfoByIdQuery,
+  useUpdateCategoryInfoMutation,
+} from '@/app/utils/hooks/useCategories'
+import { toast } from 'sonner'
 
 type Props = {}
 
@@ -31,13 +37,28 @@ const validationSchema = yup.object({
   _destroy: yup.boolean(),
 })
 
-export default function OrderDetail({}: Props) {
+export default function CategoryDetail({}: Props) {
+  const fetchApi = useFetch()
   const params = useParams()
   const route = useRouter()
-
+  const { data: CategoryInfo, isLoading } = useGetCategoryInfoByIdQuery(
+    fetchApi,
+    params.id.toString()
+  )
+  const { mutateAsync: updateCategory } = useUpdateCategoryInfoMutation(
+    fetchApi,
+    params.id.toString()
+  )
   const initialValues: MyFormValues = {
     name: '',
     _destroy: false,
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    const result = await updateCategory(values)
+    if (result) {
+      toast.success('Category updated successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -47,13 +68,14 @@ export default function OrderDetail({}: Props) {
           <Formik
             validateOnChange={true}
             validationSchema={validationSchema}
-            initialValues={initialValues}
-            onSubmit={(values, actions) => {
-              console.log(values)
-              setTimeout(() => {
-                actions.setSubmitting(false)
-              }, 1000)
-            }}
+            initialValues={
+              {
+                name: CategoryInfo?.name,
+                _destroy: CategoryInfo?._destroy,
+              } || initialValues
+            }
+            enableReinitialize={true}
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting, errors, values, touched, handleChange }) => {
               const { name, _destroy } = values
@@ -69,7 +91,7 @@ export default function OrderDetail({}: Props) {
                         value={name}
                         onChange={handleChange}
                         error={touched.name && Boolean(errors.name)}
-                        helperText={touched.name && errors.name}
+                        helperText={touched.name && errors.name as string}
                       />
                     </Grid>
                     <Grid item xs={12} md={12} sm={12}>

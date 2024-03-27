@@ -12,7 +12,8 @@ const createNew = async (req: Request, res: Response, next: NextFunction) => {
       'string.base': 'Name must be a string',
       'any.required': 'Name is required',
       'string.empty': 'Name cannot be an empty field'
-    })
+    }),
+    _destroy: Joi.boolean().default(false)
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })

@@ -8,7 +8,6 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdProduct)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -20,7 +19,6 @@ const getProducts = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(products)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -30,7 +28,6 @@ const getProductInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -40,7 +37,6 @@ const editProductInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -50,7 +46,6 @@ const deleteProductById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -60,7 +55,6 @@ const checkList = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    
   }
 }
 

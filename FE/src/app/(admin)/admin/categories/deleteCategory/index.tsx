@@ -1,5 +1,8 @@
+import { useDeleteCategoryMutation } from '@/app/utils/hooks/useCategories'
+import useFetch from '@/app/utils/useFetch'
 import { Box, Button, Modal, Typography } from '@mui/material'
 import React from 'react'
+import { toast } from 'sonner'
 
 type Props = {
   showDelete: { show: boolean; id: string }
@@ -9,6 +12,7 @@ type Props = {
       id: string
     }>
   >
+  refetch: () => void
 }
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,13 +27,22 @@ const style = {
   borderRadius: '6px',
 }
 
-export default function DeleteCategory({ showDelete, setShowDelete }: Props) {
+export default function DeleteCategory({ showDelete, setShowDelete, refetch }: Props) {
+  const fetchApi = useFetch()
+  const { mutateAsync: deleteCategory } = useDeleteCategoryMutation(fetchApi)
   const handleClose = () =>
     setShowDelete({
       show: false,
       id: '',
     })
-
+  const handleDeleteCategory = async () => {
+    const result = await deleteCategory(showDelete.id)
+    if (result) {
+      refetch()
+      handleClose()
+      toast.success('Category deleted successfully', { position: 'bottom-right' })
+    }
+  }
   return (
     <Modal
       open={showDelete.show}
@@ -53,7 +66,7 @@ export default function DeleteCategory({ showDelete, setShowDelete }: Props) {
             mt: 2,
           }}
         >
-          <Button variant='contained'>Confirm</Button>
+          <Button variant='contained' onClick={handleDeleteCategory}>Confirm</Button>
           <Button sx={{ ml: 2 }} variant='outlined' onClick={handleClose}>
             Cancel
           </Button>

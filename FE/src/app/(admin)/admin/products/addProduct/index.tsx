@@ -1,11 +1,12 @@
+import { useAddProductMutation } from '@/app/utils/hooks/productsHooks'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import useFetch from '@/app/utils/useFetch'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
   Avatar,
   Box,
-  Checkbox,
   FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -13,25 +14,24 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import * as yup from 'yup'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { styled } from '@mui/material/styles'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import { Form, Formik } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import * as yup from 'yup'
 type Props = {
   open: boolean
   toggleDrawer: (val: boolean) => void
+  refetch: () => void
 }
 
 type MyFormValues = {
   name: string
   description?: string
-  additionalInfo?: string
   quantity: number
   price: number
   priceSale?: number
@@ -45,7 +45,6 @@ const validationSchema = yup.object({
     .required('Name is required')
     .min(4, 'Name should be of minimum 4 characters length'),
   description: yup.string(),
-  additionalInfo: yup.string(),
   quantity: yup.number().required('Quantity is required').min(1).max(999),
   price: yup.number().required('Price is required').min(1).max(99999),
   priceSale: yup.number(),
@@ -65,10 +64,13 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-export default function AddProduct({ open, toggleDrawer }: Props) {
+export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
   const [file, setFile] = useState<File | undefined>(undefined)
   const [category, setCategory] = useState('')
-
+  const [categoryOption, setCategoryOption] = useState<Category[]>([])
+  const fetchApi = useFetch()
+  const { mutateAsync: addProduct } = useAddProductMutation(fetchApi)
+  const { data: allCategory } = useGetCategoriesQuery()
   const handleChangeSelect = (event: SelectChangeEvent) => {
     setCategory(event.target.value)
   }
@@ -77,10 +79,16 @@ export default function AddProduct({ open, toggleDrawer }: Props) {
     setFile(undefined)
   }
 
+  useEffect(() => {
+    if (allCategory) {
+      const option = allCategory.filter((item: Category) => item._destroy === false)
+      setCategoryOption(option)
+    }
+  }, [allCategory])
+
   const initialValues: MyFormValues = {
     name: '',
     description: '',
-    additionalInfo: '',
     quantity: 0,
     price: 0,
     priceSale: 0,
@@ -90,6 +98,29 @@ export default function AddProduct({ open, toggleDrawer }: Props) {
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    if (!file) {
+      toast.warning('Please select image', { position: 'bottom-left' })
+      return
+    }
+    if (!category) {
+      toast.warning('Please select category', { position: 'bottom-left' })
+      return
+    }
+    const result = await addProduct({
+      ...values,
+      file,
+      categoryId: category
+    })
+    if (result) {
+      actions.resetForm()
+      toggleDrawer(false)
+      refetch()
+      setFile(undefined)
+      toast.success('Product added successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -157,24 +188,10 @@ export default function AddProduct({ open, toggleDrawer }: Props) {
           validateOnChange={true}
           validationSchema={validationSchema}
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values, category)
-            setTimeout(() => {
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
-            const {
-              name,
-              description,
-              additionalInfo,
-              quantity,
-              price,
-              priceSale,
-              categoryId,
-              star,
-            } = values
+            const { name, description, quantity, price, priceSale, categoryId, star } = values
             return (
               <Form>
                 <Stack spacing={2}>
@@ -197,18 +214,6 @@ export default function AddProduct({ open, toggleDrawer }: Props) {
                     onChange={handleChange}
                     error={touched.description && Boolean(errors.description)}
                     helperText={touched.description && errors.description}
-                    multiline
-                    minRows={4}
-                  />
-                  <TextField
-                    fullWidth
-                    id='additionalInfo'
-                    label='Additional Info'
-                    variant='outlined'
-                    value={additionalInfo}
-                    onChange={handleChange}
-                    error={touched.additionalInfo && Boolean(errors.additionalInfo)}
-                    helperText={touched.additionalInfo && errors.additionalInfo}
                     multiline
                     minRows={4}
                   />
@@ -279,9 +284,11 @@ export default function AddProduct({ open, toggleDrawer }: Props) {
                       label='Category'
                       onChange={handleChangeSelect}
                     >
-                      <MenuItem value={'1'}>Fruit</MenuItem>
-                      <MenuItem value={'2'}>Snack</MenuItem>
-                      <MenuItem value={'3'}>Thirty</MenuItem>
+                      {categoryOption.map((item: Category) => (
+                        <MenuItem key={item._id} value={item._id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                   <Box sx={{ display: 'flex' }}>

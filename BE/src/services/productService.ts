@@ -39,6 +39,7 @@ const getProducts = async (page: number, pageSize: number) => {
 
 const getProductInfo = async (productId: string) => {
   try {
+    console.log(productId)
     const getProduct = await productModel.findOneById(productId)
     if (!getProduct) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
@@ -56,10 +57,16 @@ const editProductInfo = async (id: string, data: any, reqFile: any) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
     }
     const changeData = {
-      ...data,
+      name: data.name,
+      priceSale: +data.priceSale || 0,
+      price: +data.price,
+      quantity: +data.quantity,
+      star: +data.star,
+      categoryId: new ObjectId(data.categoryId),
       updatedAt: Date.now(),
       image: reqFile ? await uploadImage(reqFile, 'organick/products') : product.image,
-      slug: slugify(data.name)
+      slug: slugify(data.name),
+      _destroy: data._destroy === 'true' ? true : false
     }
     await productModel.findAndUpdate(id, changeData)
     //get latest data

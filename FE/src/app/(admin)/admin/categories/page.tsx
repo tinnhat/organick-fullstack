@@ -28,10 +28,14 @@ import DeleteCategory from './deleteCategory'
 import { Checkbox } from '@mui/material'
 import TypographyTooltip from '../components/typograhyTooltip'
 import * as XLSX from 'xlsx'
+import useFetch from '@/app/utils/useFetch'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import Loading from '../loading'
 
 type Props = {}
 
 export default function Categories({}: Props) {
+  const { data: allCategory, isLoading, refetch } = useGetCategoriesQuery()
   const [categories, setCategories] = useState<Category[]>([])
   const [categoriesShow, setCategoriesShow] = useState<Category[]>([])
   const router = useRouter()
@@ -43,19 +47,21 @@ export default function Categories({}: Props) {
     show: false,
     id: '',
   })
-  const debouncedSearch = useDebounce(search, 300)
+  const debouncedSearch = useDebounce(search, 500)
 
   useEffect(() => {
-    setCategories(CategoriesMock)
-    setCategoriesShow(CategoriesMock)
-  }, [])
+    if (allCategory) {
+      setCategories(allCategory)
+      setCategoriesShow(allCategory)
+    }
+  }, [allCategory])
 
   //use useEffect to watch value and debounce
   useEffect(() => {
     const newCategoriesShow = cloneDeep(categories)
     if (debouncedSearch) {
       const filtered = newCategoriesShow.filter((item: Category) => {
-        return item.name.includes(search)
+        return item.name.toLowerCase().includes(search.toLowerCase())
       })
       setCategoriesShow(filtered)
       setPage(0)
@@ -93,13 +99,7 @@ export default function Categories({}: Props) {
   }
 
   const exportFile = () => {
-    const header = [
-      'Id',
-      'Name',
-      'Update At',
-      'Created At',
-      'Is Deleted',
-    ]
+    const header = ['Id', 'Name', 'Update At', 'Created At', 'Is Deleted']
     const rows = categoriesShow.map((row: Category) => ({
       _id: row._id,
       name: row.name,
@@ -119,7 +119,7 @@ export default function Categories({}: Props) {
     XLSX.writeFile(workbook, 'Categories.xlsx', { compression: true })
   }
 
-
+  if (isLoading) return <Loading />
   return (
     <>
       <div className='categories'>
@@ -142,7 +142,7 @@ export default function Categories({}: Props) {
                   <Button
                     sx={{
                       mr: 'auto',
-                      ml: 2
+                      ml: 2,
                     }}
                     variant='contained'
                     color='secondary'
@@ -293,8 +293,8 @@ export default function Categories({}: Props) {
           </Grid>
         </Grid>
       </div>
-      <AddCategory open={open} toggleDrawer={toggleDrawer} />
-      <DeleteCategory showDelete={showDelete} setShowDelete={setShowDelete} />
+      <AddCategory refetch={refetch} open={open} toggleDrawer={toggleDrawer} />
+      <DeleteCategory refetch={refetch} showDelete={showDelete} setShowDelete={setShowDelete} />
     </>
   )
 }
