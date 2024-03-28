@@ -176,7 +176,7 @@ const checkRefreshToken = async (refreshToken: string) => {
   try {
     const user = await userModel.checkRefreshToken(refreshToken)
     if (!user) {
-      throw new ApiError(StatusCodes.NOT_FOUND, 'Refresh Token not found')
+      return null
     }
     const newRefreshToken = generateRefreshToken(user)
     await userModel.updateRefreshToken(user._id, newRefreshToken)

@@ -36,19 +36,19 @@ export default function SingleProductDetail({ params }: Props) {
               ...initalValue,
               {
                 ...product,
-                quantityAddCart: +productRef.current!.value,
+                quantityAddtoCart: +productRef.current!.value,
               },
             ]
           : [
               {
                 ...product,
-                quantityAddCart: +productRef.current!.value,
+                quantityAddtoCart: +productRef.current!.value,
               },
             ]
         const arrValue = cloneDeep(updatedValue).reduce((acc: any, item: any) => {
           const existingItem = acc.find((i: any) => i._id === item._id)
           if (existingItem) {
-            existingItem.quantityAddCart += item.quantityAddCart
+            existingItem.quantityAddtoCart += item.quantityAddtoCart
           } else {
             acc.push(item)
           }
@@ -101,6 +101,7 @@ export default function SingleProductDetail({ params }: Props) {
                   min={1}
                   max={999}
                   type='number'
+                  step={1}
                   defaultValue={1}
                 />
                 {product.quantity === 0 ? (

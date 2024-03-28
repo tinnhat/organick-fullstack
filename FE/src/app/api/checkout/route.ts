@@ -49,7 +49,7 @@ export const POST = async (request: any) => {
       //push product thanh toan len stripe de show UI checkout
       await stripeItems.push({
         price: stripeProduct?.default_price,
-        quantity: product?.quantityAddCart,
+        quantity: product?.quantityAddtoCart,
       })
     }
   }

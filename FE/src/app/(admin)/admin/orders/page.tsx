@@ -34,7 +34,7 @@ type Props = {}
 
 export default function Orders({}: Props) {
   const fetchApi = useFetch()
-  const { data: allOrders, isLoading } = useGetOrdersQuery(fetchApi)
+  const { data: allOrders, isLoading, refetch } = useGetOrdersQuery(fetchApi)
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersShow, setOrdersShow] = useState<Order[]>([])
   const router = useRouter()
@@ -346,8 +346,8 @@ export default function Orders({}: Props) {
           </Grid>
         </Grid>
       </div>
-      <AddOrder open={open} toggleDrawer={toggleDrawer} />
-      <DeleteOrder showDelete={showDelete} setShowDelete={setShowDelete} />
+      <AddOrder refetch={refetch} open={open} toggleDrawer={toggleDrawer} />
+      <DeleteOrder refetch={refetch} showDelete={showDelete} setShowDelete={setShowDelete} />
     </>
   )
 }

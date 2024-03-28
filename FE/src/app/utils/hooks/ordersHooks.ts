@@ -46,8 +46,11 @@ export const useCreateOrderMutation = (fetchApi: any) =>
         },
         body: JSON.stringify(data),
       })
-      const result = res.data
-      return result.data
+      if (res.hasOwnProperty('message')) {
+        toast.error(res.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
     },
   })
 
@@ -66,7 +69,60 @@ export const useGetOrdersOfUserQuery = (
           'Content-Type': 'application/json',
         },
       })
-      const result = res.data
-      return result.data
+      if (res.hasOwnProperty('message')) {
+        toast.error(res.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
+    },
+  })
+
+export const useCreateOrderByAdminMutation = (fetchApi: any) =>
+  useMutation({
+    mutationFn: async (data: any) => {
+      const res = await fetchApi('/orders/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      if (res.hasOwnProperty('message')) {
+        toast.error(res.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
+    },
+  })
+
+export const useUpdateOrderByAdminMutation = (fetchApi: any, id: string) =>
+  useMutation({
+    mutationFn: async (data: any) => {
+      const res = await fetchApi(`/orders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      if (res.hasOwnProperty('message')) {
+        toast.error(res.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
+    },
+  })
+
+export const useDeleteOrderMutation = (fetchApi: any) =>
+  useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetchApi(`/orders/${id}`, {
+        method: 'DELETE',
+      })
+      if (res.hasOwnProperty('message')) {
+        toast.error(res.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
     },
   })

@@ -250,6 +250,13 @@ export default function ProductDetail({}: Props) {
                         error={touched.quantity && Boolean(errors.quantity)}
                         helperText={touched.quantity && (errors.quantity as string)}
                         type='number'
+                        InputProps={{
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -269,6 +276,11 @@ export default function ProductDetail({}: Props) {
                               <AttachMoneyIcon />
                             </InputAdornment>
                           ),
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
                         }}
                       />
                     </Grid>
@@ -289,6 +301,11 @@ export default function ProductDetail({}: Props) {
                               <AttachMoneyIcon />
                             </InputAdornment>
                           ),
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
                         }}
                       />
                     </Grid>
@@ -303,6 +320,13 @@ export default function ProductDetail({}: Props) {
                         error={touched.star && Boolean(errors.star)}
                         helperText={touched.star && (errors.star as string)}
                         type='number'
+                        InputProps={{
+                          inputProps: {
+                            max: 5,
+                            min: 1,
+                            step: 1,
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>

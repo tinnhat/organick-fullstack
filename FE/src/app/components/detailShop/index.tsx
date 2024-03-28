@@ -1,27 +1,24 @@
 'use client'
 import { useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
 import {
   faArrowDown,
   faArrowUp,
   faFilterCircleXmark,
   faMagnifyingGlass,
+  faStar,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Rating from '@mui/material/Rating'
+import { cloneDeep } from 'lodash'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Select from 'react-select'
-import LoadingCustom from '../loading'
-import { products } from './mockDataProducts'
-import './style.scss'
 import ErrorFetchingProduct from '../errorFetchingProduct/indext'
-import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
-import client from '@/app/client'
-import { cloneDeep, set } from 'lodash'
-import { useDebounce } from '@uidotdev/usehooks'
+import LoadingCustom from '../loading'
+import './style.scss'
 
 type Props = {}
 
@@ -79,7 +76,7 @@ export default function DetailShop({}: Props) {
 
   useEffect(() => {
     if (!allCategories) return
-    setCategories(allCategories.map((item: Category) => ({ value: item._id, label: item.name })))
+    setCategories(allCategories.filter((item: any) => !item._destroy).map((item: Category) => ({ value: item._id, label: item.name })))
   }, [allCategories])
 
   useEffect(() => {

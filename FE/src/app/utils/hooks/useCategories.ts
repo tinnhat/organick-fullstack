@@ -52,6 +52,9 @@ export const useUpdateCategoryInfoMutation = (fetchApi: any, id: string) =>
     mutationFn: async ({ name, _destroy = false }: { name: string; _destroy?: boolean }) => {
       const res = await fetchApi(`/categories/${id}`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           name,
           _destroy,

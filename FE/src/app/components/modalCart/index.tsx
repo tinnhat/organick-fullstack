@@ -47,7 +47,7 @@ export default function ModalCart({ setShowCart }: Props) {
         products: cart.map((product: any) => {
           return {
             _id: product._id,
-            quantityAddCart: product.quantityAddCart,
+            quantityAddtoCart: product.quantityAddtoCart,
           }
         }),
       }),
@@ -85,7 +85,7 @@ export default function ModalCart({ setShowCart }: Props) {
             listProducts: cart.map((product: any) => {
               return {
                 _id: product._id,
-                quantityAddCart: product.quantityAddCart,
+                quantityAddtoCart: product.quantityAddtoCart,
               }
             }),
             totalPrice: 999,
@@ -118,7 +118,7 @@ export default function ModalCart({ setShowCart }: Props) {
     client.setQueryData(['User Cart'], (initalValue: any) => {
       const newValue = cloneDeep(initalValue)
       const index = newValue.findIndex((i: any) => i._id === item._id)
-      newValue[index].quantityAddCart = e.target.value
+      newValue[index].quantityAddtoCart = e.target.value
       setCart(newValue)
       return newValue
     })
@@ -179,8 +179,9 @@ export default function ModalCart({ setShowCart }: Props) {
                       </div>
                       <div className='item-quantity'>
                         <input
-                          value={item.quantityAddCart}
+                          value={item.quantityAddtoCart}
                           type='number'
+                          step={1}
                           defaultValue={1}
                           min={1}
                           max={999}

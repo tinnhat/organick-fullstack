@@ -135,7 +135,7 @@ const checkList = async (data: any) => {
     //check quantity of product
     for (let i = 0; i < data.products.length; i++) {
       const product = allProducts.find((item: any) => item._id.toString() === data.products[i]._id.toString())
-      if (data.products[i].quantityAddCart > product.quantity) {
+      if (data.products[i].quantityAddtoCart > product.quantity) {
         throw new ApiError(StatusCodes.BAD_REQUEST, `Quantity of product ${product.name} in stock is not enough`)
       }
     }

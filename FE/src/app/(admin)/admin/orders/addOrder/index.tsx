@@ -28,10 +28,12 @@ import { useGetAllUsersQuery } from '@/app/utils/hooks/usersHooks'
 import useFetch from '@/app/utils/useFetch'
 import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { cloneDeep } from 'lodash'
+import { useCreateOrderByAdminMutation } from '@/app/utils/hooks/ordersHooks'
 
 type Props = {
   open: boolean
   toggleDrawer: (val: boolean) => void
+  refetch: () => void
 }
 
 type MyFormValues = {
@@ -69,16 +71,17 @@ const validationSchema = yup.object({
   note: yup.string(),
 })
 
-export default function AddOrder({ open, toggleDrawer }: Props) {
+export default function AddOrder({ open, toggleDrawer, refetch }: Props) {
   const fetchApi = useFetch()
   const { data: allUser, isLoading } = useGetAllUsersQuery(fetchApi)
+  const { mutateAsync: createOrder } = useCreateOrderByAdminMutation(fetchApi)
   const [cart, setCart] = useState<Product[]>([])
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState<User>()
   const [showAddProduct, setShowAddProduct] = useState(false)
   const handleClose = () => {
     toggleDrawer(false)
     setShowAddProduct(false)
-    setUser('')
+    setUser(undefined)
     setCart([])
   }
 
@@ -92,7 +95,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
     setCart(cart.filter(cartItem => cartItem._id !== item._id))
   }
 
-  const handleSubmit = (values: any, actions: any) => {
+  const handleSubmit = async (values: any, actions: any) => {
     if (!user) {
       toast.warning('Please select user', { position: 'bottom-left' })
       actions.setSubmitting(false)
@@ -103,13 +106,22 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
       actions.setSubmitting(false)
       return
     }
-    console.log(values)
-    console.log(user)
-    console.log(cart)
-
-    setTimeout(() => {
-      actions.setSubmitting(false)
-    }, 1000)
+    const dataAdd = {
+      address: values.address.trim(),
+      phone: values.phone.trim(),
+      note: values.note.trim(),
+      totalPrice: totalPriceInCart,
+      userId: user._id,
+      listProducts: cart,
+    }
+    const result = await createOrder(dataAdd)
+    if (result) {
+      actions.resetForm()
+      handleClose()
+      setCart([])
+      refetch()
+      toast.success('Order added successfully', { position: 'bottom-left' })
+    }
   }
 
   const handleIncreaseQuantity = (item: Product) => {
@@ -299,6 +311,7 @@ export default function AddOrder({ open, toggleDrawer }: Props) {
                               inputProps: {
                                 max: 999,
                                 min: 1,
+                                step: 1,
                               },
                             }}
                             sx={{

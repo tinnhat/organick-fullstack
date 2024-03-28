@@ -14,7 +14,7 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -112,7 +112,7 @@ export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
     const result = await addProduct({
       ...values,
       file,
-      categoryId: category
+      categoryId: category,
     })
     if (result) {
       actions.resetForm()
@@ -227,6 +227,13 @@ export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
                     error={touched.quantity && Boolean(errors.quantity)}
                     helperText={touched.quantity && errors.quantity}
                     type='number'
+                    InputProps={{
+                      inputProps: {
+                        max: 999,
+                        min: 1,
+                        step: 1,
+                      },
+                    }}
                   />
                   <TextField
                     fullWidth
@@ -244,6 +251,11 @@ export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
                           <AttachMoneyIcon />
                         </InputAdornment>
                       ),
+                      inputProps: {
+                        max: 999,
+                        min: 1,
+                        step: 1,
+                      },
                     }}
                   />
                   <TextField
@@ -262,6 +274,11 @@ export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
                           <AttachMoneyIcon />
                         </InputAdornment>
                       ),
+                      inputProps: {
+                        max: 999,
+                        min: 1,
+                        step: 1,
+                      },
                     }}
                   />
                   <TextField
@@ -274,6 +291,13 @@ export default function AddProduct({ open, toggleDrawer, refetch }: Props) {
                     error={touched.star && Boolean(errors.star)}
                     helperText={touched.star && errors.star}
                     type='number'
+                    InputProps={{
+                      inputProps: {
+                        max: 5,
+                        min: 1,
+                        step: 1,
+                      },
+                    }}
                   />
                   <FormControl fullWidth>
                     <InputLabel id='select-cate'>Category</InputLabel>

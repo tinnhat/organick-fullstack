@@ -67,7 +67,6 @@ export default function OrderHistory({}: Props) {
     setOrdersDefaultShow(prev => prev + 16)
     setPage(prev => prev + 1)
     const result = await newConcatOrder(page + 1, ordersDefaultShow)
-    console.log(result)
     if (result.length === 0) {
       setShowLoadingMore(false)
       return
@@ -82,7 +81,7 @@ export default function OrderHistory({}: Props) {
           const product = order.listDetailProducts.find(
             (item: any) => item._id === order.listProducts[i]._id
           )
-          if (product) product.quantityAddCart = order.listProducts[i].quantityAddCart
+          if (product) product.quantityAddtoCart = order.listProducts[i].quantityAddtoCart
         }
       })
       setItems(ordersByUser)
@@ -171,7 +170,7 @@ export default function OrderHistory({}: Props) {
                         <Image src={product.image} alt='' width={100} height={100} />
                         <div className='product-straight'>
                           <p className='product-name'>{product.name}</p>
-                          <p className='product-quantity'>x{product.quantityAddCart}</p>
+                          <p className='product-quantity'>x{product.quantityAddtoCart}</p>
                         </div>
                         <p className='product-price'>${product.price}</p>
                       </div>
@@ -198,7 +197,7 @@ export default function OrderHistory({}: Props) {
                       <div className='total'>Total: ${order.totalPrice}</div>
                     </div>
                     <div className='action-for-order'>
-                      {order.isPaid ? null : (
+                      {order.isPaid || order.status === 'Complete' || order.status === 'Cancel' ? null : (
                         <button
                           className='btn-checkout'
                           onClick={() => router.push(order.stripeCheckoutLink)}
@@ -206,7 +205,7 @@ export default function OrderHistory({}: Props) {
                           Checkout
                         </button>
                       )}
-                      {order.status === 'Complete' ? null : (
+                      {order.status === 'Complete' || order.status === 'Cancel' ? null : (
                         <button className='btn-cancel'>Cancel Order</button>
                       )}
                     </div>

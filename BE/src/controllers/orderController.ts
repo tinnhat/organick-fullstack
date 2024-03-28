@@ -12,6 +12,15 @@ const createNew = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const createNewByAdmin = async (req: Request, res: Response, next: any) => {
+  try {
+    const createdOrder = await orderServices.createNewByAdmin(req.body)
+    res.status(StatusCodes.CREATED).json(createdOrder)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getOrders = async (req: Request, res: Response, next: any) => {
   try {
     const orders = await orderServices.getOrders()
@@ -75,5 +84,6 @@ export const orderController = {
   editOrderInfo,
   updateOrderInfo,
   deleteOrderById,
-  getOrdersByUser
+  getOrdersByUser,
+  createNewByAdmin
 }

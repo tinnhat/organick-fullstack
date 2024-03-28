@@ -21,6 +21,7 @@ import {
   useUpdateCategoryInfoMutation,
 } from '@/app/utils/hooks/useCategories'
 import { toast } from 'sonner'
+import Loading from '../../loading'
 
 type Props = {}
 
@@ -61,6 +62,8 @@ export default function CategoryDetail({}: Props) {
     }
   }
 
+  if (isLoading) return <Loading />
+
   return (
     <div>
       <BaseCard title={`Category - ${params.id}`}>
@@ -91,7 +94,7 @@ export default function CategoryDetail({}: Props) {
                         value={name}
                         onChange={handleChange}
                         error={touched.name && Boolean(errors.name)}
-                        helperText={touched.name && errors.name as string}
+                        helperText={touched.name && (errors.name as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={12} sm={12}>

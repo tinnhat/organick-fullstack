@@ -31,8 +31,12 @@ import { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import BaseCard from '../../components/shared/BaseCard'
 import useFetch from '@/app/utils/useFetch'
-import { useGetOrderDetailQuery } from '@/app/utils/hooks/ordersHooks'
+import {
+  useGetOrderDetailQuery,
+  useUpdateOrderByAdminMutation,
+} from '@/app/utils/hooks/ordersHooks'
 import Loading from '../../loading'
+import { toast } from 'sonner'
 
 type Props = {}
 
@@ -85,6 +89,7 @@ export default function OrderDetail({}: Props) {
   const [status, setStatus] = useState('')
   const fetchApi = useFetch()
   const { data: orderDetail, isLoading } = useGetOrderDetailQuery(fetchApi, params.id.toString())
+  const { mutateAsync: updateOrder } = useUpdateOrderByAdminMutation(fetchApi, params.id.toString())
   const handleChangeStatus = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string)
   }
@@ -104,18 +109,26 @@ export default function OrderDetail({}: Props) {
         )
         if (findIndex !== -1) {
           orderDetail.listProductsDetail[findIndex].quantityAddtoCart =
-            orderDetail.listProducts[i].quantityAddCart
+            orderDetail.listProducts[i].quantityAddtoCart
         }
       }
       setCart(orderDetail.listProductsDetail)
     }
   }, [orderDetail])
 
-  const handleRemoveCart = (item: Product) => {
-    setCart(cart.filter(cartItem => cartItem._id !== item._id))
+  const handleSubmit = async (values: any, actions: any) => {
+    const dataUpdate = {
+      address: values.address.trim(),
+      phone: values.phone.trim(),
+      note: values.note.trim(),
+      status: status,
+      _destroy: values._destroy,
+    }
+    const result = await updateOrder(dataUpdate)
+    if (result) {
+      toast.success('Order updated successfully', { position: 'bottom-right' })
+    }
   }
-  console.log(orderDetail)
-
   if (isLoading) return <Loading />
 
   return (
@@ -193,7 +206,7 @@ export default function OrderDetail({}: Props) {
                               borderRadius: 0,
                               border: '1px solid #ccc',
                             }}
-                            src={'/assets/img/product1.webp'}
+                            src={item.image!.toString()}
                           />
                         </TableCell>
                         <TableCell>
@@ -228,6 +241,7 @@ export default function OrderDetail({}: Props) {
                                 inputProps: {
                                   max: 999,
                                   min: 1,
+                                  step: 1,
                                 },
                               }}
                               sx={{
@@ -266,12 +280,7 @@ export default function OrderDetail({}: Props) {
                 user: orderDetail?.user[0].email,
               } || initialValues
             }
-            onSubmit={(values, actions) => {
-              console.log(values)
-              setTimeout(() => {
-                actions.setSubmitting(false)
-              }, 1000)
-            }}
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting, errors, values, touched, handleChange }) => {
               const { address, phone, note, _destroy, user } = values
