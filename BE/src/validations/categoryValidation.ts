@@ -12,7 +12,8 @@ const createNew = async (req: Request, res: Response, next: NextFunction) => {
       'string.base': 'Name must be a string',
       'any.required': 'Name is required',
       'string.empty': 'Name cannot be an empty field'
-    })
+    }),
+    _destroy: Joi.boolean().default(false)
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })
@@ -42,7 +43,8 @@ const getCategoryInParams = async (req: Request, res: Response, next: any) => {
 
 const editCategoryInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
-    name: Joi.string().required().min(1).max(20).trim().strict()
+    name: Joi.string().optional().min(1).max(20).trim().strict(),
+    _destroy: Joi.boolean().default(false)
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })

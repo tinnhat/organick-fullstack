@@ -81,7 +81,6 @@ export default function AddUser({ open, toggleDrawer, refetch }: Props) {
   }
 
   const handleSubmit = async (values: any, actions: any) => {
-    console.log(values);
     const result = await register({ ...values, file })
     if (result) {
       actions.resetForm()

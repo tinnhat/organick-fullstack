@@ -8,7 +8,6 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdUser)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -18,7 +17,6 @@ const login = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(createdUser)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -28,7 +26,6 @@ const getUserInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -38,7 +35,6 @@ const editUserInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -48,7 +44,6 @@ const deleteUserById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -58,7 +53,6 @@ const getUsers = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -68,7 +62,6 @@ const verifyEmail = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -78,7 +71,6 @@ const changePassword = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -88,7 +80,6 @@ const resetPassword = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(user)
   } catch (error) {
     next(error)
-    
   }
 }
 

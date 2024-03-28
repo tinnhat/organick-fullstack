@@ -76,7 +76,14 @@ const getProductInParams = async (req: Request, res: Response, next: any) => {
 
 const editProductInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
-    name: Joi.string().required().min(1).max(20).trim().strict()
+    name: Joi.string().required().min(1).max(255).trim().strict(),
+    price: Joi.number().required().min(1).max(9999),
+    description: Joi.string().required().min(1).trim().strict(),
+    categoryId: Joi.string().required(),
+    quantity: Joi.number().required().min(1).max(999),
+    star: Joi.number().required().min(1).max(5),
+    priceSale: Joi.number().min(0).max(9999).default(0),
+    _destroy: Joi.boolean().default(false)
   })
   try {
     await check.validateAsync(req.body, { abortEarly: false })

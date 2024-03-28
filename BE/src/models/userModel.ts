@@ -155,5 +155,6 @@ export const userModel = {
   verifyEmail,
   findAndRemove,
   checkRefreshToken,
-  updateRefreshToken
+  updateRefreshToken,
+  USER_COLLECTION_NAME
 }

@@ -12,6 +12,8 @@ Router.get('/', Auth, AdminAuth, orderController.getOrders)
 
 Router.post('/', Auth, orderValidation.createNew, orderController.createNew)
 
+Router.post('/admin', Auth, AdminAuth, orderValidation.createNew, orderController.createNewByAdmin)
+
 Router.get('/user/:id', Auth, orderValidation.getOrdersByUser, orderController.getOrdersByUser)
 
 Router.get('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.getOrderInfo)
@@ -19,7 +21,6 @@ Router.get('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderContr
 Router.put('/:id', Auth, AdminAuth, orderValidation.editOrderInfo, orderController.editOrderInfo)
 
 Router.put('/checkout/:id', orderValidation.updateOrderInfo, orderController.updateOrderInfo)
-
 
 Router.delete('/:id', Auth, AdminAuth, orderValidation.getOrderInParams, orderController.deleteOrderById)
 

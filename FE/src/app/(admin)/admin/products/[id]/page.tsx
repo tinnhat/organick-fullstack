@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import BaseCard from '../../components/shared/BaseCard'
 import { Form, Formik } from 'formik'
@@ -26,13 +26,17 @@ import {
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import { faSignLanguage } from '@fortawesome/free-solid-svg-icons'
+import useFetch from '@/app/utils/useFetch'
+import { useEditProductMutation, useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
+import Loading from '../../loading'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import { toast } from 'sonner'
 
 type Props = {}
 
 type MyFormValues = {
   name: string
   description?: string
-  additionalInfo?: string
   quantity: number
   price: number
   priceSale?: number
@@ -48,7 +52,6 @@ const validationSchema = yup.object({
     .required('Name is required')
     .min(4, 'Name should be of minimum 4 characters length'),
   description: yup.string(),
-  additionalInfo: yup.string(),
   quantity: yup.number().required('Quantity is required').min(1).max(999),
   price: yup.number().required('Price is required').min(1).max(99999),
   priceSale: yup.number(),
@@ -70,20 +73,37 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-export default function OrderDetail({}: Props) {
+export default function ProductDetail({}: Props) {
+  const fetchApi = useFetch()
   const params = useParams()
   const route = useRouter()
+  const { data: allCategory } = useGetCategoriesQuery()
+  const [categoryOption, setCategoryOption] = useState<Category[]>([])
+  const { data: productInfo, isLoading } = useGetProductByIdQuery(params.id.toString())
+  const { mutateAsync: editProduct } = useEditProductMutation(fetchApi, params.id.toString())
+
   const [file, setFile] = useState<File | undefined>(undefined)
   const [category, setCategory] = useState('')
 
+  useEffect(() => {
+    if (allCategory) {
+      const option = allCategory.filter((item: Category) => item._destroy === false)
+      setCategoryOption(option)
+    }
+  }, [allCategory])
   const handleChangeSelect = (event: SelectChangeEvent) => {
     setCategory(event.target.value)
   }
 
+  useEffect(() => {
+    if (productInfo) {
+      setCategory(productInfo.category[0]._id)
+    }
+  }, [productInfo])
+
   const initialValues: MyFormValues = {
     name: '',
     description: '',
-    additionalInfo: '',
     quantity: 0,
     price: 0,
     priceSale: 0,
@@ -95,6 +115,15 @@ export default function OrderDetail({}: Props) {
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.target.files && setFile(e.target.files[0])
+  }
+
+  if (isLoading) return <Loading />
+
+  const handleSubmit = async (values: any, actions: any) => {
+    const result = await editProduct({ ...values, categoryId: category, file })
+    if (result) {
+      toast.success('Product updated successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -120,7 +149,7 @@ export default function OrderDetail({}: Props) {
             <br />
             <Avatar
               alt='avatar'
-              src={file ? URL.createObjectURL(file!) : '/images/users/avatar-default.webp'}
+              src={file ? URL.createObjectURL(file!) : productInfo?.image}
               sx={{
                 height: 200,
                 width: 200,
@@ -134,19 +163,26 @@ export default function OrderDetail({}: Props) {
           <Formik
             validateOnChange={true}
             validationSchema={validationSchema}
-            initialValues={initialValues}
-            onSubmit={(values, actions) => {
-              console.log(values, category)
-              setTimeout(() => {
-                actions.setSubmitting(false)
-              }, 1000)
-            }}
+            enableReinitialize={true}
+            initialValues={
+              {
+                name: productInfo?.name,
+                description: productInfo?.description,
+                quantity: productInfo?.quantity,
+                price: productInfo?.price,
+                priceSale: productInfo?.priceSale,
+                categoryId: productInfo?.categoryId,
+                star: productInfo?.star,
+                _destroy: productInfo?._destroy,
+                slug: productInfo?.slug,
+              } || initialValues
+            }
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting, errors, values, touched, handleChange }) => {
               const {
                 name,
                 description,
-                additionalInfo,
                 quantity,
                 price,
                 priceSale,
@@ -167,7 +203,7 @@ export default function OrderDetail({}: Props) {
                         value={name}
                         onChange={handleChange}
                         error={touched.name && Boolean(errors.name)}
-                        helperText={touched.name && errors.name}
+                        helperText={touched.name && (errors.name as string)}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -180,13 +216,15 @@ export default function OrderDetail({}: Props) {
                           label='Category'
                           onChange={handleChangeSelect}
                         >
-                          <MenuItem value={'1'}>Fruit</MenuItem>
-                          <MenuItem value={'2'}>Snack</MenuItem>
-                          <MenuItem value={'3'}>Thirty</MenuItem>
+                          {categoryOption.map(item => (
+                            <MenuItem key={item._id} value={item._id}>
+                              {item.name}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6} sm={12}>
+                    <Grid item xs={12} md={12} sm={12}>
                       <TextField
                         fullWidth
                         id='description'
@@ -195,25 +233,12 @@ export default function OrderDetail({}: Props) {
                         value={description}
                         onChange={handleChange}
                         error={touched.description && Boolean(errors.description)}
-                        helperText={touched.description && errors.description}
+                        helperText={touched.description && (errors.description as string)}
                         multiline
                         minRows={4}
                       />
                     </Grid>
-                    <Grid item xs={12} md={6} sm={12}>
-                      <TextField
-                        fullWidth
-                        id='additionalInfo'
-                        label='Additional Info'
-                        variant='outlined'
-                        value={additionalInfo}
-                        onChange={handleChange}
-                        error={touched.additionalInfo && Boolean(errors.additionalInfo)}
-                        helperText={touched.additionalInfo && errors.additionalInfo}
-                        multiline
-                        minRows={4}
-                      />
-                    </Grid>
+
                     <Grid item xs={12} md={6} sm={12}>
                       <TextField
                         fullWidth
@@ -223,8 +248,15 @@ export default function OrderDetail({}: Props) {
                         value={quantity}
                         onChange={handleChange}
                         error={touched.quantity && Boolean(errors.quantity)}
-                        helperText={touched.quantity && errors.quantity}
+                        helperText={touched.quantity && (errors.quantity as string)}
                         type='number'
+                        InputProps={{
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -236,7 +268,7 @@ export default function OrderDetail({}: Props) {
                         value={price}
                         onChange={handleChange}
                         error={touched.price && Boolean(errors.price)}
-                        helperText={touched.price && errors.price}
+                        helperText={touched.price && (errors.price as string)}
                         type='number'
                         InputProps={{
                           endAdornment: (
@@ -244,6 +276,11 @@ export default function OrderDetail({}: Props) {
                               <AttachMoneyIcon />
                             </InputAdornment>
                           ),
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
                         }}
                       />
                     </Grid>
@@ -256,7 +293,7 @@ export default function OrderDetail({}: Props) {
                         value={priceSale}
                         onChange={handleChange}
                         error={touched.priceSale && Boolean(errors.priceSale)}
-                        helperText={touched.priceSale && errors.priceSale}
+                        helperText={touched.priceSale && (errors.priceSale as string)}
                         type='number'
                         InputProps={{
                           endAdornment: (
@@ -264,6 +301,11 @@ export default function OrderDetail({}: Props) {
                               <AttachMoneyIcon />
                             </InputAdornment>
                           ),
+                          inputProps: {
+                            max: 999,
+                            min: 1,
+                            step: 1,
+                          },
                         }}
                       />
                     </Grid>
@@ -276,8 +318,15 @@ export default function OrderDetail({}: Props) {
                         value={star}
                         onChange={handleChange}
                         error={touched.star && Boolean(errors.star)}
-                        helperText={touched.star && errors.star}
+                        helperText={touched.star && (errors.star as string)}
                         type='number'
+                        InputProps={{
+                          inputProps: {
+                            max: 5,
+                            min: 1,
+                            step: 1,
+                          },
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} sm={12}>
@@ -289,7 +338,7 @@ export default function OrderDetail({}: Props) {
                         value={slug}
                         onChange={handleChange}
                         error={touched.slug && Boolean(errors.slug)}
-                        helperText={touched.slug && errors.slug}
+                        helperText={touched.slug && (errors.slug as string)}
                         disabled
                       />
                     </Grid>

@@ -4,7 +4,7 @@ import './style.scss'
 import Image from 'next/image'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/free-regular-svg-icons'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useGetProductsOfferQuery, useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
 type Props = {}

@@ -1,3 +1,5 @@
+import { useAddCategoryInfoMutation } from '@/app/utils/hooks/useCategories'
+import useFetch from '@/app/utils/useFetch'
 import {
   Box,
   Checkbox,
@@ -13,11 +15,13 @@ import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import { Form, Formik } from 'formik'
 import React from 'react'
+import { toast } from 'sonner'
 import * as yup from 'yup'
 
 type Props = {
   open: boolean
   toggleDrawer: (val: boolean) => void
+  refetch: () => void
 }
 
 type MyFormValues = {
@@ -33,7 +37,10 @@ const validationSchema = yup.object({
   _destroy: yup.boolean(),
 })
 
-export default function AddCategory({ open, toggleDrawer }: Props) {
+export default function AddCategory({ open, toggleDrawer, refetch }: Props) {
+  const fetchApi = useFetch()
+  const { mutateAsync: addCategory } = useAddCategoryInfoMutation(fetchApi)
+
   const handleClose = () => {
     toggleDrawer(false)
   }
@@ -41,6 +48,16 @@ export default function AddCategory({ open, toggleDrawer }: Props) {
   const initialValues: MyFormValues = {
     name: '',
     _destroy: false,
+  }
+
+  const handleSubmit = async (values: any, actions: any) => {
+    const result = await addCategory(values)
+    if (result) {
+      actions.resetForm()
+      toggleDrawer(false)
+      refetch()
+      toast.success('User added successfully', { position: 'bottom-right' })
+    }
   }
 
   return (
@@ -63,12 +80,7 @@ export default function AddCategory({ open, toggleDrawer }: Props) {
           validateOnChange={true}
           validationSchema={validationSchema}
           initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values)
-            setTimeout(() => {
-              actions.setSubmitting(false)
-            }, 1000)
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting, errors, values, touched, handleChange }) => {
             const { name, _destroy } = values

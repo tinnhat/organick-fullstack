@@ -9,7 +9,15 @@ const createNew = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.CREATED).json(createdOrder)
   } catch (error) {
     next(error)
-    
+  }
+}
+
+const createNewByAdmin = async (req: Request, res: Response, next: any) => {
+  try {
+    const createdOrder = await orderServices.createNewByAdmin(req.body)
+    res.status(StatusCodes.CREATED).json(createdOrder)
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -19,7 +27,6 @@ const getOrders = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(orders)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -31,7 +38,6 @@ const getOrdersByUser = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(orders)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -41,7 +47,6 @@ const getOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -51,7 +56,6 @@ const editOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -61,10 +65,8 @@ const updateOrderInfo = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)
-    
   }
 }
-
 
 const deleteOrderById = async (req: Request, res: Response, next: any) => {
   try {
@@ -72,7 +74,6 @@ const deleteOrderById = async (req: Request, res: Response, next: any) => {
     res.status(StatusCodes.OK).json(product)
   } catch (error) {
     next(error)
-    
   }
 }
 
@@ -83,5 +84,6 @@ export const orderController = {
   editOrderInfo,
   updateOrderInfo,
   deleteOrderById,
-  getOrdersByUser
+  getOrdersByUser,
+  createNewByAdmin
 }

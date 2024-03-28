@@ -16,7 +16,5 @@ export const DEFAULT_AVATAR =
 export enum StatusOrder {
   Cancel = 'Cancel',
   Pending = 'Pending',
-  Confirm = 'Confirm',
-  Shipping = 'Shipping',
-  Completed = 'Completed'
+  Complete = 'Complete'
 }

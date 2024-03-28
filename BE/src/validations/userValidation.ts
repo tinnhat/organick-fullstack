@@ -174,7 +174,6 @@ const resetPassword = async (req: any, res: Response, next: any) => {
   }
 }
 
-
 export const userValidation = {
   createNew,
   login,

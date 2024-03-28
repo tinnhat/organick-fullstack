@@ -47,7 +47,7 @@ const findOneById = async (id: string) => {
       .collection(PRODUCT_COLLECTION_NAME)
       .aggregate([
         {
-          $match: { _id: new ObjectId(id), _destroy: false }
+          $match: { _id: new ObjectId(id) }
         },
         {
           $lookup: {
@@ -69,22 +69,41 @@ const findOneById = async (id: string) => {
 const getProducts = async (page: number, pageSize: number) => {
   try {
     const skip = (page - 1) * pageSize
-    const result = await getDB()
-      .collection(PRODUCT_COLLECTION_NAME)
-      .aggregate([
-        {
-          $lookup: {
-            from: categoryModel.CATEGORY_COLLECTION_NAME,
-            localField: 'categoryId',
-            foreignField: '_id',
-            as: 'category'
-          }
-        },
-        { $skip: skip },
-        { $limit: pageSize },
-        { $sort: { _destroy: 1 } }
-      ])
-      .toArray()
+    let result: any = []
+    if (!isNaN(skip) && pageSize) {
+      result = await getDB()
+        .collection(PRODUCT_COLLECTION_NAME)
+        .aggregate([
+          {
+            $lookup: {
+              from: categoryModel.CATEGORY_COLLECTION_NAME,
+              localField: 'categoryId',
+              foreignField: '_id',
+              as: 'category'
+            }
+          },
+          { $skip: skip },
+          { $limit: pageSize },
+          { $sort: { _destroy: 1 } }
+        ])
+        .toArray()
+    } else {
+      result = await getDB()
+        .collection(PRODUCT_COLLECTION_NAME)
+        .aggregate([
+          {
+            $lookup: {
+              from: categoryModel.CATEGORY_COLLECTION_NAME,
+              localField: 'categoryId',
+              foreignField: '_id',
+              as: 'category'
+            }
+          },
+          { $sort: { _destroy: 1 } }
+        ])
+        .toArray()
+    }
+
     if (!result) return null
     return result || null
   } catch (error) {

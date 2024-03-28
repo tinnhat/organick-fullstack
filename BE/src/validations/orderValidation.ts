@@ -91,11 +91,7 @@ const editOrderInfo = async (req: any, res: Response, next: any) => {
     address: Joi.string().optional().min(1).max(255).trim().strict(),
     phone: Joi.string().optional().min(1).max(255).trim().strict(),
     note: Joi.string().optional().max(255).trim().strict(),
-    listProducts: Joi.array().optional(),
-    totalPrice: Joi.number().optional().min(1).max(9999),
-    status: Joi.string()
-      .optional()
-      .valid(StatusOrder.Cancel, StatusOrder.Completed, StatusOrder.Confirm, StatusOrder.Pending, StatusOrder.Shipping),
+    status: Joi.string().optional().valid(StatusOrder.Cancel, StatusOrder.Complete, StatusOrder.Pending),
     _destroy: Joi.boolean().default(false)
   })
   try {
@@ -112,7 +108,6 @@ const editOrderInfo = async (req: any, res: Response, next: any) => {
   }
 }
 
-
 const updateOrderInfo = async (req: any, res: Response, next: any) => {
   const check = Joi.object({
     address: Joi.string().optional().min(1).max(255).trim().strict(),
@@ -120,9 +115,7 @@ const updateOrderInfo = async (req: any, res: Response, next: any) => {
     note: Joi.string().optional().max(255).trim().strict(),
     listProducts: Joi.array().optional(),
     totalPrice: Joi.number().optional().min(1).max(9999),
-    status: Joi.string()
-      .optional()
-      .valid(StatusOrder.Cancel, StatusOrder.Completed, StatusOrder.Confirm, StatusOrder.Pending, StatusOrder.Shipping),
+    status: Joi.string().optional().valid(StatusOrder.Cancel, StatusOrder.Complete, StatusOrder.Pending),
     _destroy: Joi.boolean().default(false),
     isPaid: Joi.boolean().optional().default(false),
     stripeCheckoutLink: Joi.string().default('').optional(),

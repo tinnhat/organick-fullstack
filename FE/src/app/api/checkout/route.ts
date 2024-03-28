@@ -49,7 +49,7 @@ export const POST = async (request: any) => {
       //push product thanh toan len stripe de show UI checkout
       await stripeItems.push({
         price: stripeProduct?.default_price,
-        quantity: product?.quantityAddCart,
+        quantity: product?.quantityAddtoCart,
       })
     }
   }
@@ -58,7 +58,7 @@ export const POST = async (request: any) => {
     line_items: stripeItems,
     mode: 'payment',
     success_url: `${HOST}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${HOST}/cancel?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${HOST}/pending?session_id={CHECKOUT_SESSION_ID}`,
     custom_fields: [
       {
         key: 'phone',
