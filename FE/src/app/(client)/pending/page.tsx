@@ -19,12 +19,9 @@ export default function Cancel({}: Props) {
         method: 'GET',
       })
       const result = await res.json()
-      console.log(result.session);
-      
       setOrderCancel(result.session)
       setIsLoading(false)
     }
-    console.log(session_id)
     if (session_id) {
       fetchData()
     } else {

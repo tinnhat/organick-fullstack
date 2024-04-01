@@ -11,6 +11,10 @@ export const useGetUserInfoQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
       return res.data.data
     },
   })
@@ -25,6 +29,10 @@ export const useGetUserInfoByIdQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
       return res.data.data
     },
   })
@@ -58,7 +66,6 @@ export const useRegisterMutation = () =>
         body: data,
       })
       const result = await res.json()
-      console.log(result)
       if (result.hasOwnProperty('message')) {
         toast.error(result.message, { position: 'bottom-right' })
         return
@@ -132,6 +139,10 @@ export const useGetAllUsersQuery = (fetchApi: any) =>
           'Content-Type': 'application/json',
         },
       })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
       return res.data.data
     },
   })

@@ -22,7 +22,6 @@ export default function Success({}: Props) {
       setOrderSuccess(result.session)
       setIsLoading(false)
     }
-    console.log(session_id)
     if (session_id) {
       fetchData()
     } else {

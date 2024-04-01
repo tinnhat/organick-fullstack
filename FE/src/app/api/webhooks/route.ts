@@ -61,7 +61,6 @@ const webhookHandler = async (req: NextRequest) => {
         body: JSON.stringify(data)
       })
       const test = await order.json()
-      console.log('find by session id', test);
       break
 
     default:

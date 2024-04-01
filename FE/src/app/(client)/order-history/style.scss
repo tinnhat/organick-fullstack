@@ -59,7 +59,7 @@
     }
     .list-orders {
       padding: 10px 0;
-      .loading{
+      .loading {
         text-align: center;
         color: $text-bold-color;
         margin-top: 20px;
@@ -70,7 +70,7 @@
         padding: 10px;
         border-radius: 4px;
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-        
+
         .order-id {
           span {
             color: $green-leaf-color;
@@ -169,7 +169,60 @@
       margin-top: 20px;
       font-size: 20px;
       margin-bottom: 20px;
+    }
+  }
+  .container-pagination {
+    .pagination {
+      width: 100%;
+      padding: 0 1rem;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .page-btn {
+      color: #000000;
+      margin-right: 0.25rem;
+      transition: all 0.2s linear;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        display: block;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      &.active {
+        background-color: $text-bold-color;
+        color: $white-color;
+      }
+      &:hover {
+        cursor: pointer;
+        background-color: $green-leaf-color;
+        color: $white-color;
+      }
+      &.disabled-page {
+        cursor: not-allowed !important;
+        a {
+          cursor: not-allowed !important;
+        }
+      }
+      &.next,
+      &.previous {
+        cursor: pointer;
+      }
+    }
 
+    .page-num {
+      display: none;
+    }
+
+    .page-step {
+      display: none;
     }
   }
 }

@@ -77,41 +77,81 @@ const getOrders = async () => {
 const getOrdersByUser = async (id: string, page: number, pageSize: number) => {
   try {
     const skip = (page - 1) * pageSize
-    const result = await getDB()
-      .collection(ORDER_COLLECTION_NAME)
-      .aggregate([
-        {
-          $match: {
-            userId: new ObjectId(id)
-          }
-        },
-        {
-          $lookup: {
-            from: 'products',
-            let: {
-              listProducts: '$listProducts'
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $in: [
-                      {
-                        $toString: '$_id'
-                      },
-                      '$$listProducts._id'
-                    ]
+    let result: any = []
+    if (!isNaN(skip) && pageSize) {
+      console.log('vo day')
+
+      result = await getDB()
+        .collection(ORDER_COLLECTION_NAME)
+        .aggregate([
+          {
+            $match: {
+              userId: new ObjectId(id)
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              let: {
+                listProducts: '$listProducts'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: [
+                        {
+                          $toString: '$_id'
+                        },
+                        '$$listProducts._id'
+                      ]
+                    }
                   }
                 }
-              }
-            ],
-            as: 'listDetailProducts'
+              ],
+              as: 'listDetailProducts'
+            }
+          },
+          { $skip: skip },
+          { $limit: pageSize }
+        ])
+        .toArray()
+    } else {
+      result = await getDB()
+        .collection(ORDER_COLLECTION_NAME)
+        .aggregate([
+          {
+            $match: {
+              userId: new ObjectId(id)
+            }
+          },
+          {
+            $lookup: {
+              from: 'products',
+              let: {
+                listProducts: '$listProducts'
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $in: [
+                        {
+                          $toString: '$_id'
+                        },
+                        '$$listProducts._id'
+                      ]
+                    }
+                  }
+                }
+              ],
+              as: 'listDetailProducts'
+            }
           }
-        },
-        { $skip: skip },
-        { $limit: pageSize }
-      ])
-      .toArray()
+        ])
+        .toArray()
+    }
+
     if (!result) return null
     return result
   } catch (error) {

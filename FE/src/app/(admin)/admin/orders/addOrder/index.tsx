@@ -159,8 +159,6 @@ export default function AddOrder({ open, toggleDrawer, refetch }: Props) {
       //reset ve 1
       e.target.value = 1
     }
-    console.log(e.target.value)
-    console.log(item)
     const cloneCart: any = cloneDeep(cart)
     const findIndexItem = cloneCart.findIndex((cartItem: any) => cartItem._id === item._id)
     cloneCart[findIndexItem].quantityAddtoCart = Number(e.target.value)
@@ -387,7 +385,6 @@ export default function AddOrder({ open, toggleDrawer, refetch }: Props) {
                     options={allUser}
                     autoHighlight
                     onChange={(event: any, newValue: any) => {
-                      console.log(newValue)
                       setUser(newValue)
                     }}
                     getOptionLabel={option => option.fullname}

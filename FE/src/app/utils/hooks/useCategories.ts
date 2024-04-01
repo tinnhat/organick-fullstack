@@ -44,6 +44,10 @@ export const useGetCategoryInfoByIdQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
       return res.data.data
     },
   })

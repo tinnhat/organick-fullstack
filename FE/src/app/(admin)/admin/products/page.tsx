@@ -138,8 +138,7 @@ export default function Products({}: Props) {
   }
 
   if (isLoading) return <Loading />
-  console.log(visibleRows);
-  
+
   return (
     <>
       <div className='products'>

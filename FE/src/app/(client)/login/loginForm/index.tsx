@@ -23,7 +23,6 @@ export default function LoginForm({ setShowRegister }: Props) {
           password,
           redirect: false,
         })
-        console.log(response)
         if (response?.error) {
           toast.error(response.error, {
             position: 'bottom-right',

@@ -15,8 +15,6 @@ export default function VerifyEmail({}: Props) {
   const searchParams = useSearchParams()
 
   const emailToken = searchParams.get('emailToken')
-  console.log(emailToken)
-
   useEffect(() => {
     ;(async () => {
       // wrong route
