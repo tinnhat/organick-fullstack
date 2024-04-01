@@ -1,20 +1,17 @@
 'use client'
+import LoadingCustom from '@/app/components/loading'
+import { useGetOrdersOfUserQuery } from '@/app/utils/hooks/ordersHooks'
+import useFetch from '@/app/utils/useFetch'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Image from 'next/image'
-import './style.scss'
-import { useCallback, useEffect, useState } from 'react'
-import { products } from '@/app/components/detailShop/mockDataProducts'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { useSession } from 'next-auth/react'
-import useFetch from '@/app/utils/useFetch'
-import { useRouter } from 'next/navigation'
-import { useGetOrdersOfUserQuery } from '@/app/utils/hooks/ordersHooks'
-import ErrorFetchingProduct from '@/app/components/errorFetchingProduct/indext'
-import LoadingCustom from '@/app/components/loading'
-import moment from 'moment'
 import { useDebounce } from '@uidotdev/usehooks'
 import { cloneDeep } from 'lodash'
+import moment from 'moment'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import './style.scss'
 type Props = {}
 
 export default function OrderHistory({}: Props) {
@@ -28,7 +25,6 @@ export default function OrderHistory({}: Props) {
     isLoading,
     isError,
   } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
-  const [showLoadingMore, setShowLoadingMore] = useState(true)
   const [items, setItems] = useState(ordersByUser || [])
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
@@ -62,18 +58,6 @@ export default function OrderHistory({}: Props) {
     },
     [fetchApi, session?.user._id]
   )
-  const fetchMoreData = async () => {
-    if (!showLoadingMore) return
-    setOrdersDefaultShow(prev => prev + 16)
-    setPage(prev => prev + 1)
-    const result = await newConcatOrder(page + 1, ordersDefaultShow)
-    if (result.length === 0) {
-      setShowLoadingMore(false)
-      return
-    }
-    setItems((prev: any) => [...prev, ...result])
-    setShowLoadingMore(false)
-  }
   useEffect(() => {
     if (ordersByUser) {
       ordersByUser.forEach((order: any) => {
@@ -150,69 +134,63 @@ export default function OrderHistory({}: Props) {
           </div>
           <ul className='list-orders'>
             {items.length > 0 ? (
-              <InfiniteScroll
-                dataLength={ordersDefaultShow}
-                next={fetchMoreData}
-                hasMore={true}
-                loader={showLoadingMore && <h4 className='loading'>Loading...</h4>}
-              >
-                {items.map((order: any) => (
-                  <li className='order' key={order._id}>
-                    <div className='order-header-info'>
-                      <p className='order-id'>
-                        ID: <span>{order._id}</span>
-                      </p>
-                      <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
-                      <p className={`order-status ${order.status}`}>{order.status}</p>
+              items.map((order: any) => (
+                <li className='order' key={order._id}>
+                  <div className='order-header-info'>
+                    <p className='order-id'>
+                      ID: <span>{order._id}</span>
+                    </p>
+                    <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
+                    <p className={`order-status ${order.status}`}>{order.status}</p>
+                  </div>
+                  {order.listDetailProducts.map((product: any) => (
+                    <div className='product-info' key={product._id}>
+                      <Image src={product.image} alt='' width={100} height={100} />
+                      <div className='product-straight'>
+                        <p className='product-name'>{product.name}</p>
+                        <p className='product-quantity'>x{product.quantityAddtoCart}</p>
+                      </div>
+                      <p className='product-price'>${product.price}</p>
                     </div>
-                    {order.listDetailProducts.map((product: any) => (
-                      <div className='product-info' key={product._id}>
-                        <Image src={product.image} alt='' width={100} height={100} />
-                        <div className='product-straight'>
-                          <p className='product-name'>{product.name}</p>
-                          <p className='product-quantity'>x{product.quantityAddtoCart}</p>
-                        </div>
-                        <p className='product-price'>${product.price}</p>
+                  ))}
+                  <div className='order-more-info'>
+                    <div className='box-address'>
+                      <div className='address'>
+                        <p>
+                          <span>Address:</span> {order.address}
+                        </p>
                       </div>
-                    ))}
-                    <div className='order-more-info'>
-                      <div className='box-address'>
-                        <div className='address'>
-                          <p>
-                            <span>Address:</span> {order.address}
-                          </p>
-                        </div>
-                        <div className='phone'>
-                          <p>
-                            <span>Phone:</span> {order.phone}
-                          </p>
-                        </div>
-                        <div className='note'>
-                          <p>
-                            <span>Note:</span> {order.note ? order.note : 'No note'}
-                          </p>
-                        </div>
+                      <div className='phone'>
+                        <p>
+                          <span>Phone:</span> {order.phone}
+                        </p>
                       </div>
+                      <div className='note'>
+                        <p>
+                          <span>Note:</span> {order.note ? order.note : 'No note'}
+                        </p>
+                      </div>
+                    </div>
 
-                      <div className='total'>Total: ${order.totalPrice}</div>
-                    </div>
-                    <div className='action-for-order'>
-                      {order.isPaid || order.status === 'Complete' || order.status === 'Cancel' ? null : (
-                        <button
-                          className='btn-checkout'
-                          onClick={() => router.push(order.stripeCheckoutLink)}
-                        >
-                          Checkout
-                        </button>
-                      )}
-                      {order.status === 'Complete' || order.status === 'Cancel' ? null : (
-                        <button className='btn-cancel'>Cancel Order</button>
-                      )}
-                    </div>
-                  </li>
-                ))}
-                {showLoadingMore && <h4 className='loading'>Loading...</h4>}
-              </InfiniteScroll>
+                    <div className='total'>Total: ${order.totalPrice}</div>
+                  </div>
+                  <div className='action-for-order'>
+                    {order.isPaid ||
+                    order.status === 'Complete' ||
+                    order.status === 'Cancel' ? null : (
+                      <button
+                        className='btn-checkout'
+                        onClick={() => router.push(order.stripeCheckoutLink)}
+                      >
+                        Checkout
+                      </button>
+                    )}
+                    {order.status === 'Complete' || order.status === 'Cancel' ? null : (
+                      <button className='btn-cancel'>Cancel Order</button>
+                    )}
+                  </div>
+                </li>
+              ))
             ) : (
               <p className='no-order'>No order</p>
             )}
