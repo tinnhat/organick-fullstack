@@ -45,6 +45,15 @@ const getProducts = async (page: number, pageSize: number) => {
   }
 }
 
+const getProductsByName = async (name: string) => {
+  try {
+    const allProducts = await productModel.getProductsByName(name)
+    return responseData(allProducts)
+  } catch (error) {
+    throw error
+  }
+}
+
 const getProductInfo = async (productId: string) => {
   try {
     console.log(productId)
@@ -148,6 +157,7 @@ const checkList = async (data: any) => {
 export const productServices = {
   createNew,
   getProducts,
+  getProductsByName,
   getProductInfo,
   editProductInfo,
   deleteProductById,

@@ -38,7 +38,7 @@ export default function Offer({}: Props) {
                 >
                   <div className='product-tag'>{product.category && product.category[0]?.name}</div>
                   {typeof product.image === 'string' || product.image instanceof Buffer ? (
-                    <Image
+                    <Image 
                       src={product.image.toString()}
                       alt=''
                       className='product-img'

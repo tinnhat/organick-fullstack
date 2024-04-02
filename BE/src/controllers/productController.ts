@@ -22,6 +22,16 @@ const getProducts = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const getProductsByName = async (req: Request, res: Response, next: any) => {
+  try {
+    const name = req.query.name!.toString()
+    const products = await productServices.getProductsByName(name)
+    res.status(StatusCodes.OK).json(products)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const getProductInfo = async (req: Request, res: Response, next: any) => {
   try {
     const user = await productServices.getProductInfo(req.params.id)
@@ -64,5 +74,6 @@ export const productController = {
   getProductInfo,
   editProductInfo,
   deleteProductById,
-  checkList
+  checkList,
+  getProductsByName
 }

@@ -15,7 +15,7 @@ export default function AuthPage({}: Props) {
     <div className='container'>
       <div className='auth-container'>
         <div className='bkg-login-img'>
-          <Image
+          <Image 
             src='/assets/img/bkgLogin.webp'
             alt=''
             width={0}

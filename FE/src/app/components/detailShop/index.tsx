@@ -14,49 +14,44 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Rating from '@mui/material/Rating'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Select from 'react-select'
 import ErrorFetchingProduct from '../errorFetchingProduct/indext'
 import LoadingCustom from '../loading'
+import CreatableSelect from 'react-select/creatable'
 import './style.scss'
 import ReactPaginate from 'react-paginate'
 import { DotLoader } from 'react-spinners'
+import { cloneDeep, sortBy } from 'lodash'
+import { toast } from 'sonner'
 
 type Props = {}
 
 export default function DetailShop({}: Props) {
-  const [page, setPage] = useState(1)
-  const [quantityDefaultShow, setQuantityDefaultShow] = useState(16)
-  const { data: allProducts, isLoading, isError } = useGetProductsQuery(page, quantityDefaultShow)
-  const { data: allProductsNotPagination, isLoading: isLoadingNotPagination } =
-    useGetAllProductsQuery()
+  const [pageNumber, setPageNumber] = useState(0)
+  const [quantityDefaultShow, setQuantityDefaultShow] = useState(20)
+  const { data: allProducts, isLoading, isError } = useGetAllProductsQuery()
   const { data: allCategories } = useGetCategoriesQuery()
+  const [dataSearch, setDataSearch] = useState<Product[]>([])
   const router = useRouter()
   const [categories, setCategories] = useState([])
   const [search, setSearch] = useState('')
   const [items, setItems] = useState<Product[]>([])
   const [star, setStar] = React.useState<number | null>(0)
-  const [categoriesFilter, setCategoriesFilter] = useState([])
+  const [categoriesFilter, setCategoriesFilter] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
   const [showFilter, setShowFilter] = useState(true)
+  const selectRef = useRef<any>()
 
-  const newConcatProduct = useCallback(async (page: number, pageSize: number) => {
-    const res = await fetch(
-      `http://localhost:8017/v1/products/?page=${page}&pageSize=${pageSize}`,
-      {
-        method: 'GET',
-      }
-    )
-    const result = await res.json()
-    return result.data
-  }, [])
-
+  const handleClear = () => {
+    selectRef.current!.clearValue()
+  }
   useEffect(() => {
-    if (!allProducts) return
-    setLoading(true)
-    setItems(allProducts)
-    setLoading(false)
+    if (allProducts) {
+      setItems(allProducts)
+      setLoading(false)
+    }
   }, [allProducts])
 
   useEffect(() => {
@@ -68,7 +63,28 @@ export default function DetailShop({}: Props) {
     )
   }, [allCategories])
 
-  if (isLoading || isLoadingNotPagination) {
+  useEffect(() => {
+    if (star === null && categoriesFilter.length === 0) return
+
+    let itemsSet
+    if (search) {
+      itemsSet = cloneDeep(dataSearch)
+    } else {
+      itemsSet = cloneDeep(allProducts)
+    }
+
+    if (star) {
+      itemsSet = itemsSet.filter((item: Product) => item.star === star)
+    }
+
+    if (categoriesFilter.length > 0) {
+      itemsSet = itemsSet.filter((item: Product) => categoriesFilter.includes(item.categoryId!))
+    }
+
+    setItems(itemsSet)
+  }, [star, categoriesFilter])
+
+  if (isLoading) {
     return <LoadingCustom />
   }
 
@@ -77,16 +93,44 @@ export default function DetailShop({}: Props) {
   }
 
   const handleSortDesc = () => {
-    setItems(prev => items.sort((a: any, b: any) => b.price - a.price))
+    setItems(prev => prev.sort((a, b) => b.price - a.price))
     setShowFilter(true)
   }
   const handleSortAsc = () => {
-    setItems(prev => items.sort((a: any, b: any) => a.price - b.price))
+    setItems(prev => prev.sort((a, b) => a.price - b.price))
     setShowFilter(false)
   }
-
   const handleSearch = () => {
     //call api search by name
+    ;(async () => {
+      setLoading(true)
+      const response = await fetch(`http://localhost:8017/v1/products/search?name=${search}`)
+      const data = await response.json()
+      if (!data.data) {
+        toast.error('Not found product', {
+          position: 'bottom-right',
+        })
+        setLoading(false)
+        return
+      }
+      //check xem dang co filter hay k
+      let itemSet = cloneDeep(data.data)
+      if (star) {
+        itemSet = itemSet.filter((item: Product) => item.star === star)
+        setItems(itemSet)
+        setDataSearch(itemSet)
+      } else if (categoriesFilter.length > 0) {
+        const filteredData = itemSet.filter((item: Product) =>
+          categoriesFilter.includes(item.categoryId!)
+        )
+        setItems(filteredData)
+        setDataSearch(filteredData)
+      } else {
+        setItems(itemSet)
+        setDataSearch(itemSet)
+      }
+      setLoading(false)
+    })()
   }
 
   const handleChangCategory = (e: any) => {
@@ -98,23 +142,67 @@ export default function DetailShop({}: Props) {
   }
 
   const handleClearFilter = () => {
-    // setPage(1)
-    // setStar(0)
-    // setSearch('')
-    // setQuantityDefaultShow(16)
-    // setShowLoadingMore(true)
-    setItems(allProducts)
-  }
-
-  const handlePageClick = async ({ selected }: any) => {
-    //bấm next thì call api get products page tiep theo
-    setPage(selected)
     setLoading(true)
-    const result = await newConcatProduct(selected + 1, quantityDefaultShow)
-    setItems(result)
+    setStar(0)
+    setSearch('')
+    handleClear()
+    setCategoriesFilter([])
+    setQuantityDefaultShow(20)
+    setItems(allProducts)
     setLoading(false)
   }
 
+  const productPerPage = 20
+  const pagesVisited = pageNumber * productPerPage
+  const productShow =
+    items &&
+    items
+      .slice(pagesVisited, pagesVisited + productPerPage)
+      .map((product: Product, index: number) => {
+        return (
+          <div
+            className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
+            key={index}
+            onClick={() => router.push(`/shop/${product.slug}/${product._id}`)}
+          >
+            <div className='product-tag'>{product.category && product.category[0]?.name}</div>
+            {typeof product.image === 'string' || product.image instanceof Buffer ? (
+              <Image 
+                src={product.image.toString()}
+                alt=''
+                className='product-img'
+                layout='fill'
+                sizes='(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw'
+              />
+            ) : (
+              <div>No image available</div>
+            )}
+            <p className='product-name'>{product.name}</p>
+            <div className='straight'></div>
+            <div className='price-start-box'>
+              <div className='price-box'>
+                {product.priceSale === 0 ? null : <p className='price-old'>${product.priceSale}</p>}
+                <p className='price-sale'>${product.price}</p>
+              </div>
+              <div className='start-box'>
+                {Array.from({ length: product.star }).map((val, idx) => (
+                  <FontAwesomeIcon icon={faStar} key={idx} />
+                ))}
+              </div>
+            </div>
+            {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
+          </div>
+        )
+      })
+  const pageCount = items && Math.ceil(items.length / productPerPage)
+  const changePage = ({ selected }: { selected: number }) => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+    setPageNumber(selected)
+  }
   return (
     <section className='detail-shop'>
       <div className='container'>
@@ -146,6 +234,7 @@ export default function DetailShop({}: Props) {
                 classNamePrefix='select'
                 placeholder='Choose category'
                 onChange={handleChangCategory}
+                ref={selectRef}
               />
             </div>
             <div className='search-box'>
@@ -177,44 +266,7 @@ export default function DetailShop({}: Props) {
             </div>
           ) : (
             <div className='container-products'>
-              <div className='row-products'>
-                {items &&
-                  items.map((product: Product, index: number) => (
-                    <div
-                      className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
-                      key={index}
-                      onClick={() => router.push(`/shop/${product.slug}/${product._id}`)}
-                    >
-                      <div className='product-tag'>
-                        {product.category && product.category[0]?.name}
-                      </div>
-                      {typeof product.image === 'string' || product.image instanceof Buffer ? (
-                        <Image
-                          src={product.image.toString()}
-                          alt=''
-                          className='product-img'
-                          layout='fill'
-                        />
-                      ) : (
-                        <div>No image available</div>
-                      )}
-                      <p className='product-name'>{product.name}</p>
-                      <div className='straight'></div>
-                      <div className='price-start-box'>
-                        <div className='price-box'>
-                          <p className='price-old'>${product.priceSale}</p>
-                          <p className='price-sale'>${product.price}</p>
-                        </div>
-                        <div className='start-box'>
-                          {Array.from({ length: product.star }).map((val, idx) => (
-                            <FontAwesomeIcon icon={faStar} key={idx} />
-                          ))}
-                        </div>
-                      </div>
-                      {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
-                    </div>
-                  ))}
-              </div>
+              <div className='row-products'>{productShow}</div>
             </div>
           )}
 
@@ -230,10 +282,10 @@ export default function DetailShop({}: Props) {
               pageClassName={'page-btn pagination-page '}
               previousClassName={'page-btn previous'}
               previousLabel={<FontAwesomeIcon icon={faChevronLeft} />}
-              pageCount={Math.ceil(allProductsNotPagination.length / quantityDefaultShow)}
+              pageCount={pageCount || 0}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
-              onPageChange={handlePageClick}
+              onPageChange={changePage}
               initialPage={0}
             />
           </div>

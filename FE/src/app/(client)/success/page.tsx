@@ -54,7 +54,7 @@ export default function Success({}: Props) {
                   return (
                     <li className='item' key={item.id}>
                       <div className='item-img'>
-                        <Image
+                        <Image 
                           src={product.images[0]}
                           alt=''
                           className='item-img__img'

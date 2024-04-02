@@ -71,7 +71,7 @@ export default function RegisterForm({ setShowRegister }: Props) {
                   Upload
                 </label>
                 <input id='file-upload' type='file' onChange={handleChangeImage} />
-                <Image
+                <Image 
                   style={{
                     borderRadius: '50%',
                     marginTop: '5px',

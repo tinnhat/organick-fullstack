@@ -189,7 +189,7 @@ export default function FormMyAccount({}: Props) {
                       Upload
                     </label>
                     <input id='file-upload' type='file' onChange={handleChangeImage} />
-                    <Image
+                    <Image 
                       style={{
                         borderRadius: '50%',
                         marginTop: '10px',

@@ -9,7 +9,7 @@ export default function ServiceSingle({}: Props) {
     <section className='service-single'>
       <div className='container'>
         <div className='ss-container'>
-          <Image
+          <Image 
             src={'/assets/img/PhotoSS.webp'}
             alt=''
             className='ss-img'
