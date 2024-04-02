@@ -42,7 +42,7 @@ export default function Offer({}: Props) {
                       src={product.image.toString()}
                       alt=''
                       className='product-img'
-                      layout='fill'
+                      layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center'
                     />
                   ) : (
                     <div>No image available</div>

@@ -38,6 +38,7 @@ export default function Header({}: Props) {
               className='logo-img'
               width={50}
               height={50}
+              priority
             />
             <p className='header-logo-name'>Organick</p>
           </Link>

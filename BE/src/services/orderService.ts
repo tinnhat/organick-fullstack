@@ -196,7 +196,7 @@ const getOrderInfo = async (req: any) => {
     if (!getOrder) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
     }
-    if (req.user._id !== new ObjectId(getOrder[0].userId)) {
+    if (req.user.isAdmin !== true && req.user._id !== new ObjectId(getOrder[0].userId)) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
     }
     //get detail product

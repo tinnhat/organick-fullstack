@@ -75,7 +75,7 @@ export default function SingleProductDetail({ params }: Props) {
         <div className='container'>
           <div className='product-container'>
             <div className='img-box-product'>
-              <Image src={product.image} alt='' className='img-box-product__img' layout='fill' />
+              <Image src={product.image} alt='' className='img-box-product__img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
               {product.quantity === 0 && <div className='product-sold-out'>Sold out</div>}
             </div>
             <div className='product-info'>
