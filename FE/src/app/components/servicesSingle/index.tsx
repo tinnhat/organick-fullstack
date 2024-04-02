@@ -9,11 +9,11 @@ export default function ServiceSingle({}: Props) {
     <section className='service-single'>
       <div className='container'>
         <div className='ss-container'>
-          <Image
+          <Image 
             src={'/assets/img/PhotoSS.webp'}
             alt=''
             className='ss-img'
-            layout='fill'
+            layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center'
             data-aos='fade-up'
             data-aos-duration='1000'
           />
@@ -32,7 +32,7 @@ export default function ServiceSingle({}: Props) {
             </p>
             <div className='ss-box__img'>
               <div className='box-img'>
-                <Image src={'/assets/img/pic1.webp'} alt='' className='box-img__img' layout='fill' />
+                <Image src={'/assets/img/pic1.webp'} alt='' className='box-img__img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
               </div>
               <div className='box-content'>
                 <p className='box-content__title'>Why Organic</p>
@@ -51,7 +51,7 @@ export default function ServiceSingle({}: Props) {
                 </p>
               </div>
               <div className='box-img'>
-                <Image src={'/assets/img/pic2.webp'} alt='' className='box-img__img' layout='fill' />
+                <Image src={'/assets/img/pic2.webp'} alt='' className='box-img__img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
               </div>
             </div>
             <p className='ss-box__sub-title'>We farm your land</p>

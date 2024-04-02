@@ -190,11 +190,14 @@ const getOrdersByUser = async (userId: string, page: number, pageSize: number) =
   }
 }
 
-const getOrderInfo = async (orderId: string) => {
+const getOrderInfo = async (req: any) => {
   try {
-    const getOrder = await orderModel.findOneById(orderId)
+    const getOrder = await orderModel.findOneById(req.params.id)
     if (!getOrder) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
+    }
+    if (req.user.isAdmin !== true && req.user._id !== new ObjectId(getOrder[0].userId)) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Unauthorized')
     }
     //get detail product
     const listProducts = []

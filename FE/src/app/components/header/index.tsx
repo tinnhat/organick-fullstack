@@ -32,12 +32,13 @@ export default function Header({}: Props) {
       <div className='container'>
         <div className='header-container'>
           <Link className='header-logo' href='/'>
-            <Image
+            <Image 
               src={'/assets/img/Logo.svg'}
               alt=''
               className='logo-img'
               width={50}
               height={50}
+              priority
             />
             <p className='header-logo-name'>Organick</p>
           </Link>
@@ -70,7 +71,7 @@ export default function Header({}: Props) {
                 {isLoading ? (
                   <DotLoader size={20} color='#274c5b' />
                 ) : (
-                  <Image
+                  <Image 
                     priority
                     src={userInfo?.avatar}
                     alt=''

@@ -15,8 +15,6 @@ const refreshToken = async (oldToken: string) => {
     body: JSON.stringify({ oldToken }),
   })
   const data = await res.json()
-  console.log(data)
-
   return data
 }
 const customFetcher = async (accessToken: string, url: string, config: any = {}) => {

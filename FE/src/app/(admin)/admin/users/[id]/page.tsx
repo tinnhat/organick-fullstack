@@ -79,7 +79,6 @@ export default function UserDetail({}: Props) {
   }
 
   const handleSubmit = async (values: any, actions: any) => {
-    console.log(values)
     const result = await updateInfo({
       ...values,
       file,

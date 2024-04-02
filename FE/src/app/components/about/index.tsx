@@ -26,6 +26,10 @@ export default function About({}: Props) {
                   className='sub-box-icon'
                   width={50}
                   height={50}
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }}
                 />
               </p>
               <div className='sub-box-content'>
@@ -43,6 +47,10 @@ export default function About({}: Props) {
                   className='sub-box-icon'
                   width={50}
                   height={50}
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }}
                 />
               </p>
               <div className='sub-box-content'>

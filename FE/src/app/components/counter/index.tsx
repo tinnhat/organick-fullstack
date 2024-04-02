@@ -17,7 +17,7 @@ export default function Counter({}: Props) {
             What Our Customer Saying?
           </p>
           <div className='counter-people' data-aos='fade-up' data-aos-duration='1200'>
-            <Image
+            <Image 
               src={'/assets/img/avatar.webp'}
               alt=''
               className='avatar-counter'

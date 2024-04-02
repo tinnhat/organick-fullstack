@@ -43,7 +43,7 @@ const getOrdersByUser = async (req: Request, res: Response, next: any) => {
 
 const getOrderInfo = async (req: Request, res: Response, next: any) => {
   try {
-    const order = await orderServices.getOrderInfo(req.params.id)
+    const order = await orderServices.getOrderInfo(req)
     res.status(StatusCodes.OK).json(order)
   } catch (error) {
     next(error)

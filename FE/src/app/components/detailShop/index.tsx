@@ -1,93 +1,88 @@
 'use client'
-import { useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
+import { useGetAllProductsQuery, useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
 import {
   faArrowDown,
   faArrowUp,
+  faChevronLeft,
+  faChevronRight,
   faFilterCircleXmark,
   faMagnifyingGlass,
   faStar,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Rating from '@mui/material/Rating'
-import { cloneDeep } from 'lodash'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useState } from 'react'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Select from 'react-select'
 import ErrorFetchingProduct from '../errorFetchingProduct/indext'
 import LoadingCustom from '../loading'
+import CreatableSelect from 'react-select/creatable'
 import './style.scss'
+import ReactPaginate from 'react-paginate'
+import { DotLoader } from 'react-spinners'
+import { cloneDeep, sortBy } from 'lodash'
+import { toast } from 'sonner'
 
 type Props = {}
 
 export default function DetailShop({}: Props) {
-  const [page, setPage] = useState(1)
-  const [quantityDefaultShow, setQuantityDefaultShow] = useState(16)
-  const { data: allProducts, isLoading, isError } = useGetProductsQuery(page, quantityDefaultShow)
+  const [pageNumber, setPageNumber] = useState(0)
+  const [quantityDefaultShow, setQuantityDefaultShow] = useState(20)
+  const { data: allProducts, isLoading, isError } = useGetAllProductsQuery()
   const { data: allCategories } = useGetCategoriesQuery()
+  const [dataSearch, setDataSearch] = useState<Product[]>([])
   const router = useRouter()
-  const [showLoadingMore, setShowLoadingMore] = useState(true)
   const [categories, setCategories] = useState([])
   const [search, setSearch] = useState('')
   const [items, setItems] = useState<Product[]>([])
   const [star, setStar] = React.useState<number | null>(0)
-  const [filter, setFilter] = useState<any>({
-    rating: 0,
-    category: [],
-  })
-  const [showFilter, setShowFilter] = useState(true)
+  const [categoriesFilter, setCategoriesFilter] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const newConcatProduct = useCallback(async (page: number, pageSize: number) => {
-    const res = await fetch(`http://localhost:8017/v1/products/?page=${page}&pageSize=${pageSize}`, {
-      method: 'GET',
-    })
-    const result = await res.json()
-    return result.data
-  }, [])
-  const fetchMoreData = async () => {
-    if (!showLoadingMore) return
-    setQuantityDefaultShow(prev => prev + 16)
-    setPage(prev => prev + 1)
-    const result = await newConcatProduct(page + 1, quantityDefaultShow)
-    if (result.length > 0) {
-      //sort
-      const newItems = cloneDeep([...items, ...result])
-      let itemSet = newItems
-      if (filter.rating) {
-        itemSet = newItems.filter((item: any) => item.star === filter.rating)
-      }
-      if (filter.category.length > 0) {
-        itemSet.filter((item: any) => filter.category.includes(item.categoryId))
-      }
-      if (search) {
-        itemSet = itemSet.filter((item: any) =>
-          item.name.toLowerCase().includes(search.toLowerCase())
-        )
-      }
-      setItems(itemSet)
-      setShowLoadingMore(false)
-    }
+  const [showFilter, setShowFilter] = useState(true)
+  const selectRef = useRef<any>()
+
+  const handleClear = () => {
+    selectRef.current!.clearValue()
   }
   useEffect(() => {
-    setItems(allProducts)
+    if (allProducts) {
+      setItems(allProducts)
+      setLoading(false)
+    }
   }, [allProducts])
 
   useEffect(() => {
     if (!allCategories) return
-    setCategories(allCategories.filter((item: any) => !item._destroy).map((item: Category) => ({ value: item._id, label: item.name })))
+    setCategories(
+      allCategories
+        .filter((item: any) => !item._destroy)
+        .map((item: Category) => ({ value: item._id, label: item.name }))
+    )
   }, [allCategories])
 
   useEffect(() => {
-    const newItems = cloneDeep(allProducts)
-    if (filter.rating) {
-      //call api filter product by rating
+    if (star === null && categoriesFilter.length === 0) return
+
+    let itemsSet
+    if (search) {
+      itemsSet = cloneDeep(dataSearch)
+    } else {
+      itemsSet = cloneDeep(allProducts)
     }
-    if (filter.category.length > 0) {
-      //call api filter product by category
+
+    if (star) {
+      itemsSet = itemsSet.filter((item: Product) => item.star === star)
     }
-  }, [filter])
+
+    if (categoriesFilter.length > 0) {
+      itemsSet = itemsSet.filter((item: Product) => categoriesFilter.includes(item.categoryId!))
+    }
+
+    setItems(itemsSet)
+  }, [star, categoriesFilter])
 
   if (isLoading) {
     return <LoadingCustom />
@@ -98,38 +93,116 @@ export default function DetailShop({}: Props) {
   }
 
   const handleSortDesc = () => {
-    setItems(prev => items.sort((a: any, b: any) => b.price - a.price))
+    setItems(prev => prev.sort((a, b) => b.price - a.price))
     setShowFilter(true)
   }
   const handleSortAsc = () => {
-    setItems(prev => items.sort((a: any, b: any) => a.price - b.price))
+    setItems(prev => prev.sort((a, b) => a.price - b.price))
     setShowFilter(false)
   }
-
   const handleSearch = () => {
     //call api search by name
+    ;(async () => {
+      setLoading(true)
+      const response = await fetch(`http://localhost:8017/v1/products/search?name=${search}`)
+      const data = await response.json()
+      if (!data.data) {
+        toast.error('Not found product', {
+          position: 'bottom-right',
+        })
+        setLoading(false)
+        return
+      }
+      //check xem dang co filter hay k
+      let itemSet = cloneDeep(data.data)
+      if (star) {
+        itemSet = itemSet.filter((item: Product) => item.star === star)
+        setItems(itemSet)
+        setDataSearch(itemSet)
+      } else if (categoriesFilter.length > 0) {
+        const filteredData = itemSet.filter((item: Product) =>
+          categoriesFilter.includes(item.categoryId!)
+        )
+        setItems(filteredData)
+        setDataSearch(filteredData)
+      } else {
+        setItems(itemSet)
+        setDataSearch(itemSet)
+      }
+      setLoading(false)
+    })()
   }
 
   const handleChangCategory = (e: any) => {
-    setFilter({
-      ...filter,
-      category: e.map((item: any) => item.value),
-    })
+    setCategoriesFilter(e.map((item: any) => item.value))
+  }
+
+  const handleChangeRating = (e: any, newValue: any) => {
+    setStar(newValue)
   }
 
   const handleClearFilter = () => {
-    setFilter({
-      rating: 0,
-      category: [],
-      search: '',
-    })
-    setPage(1)
+    setLoading(true)
     setStar(0)
     setSearch('')
-    setShowLoadingMore(true)
+    handleClear()
+    setCategoriesFilter([])
+    setQuantityDefaultShow(20)
     setItems(allProducts)
+    setLoading(false)
   }
 
+  const productPerPage = 20
+  const pagesVisited = pageNumber * productPerPage
+  const productShow =
+    items &&
+    items
+      .slice(pagesVisited, pagesVisited + productPerPage)
+      .map((product: Product, index: number) => {
+        return (
+          <div
+            className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
+            key={index}
+            onClick={() => router.push(`/shop/${product.slug}/${product._id}`)}
+          >
+            <div className='product-tag'>{product.category && product.category[0]?.name}</div>
+            {typeof product.image === 'string' || product.image instanceof Buffer ? (
+              <Image 
+                src={product.image.toString()}
+                alt=''
+                className='product-img'
+                layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center'
+               
+              />
+            ) : (
+              <div>No image available</div>
+            )}
+            <p className='product-name'>{product.name}</p>
+            <div className='straight'></div>
+            <div className='price-start-box'>
+              <div className='price-box'>
+                {product.priceSale === 0 ? null : <p className='price-old'>${product.priceSale}</p>}
+                <p className='price-sale'>${product.price}</p>
+              </div>
+              <div className='start-box'>
+                {Array.from({ length: product.star }).map((val, idx) => (
+                  <FontAwesomeIcon icon={faStar} key={idx} />
+                ))}
+              </div>
+            </div>
+            {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
+          </div>
+        )
+      })
+  const pageCount = items && Math.ceil(items.length / productPerPage)
+  const changePage = ({ selected }: { selected: number }) => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+    setPageNumber(selected)
+  }
   return (
     <section className='detail-shop'>
       <div className='container'>
@@ -150,17 +223,7 @@ export default function DetailShop({}: Props) {
               {/* sort by rating - click to show 0 -> 5 start */}
               <div className='rating-box'>
                 <span>Rating:</span>
-                <Rating
-                  name='simple-controlled'
-                  value={star}
-                  onChange={(event, newValue) => {
-                    setStar(newValue)
-                    setFilter((prev: any) => ({
-                      ...prev,
-                      rating: newValue,
-                    }))
-                  }}
-                />
+                <Rating name='simple-controlled' value={star} onChange={handleChangeRating} />
               </div>
               {/* sort by category - select option */}
               <Select
@@ -171,6 +234,7 @@ export default function DetailShop({}: Props) {
                 classNamePrefix='select'
                 placeholder='Choose category'
                 onChange={handleChangCategory}
+                ref={selectRef}
               />
             </div>
             <div className='search-box'>
@@ -196,52 +260,34 @@ export default function DetailShop({}: Props) {
               />
             </div>
           </div>
-          <div className='container-products'>
-            <InfiniteScroll
-              dataLength={quantityDefaultShow}
-              next={fetchMoreData}
-              hasMore={true}
-              loader={showLoadingMore && <h4>Loading...</h4>}
-            >
-              <div className='row-products'>
-                {items &&
-                  items.map((product: Product, index: number) => (
-                    <div
-                      className={`product-box ${product.quantity === 0 ? 'product-sold-out' : ''}`}
-                      key={index}
-                      onClick={() => router.push(`/shop/${product.slug}/${product._id}`)}
-                    >
-                      <div className='product-tag'>
-                        {product.category && product.category[0]?.name}
-                      </div>
-                      {typeof product.image === 'string' || product.image instanceof Buffer ? (
-                        <Image
-                          src={product.image.toString()}
-                          alt=''
-                          className='product-img'
-                          layout='fill'
-                        />
-                      ) : (
-                        <div>No image available</div>
-                      )}
-                      <p className='product-name'>{product.name}</p>
-                      <div className='straight'></div>
-                      <div className='price-start-box'>
-                        <div className='price-box'>
-                          <p className='price-old'>${product.priceSale}</p>
-                          <p className='price-sale'>${product.price}</p>
-                        </div>
-                        <div className='start-box'>
-                          {Array.from({ length: product.star }).map((val, idx) => (
-                            <FontAwesomeIcon icon={faStar} key={idx} />
-                          ))}
-                        </div>
-                      </div>
-                      {product.quantity === 0 && <div className='sold-out'>Sold out</div>}
-                    </div>
-                  ))}
-              </div>
-            </InfiniteScroll>
+          {loading ? (
+            <div className='loading-product'>
+              <DotLoader size={50} color='#274c5b' />
+            </div>
+          ) : (
+            <div className='container-products'>
+              <div className='row-products'>{productShow}</div>
+            </div>
+          )}
+
+          <div className='container-pagination'>
+            <ReactPaginate
+              activeClassName={'page-btn active'}
+              breakClassName={'page-btn break-me '}
+              breakLabel={'...'}
+              containerClassName={'pagination'}
+              nextLabel={<FontAwesomeIcon icon={faChevronRight} />}
+              disabledClassName={'disabled-page'}
+              nextClassName={'page-btn next '}
+              pageClassName={'page-btn pagination-page '}
+              previousClassName={'page-btn previous'}
+              previousLabel={<FontAwesomeIcon icon={faChevronLeft} />}
+              pageCount={pageCount || 0}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={changePage}
+              initialPage={0}
+            />
           </div>
         </div>
       </div>

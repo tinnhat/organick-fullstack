@@ -22,7 +22,6 @@ export default function Success({}: Props) {
       setOrderSuccess(result.session)
       setIsLoading(false)
     }
-    console.log(session_id)
     if (session_id) {
       fetchData()
     } else {
@@ -59,7 +58,8 @@ export default function Success({}: Props) {
                           src={product.images[0]}
                           alt=''
                           className='item-img__img'
-                          layout='fill'
+                          fill
+                          sizes='100vw'
                         />
                       </div>
                       <div className='item-info'>
@@ -81,16 +81,14 @@ export default function Success({}: Props) {
             <div className='info-checkout'>
               <div className='address-box'>
                 <p className='address'>
-                  Address: {' '}
-                  <span>{order.custom_fields[1].text.value}</span>
+                  Address: <span>{order.custom_fields[1].text.value}</span>
                 </p>
                 <p className='phone'>
-                  Phone: {' '} <span>{order.custom_fields[0].numeric.value}</span>
+                  Phone: <span>{order.custom_fields[0].numeric.value}</span>
                 </p>
                 {order.custom_fields[2].text.value && (
                   <p className='address'>
-                    Note: {' '}
-                    <span>{order.custom_fields[2].text.value}</span>
+                    Note: <span>{order.custom_fields[2].text.value}</span>
                   </p>
                 )}
               </div>

@@ -1,20 +1,24 @@
 'use client'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Image from 'next/image'
-import './style.scss'
-import { useCallback, useEffect, useState } from 'react'
-import { products } from '@/app/components/detailShop/mockDataProducts'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { useSession } from 'next-auth/react'
-import useFetch from '@/app/utils/useFetch'
-import { useRouter } from 'next/navigation'
-import { useGetOrdersOfUserQuery } from '@/app/utils/hooks/ordersHooks'
-import ErrorFetchingProduct from '@/app/components/errorFetchingProduct/indext'
 import LoadingCustom from '@/app/components/loading'
-import moment from 'moment'
+import {
+  useCancelOrderMutation,
+  useGetAllOrdersOfUserQuery,
+  useGetOrderDetailQuery,
+  useGetOrdersOfUserQuery,
+} from '@/app/utils/hooks/ordersHooks'
+import useFetch from '@/app/utils/useFetch'
+import { faChevronLeft, faChevronRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDebounce } from '@uidotdev/usehooks'
 import { cloneDeep } from 'lodash'
+import moment from 'moment'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import './style.scss'
+import ReactPaginate from 'react-paginate'
+import { toast } from 'sonner'
 type Props = {}
 
 export default function OrderHistory({}: Props) {
@@ -22,16 +26,9 @@ export default function OrderHistory({}: Props) {
   const fetchApi = useFetch()
   const [page, setPage] = useState(1)
   const [ordersDefaultShow, setOrdersDefaultShow] = useState(10)
-  const { data: session } = useSession()
-  const {
-    data: ordersByUser,
-    isLoading,
-    isError,
-  } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
-  const [showLoadingMore, setShowLoadingMore] = useState(true)
-  const [items, setItems] = useState(ordersByUser || [])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const debouncedSearch = useDebounce(search, 300)
+  const [pageCount, setPageCount] = useState(0)
   const [status, setStatus] = useState([
     {
       text: 'All',
@@ -50,6 +47,21 @@ export default function OrderHistory({}: Props) {
       active: false,
     },
   ])
+  const { data: session } = useSession()
+  const {
+    data: ordersByUser,
+    isLoading,
+    isError,
+    refetch: refetchOrdersByUser,
+  } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
+  const {
+    data: allOrdersByUser,
+    isLoading: isLoadingAllOrders,
+    refetch: refetchAllOrders,
+  } = useGetAllOrdersOfUserQuery(fetchApi, session?.user._id)
+  const { mutateAsync: cancelOrder } = useCancelOrderMutation(fetchApi)
+  const [items, setItems] = useState(ordersByUser || [])
+
   const newConcatOrder = useCallback(
     async (page: number, ordersDefaultShow: number) => {
       const res = await fetchApi(
@@ -62,18 +74,6 @@ export default function OrderHistory({}: Props) {
     },
     [fetchApi, session?.user._id]
   )
-  const fetchMoreData = async () => {
-    if (!showLoadingMore) return
-    setOrdersDefaultShow(prev => prev + 16)
-    setPage(prev => prev + 1)
-    const result = await newConcatOrder(page + 1, ordersDefaultShow)
-    if (result.length === 0) {
-      setShowLoadingMore(false)
-      return
-    }
-    setItems((prev: any) => [...prev, ...result])
-    setShowLoadingMore(false)
-  }
   useEffect(() => {
     if (ordersByUser) {
       ordersByUser.forEach((order: any) => {
@@ -89,25 +89,23 @@ export default function OrderHistory({}: Props) {
   }, [ordersByUser])
 
   useEffect(() => {
-    const newOrderShow = cloneDeep(items)
-    if (debouncedSearch) {
-      const filtered = newOrderShow.filter((item: User) => {
-        return item._id.includes(search)
-      })
-      console.log(filtered)
-      // setItems(filtered)
+    if (allOrdersByUser) {
+      setPageCount(Math.ceil(allOrdersByUser.length / ordersDefaultShow))
     }
-  }, [debouncedSearch, items, search])
+  }, [allOrdersByUser])
 
   const handleChangeFilter = (item: any) => {
     if (item.text === 'All') {
       setItems(ordersByUser)
+      setPageCount(Math.ceil(allOrdersByUser.length / ordersDefaultShow))
     } else {
       const ordersFilter = ordersByUser?.filter((order: any) => {
         return order.status === item.text
       })
       setItems(ordersFilter)
+      setPageCount(Math.ceil(ordersFilter.length / ordersDefaultShow))
     }
+    setPage(1)
     setStatus((prev: any) => {
       return prev.map((val: any) => {
         if (val.text === item.text) {
@@ -119,7 +117,52 @@ export default function OrderHistory({}: Props) {
       })
     })
   }
-  if (isLoading) return <LoadingCustom />
+
+  const handlePageClick = async ({ selected }: any) => {
+    window.scrollTo(0, 0)
+    //bấm next thì call api get products page tiep theo
+    setPage(selected)
+    setLoading(true)
+    const result = await newConcatOrder(selected + 1, ordersDefaultShow)
+    setItems(result)
+    setLoading(false)
+  }
+
+  const handleSearch = async () => {
+    if (!search) return
+    const result = await fetchApi(`/orders/${search}`, {
+      method: 'GET',
+    })
+    if (result.data.hasOwnProperty('message')) {
+      toast.error('Not found', { position: 'bottom-right' })
+      return
+    }
+    setPage(1)
+    setPageCount(0)
+    setItems([
+      {
+        ...result.data.data,
+        listDetailProducts: result.data.data.listProductsDetail,
+      },
+    ])
+    setStatus((prev: any) => {
+      return prev.map((val: any) => {
+        val.active = false
+        return val
+      })
+    })
+    setSearch('')
+  }
+
+  const handleCancelOrder = async (_id: string) => {
+    const result = await cancelOrder(_id)
+    if (!result) return
+    refetchOrdersByUser()
+    refetchAllOrders()
+    toast.success('Cancel order successfully', { position: 'bottom-right' })
+  }
+
+  if (isLoading && isLoadingAllOrders) return <LoadingCustom />
   return (
     <div className='order-history'>
       <div className='container'>
@@ -145,78 +188,103 @@ export default function OrderHistory({}: Props) {
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
-            <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' />
+            <FontAwesomeIcon icon={faMagnifyingGlass} className='icon' onClick={handleSearch} />
             {/* <FontAwesomeIcon icon={faX} className='icon' /> */}
           </div>
+
           <ul className='list-orders'>
             {items.length > 0 ? (
-              <InfiniteScroll
-                dataLength={ordersDefaultShow}
-                next={fetchMoreData}
-                hasMore={true}
-                loader={showLoadingMore && <h4 className='loading'>Loading...</h4>}
-              >
-                {items.map((order: any) => (
-                  <li className='order' key={order._id}>
-                    <div className='order-header-info'>
-                      <p className='order-id'>
-                        ID: <span>{order._id}</span>
-                      </p>
-                      <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
-                      <p className={`order-status ${order.status}`}>{order.status}</p>
+              items.map((order: any) => (
+                <li className='order' key={order._id}>
+                  <div className='order-header-info'>
+                    <p className='order-id'>
+                      ID: <span>{order._id}</span>
+                    </p>
+                    <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
+                    <p className={`order-status ${order.status}`}>{order.status}</p>
+                  </div>
+                  {order.listDetailProducts.map((product: any) => (
+                    <div className='product-info' key={product._id}>
+                      <Image
+                        src={product.image}
+                        alt=''
+                        width={100}
+                        height={100}
+                        style={{
+                          maxWidth: '100%',
+                          height: 'auto',
+                        }}
+                      />
+                      <div className='product-straight'>
+                        <p className='product-name'>{product.name}</p>
+                        <p className='product-quantity'>x{product.quantityAddtoCart}</p>
+                      </div>
+                      <p className='product-price'>${product.price}</p>
                     </div>
-                    {order.listDetailProducts.map((product: any) => (
-                      <div className='product-info' key={product._id}>
-                        <Image src={product.image} alt='' width={100} height={100} />
-                        <div className='product-straight'>
-                          <p className='product-name'>{product.name}</p>
-                          <p className='product-quantity'>x{product.quantityAddtoCart}</p>
-                        </div>
-                        <p className='product-price'>${product.price}</p>
+                  ))}
+                  <div className='order-more-info'>
+                    <div className='box-address'>
+                      <div className='address'>
+                        <p>
+                          <span>Address:</span> {order.address}
+                        </p>
                       </div>
-                    ))}
-                    <div className='order-more-info'>
-                      <div className='box-address'>
-                        <div className='address'>
-                          <p>
-                            <span>Address:</span> {order.address}
-                          </p>
-                        </div>
-                        <div className='phone'>
-                          <p>
-                            <span>Phone:</span> {order.phone}
-                          </p>
-                        </div>
-                        <div className='note'>
-                          <p>
-                            <span>Note:</span> {order.note ? order.note : 'No note'}
-                          </p>
-                        </div>
+                      <div className='phone'>
+                        <p>
+                          <span>Phone:</span> {order.phone}
+                        </p>
                       </div>
+                      <div className='note'>
+                        <p>
+                          <span>Note:</span> {order.note ? order.note : 'No note'}
+                        </p>
+                      </div>
+                    </div>
 
-                      <div className='total'>Total: ${order.totalPrice}</div>
-                    </div>
-                    <div className='action-for-order'>
-                      {order.isPaid || order.status === 'Complete' || order.status === 'Cancel' ? null : (
-                        <button
-                          className='btn-checkout'
-                          onClick={() => router.push(order.stripeCheckoutLink)}
-                        >
-                          Checkout
-                        </button>
-                      )}
-                      {order.status === 'Complete' || order.status === 'Cancel' ? null : (
-                        <button className='btn-cancel'>Cancel Order</button>
-                      )}
-                    </div>
-                  </li>
-                ))}
-                {showLoadingMore && <h4 className='loading'>Loading...</h4>}
-              </InfiniteScroll>
+                    <div className='total'>Total: ${order.totalPrice}</div>
+                  </div>
+                  <div className='action-for-order'>
+                    {order.isPaid ||
+                    order.status === 'Complete' ||
+                    order.status === 'Cancel' ? null : (
+                      <button
+                        className='btn-checkout'
+                        onClick={() => router.push(order.stripeCheckoutLink)}
+                      >
+                        Checkout
+                      </button>
+                    )}
+                    {order.status === 'Complete' || order.status === 'Cancel' ? null : (
+                      <button className='btn-cancel' onClick={() => handleCancelOrder(order._id)}>
+                        Cancel Order
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))
             ) : (
               <p className='no-order'>No order</p>
             )}
           </ul>
+        </div>
+        <div className='container-pagination'>
+          <ReactPaginate
+            activeClassName={'page-btn active'}
+            breakClassName={'page-btn break-me '}
+            breakLabel={'...'}
+            containerClassName={'pagination'}
+            nextLabel={<FontAwesomeIcon icon={faChevronRight} />}
+            disabledClassName={'disabled-page'}
+            nextClassName={'page-btn next '}
+            pageClassName={'page-btn pagination-page '}
+            previousClassName={'page-btn previous'}
+            previousLabel={<FontAwesomeIcon icon={faChevronLeft} />}
+            pageCount={pageCount || 0}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            forcePage={0}
+          />
         </div>
       </div>
     </div>

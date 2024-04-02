@@ -111,6 +111,33 @@ const getProducts = async (page: number, pageSize: number) => {
   }
 }
 
+const getProductsByName = async (name: string) => {
+  try {
+    const result = await getDB()
+      .collection(PRODUCT_COLLECTION_NAME)
+      .aggregate([
+        {
+          $lookup: {
+            from: categoryModel.CATEGORY_COLLECTION_NAME,
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'category'
+          }
+        },
+        { $sort: { _destroy: 1 } },
+        {
+          $match: { name: new RegExp(name, 'i') }
+        }
+      ])
+      .toArray()
+
+    if (!result) return null
+    return result || null
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 const findAndUpdate = async (id: string, data: any) => {
   try {
     const result = await getDB()
@@ -139,6 +166,7 @@ export const productModel = {
   createNew,
   findOneById,
   getProducts,
+  getProductsByName,
   findAndRemove,
   findAndUpdate,
   findOneByName

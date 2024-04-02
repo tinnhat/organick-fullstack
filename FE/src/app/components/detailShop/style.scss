@@ -1,5 +1,10 @@
 @import '../../variables';
 
+@mixin active() {
+  color: #ffffff;
+  background-color: $text-bold-color;
+}
+
 .detail-shop {
   margin: 8em 0;
   .title {
@@ -38,6 +43,27 @@
         }
         .basic-multi-select {
           width: 50%;
+          .select__control {
+            .select__indicators {
+              .select__clear-indicator {
+                display: none !important;
+              }
+            }
+            .select__value-container {
+              &.select__value-container--is-multi {
+                .select__multi-value {
+                  .select__multi-value__label{
+                    padding: 6px;
+                    color: #fff;
+                    background-color: $green-leaf-color;
+                  }
+                  .select__multi-value__remove {
+                    display: none !important;
+                  }
+                }
+              }
+            }
+          }
         }
         .btn-price {
           width: 25%;
@@ -57,13 +83,13 @@
         display: flex;
         height: 40px;
         width: 30%;
-        position: relative;
+
         input {
           width: 100%;
           border: none;
           outline: none;
           background-color: $gray-color;
-          padding: 8px 30px 8px 10px;
+          padding: 10px;
           border-radius: 4px;
           font-size: 14px;
           background-color: #fff;
@@ -73,16 +99,22 @@
           }
         }
         .icon {
-          position: absolute;
-          top: 50%;
-          right: 50px;
-          transform: translateY(-50%);
+          color: $green-leaf-color;
+          padding: 10px;
+          font-size: 20px;
+        }
+        .icon-clear {
+          padding: 10px;
+          font-size: 20px;
         }
       }
-      .icon-clear{
-        padding: 10px;
-        font-size: 20px;
-      }
+    }
+    .loading-product {
+      width: 80vw;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .container-products {
       text-align: center;
@@ -106,7 +138,7 @@
           -moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
           transition: all 0.2s linear;
           position: relative;
-          &.product-sold-out{
+          &.product-sold-out {
             opacity: 0.6;
           }
           &:hover {
@@ -201,6 +233,60 @@
       opacity: 0.9;
       margin-top: 4em;
     }
+    .container-pagination {
+      .pagination {
+        width: 100%;
+        padding: 0 1rem;
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .page-btn {
+        color: #000000;
+        margin-right: 0.25rem;
+        transition: all 0.2s linear;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        a {
+          display: block;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        &.active {
+          background-color: $text-bold-color;
+          color: $white-color;
+        }
+        &:hover {
+          cursor: pointer;
+          background-color: $green-leaf-color;
+          color: $white-color;
+        }
+        &.disabled-page {
+          cursor: not-allowed !important;
+          a {
+            cursor: not-allowed !important;
+          }
+        }
+        &.next,
+        &.previous {
+          cursor: pointer;
+        }
+      }
+
+      .page-num {
+        display: none;
+      }
+
+      .page-step {
+        display: none;
+      }
+    }
   }
   //tablet
   @media screen and (max-width: 1023.98px) {
@@ -257,6 +343,9 @@
             min-width: 15em !important;
             scroll-snap-align: start;
             scroll-snap-stop: always;
+            &:first-child {
+              margin-left: 150px;
+            }
           }
         }
       }
@@ -271,7 +360,6 @@
           .rating-box {
             width: 100%;
             margin: auto;
-            
           }
           .basic-multi-select {
             width: 100%;
@@ -295,6 +383,9 @@
         .row-products {
           .product-box {
             width: 100%;
+            &:first-child {
+              margin-left: 250px !important;
+            }
           }
         }
       }

@@ -72,15 +72,17 @@ export default function RegisterForm({ setShowRegister }: Props) {
                 </label>
                 <input id='file-upload' type='file' onChange={handleChangeImage} />
                 <Image
-                  style={{
-                    borderRadius: '50%',
-                    marginTop: '5px',
-                    marginBottom: '5px',
-                  }}
                   alt='Avatar'
                   width={100}
                   height={100}
                   src={file ? URL.createObjectURL(file) : '/images/users/avatar-default.webp'}
+                  style={{
+                    borderRadius: '50%',
+                    marginTop: '5px',
+                    marginBottom: '5px',
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }}
                 />
                 {file && (
                   <p className='clear-img' onClick={() => setFile('')}>

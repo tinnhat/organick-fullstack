@@ -76,7 +76,6 @@ export default function ModalCart({ setShowCart }: Props) {
       })
       .then(async data => {
         if (data.session) {
-          console.log(data.session);
           //call api create order truoc khi redirect user sang page checkout
           const dataCreateOrder = {
             userId: session?.user._id,
@@ -108,9 +107,7 @@ export default function ModalCart({ setShowCart }: Props) {
       })
   }
 
-  // console.log(cart)
   const handleChangeQuantityInCart = (e: any, item: any) => {
-    console.log(e.target.value)
     if (!e.target.value) {
       handleRemoveProduct(item)
       return

@@ -11,8 +11,8 @@ export const useGetOrdersQuery = (fetchApi: any) =>
           'Content-Type': 'application/json',
         },
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -29,8 +29,8 @@ export const useGetOrderDetailQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -46,8 +46,8 @@ export const useCreateOrderMutation = (fetchApi: any) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -69,8 +69,26 @@ export const useGetOrdersOfUserQuery = (
           'Content-Type': 'application/json',
         },
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
+    },
+  })
+
+export const useGetAllOrdersOfUserQuery = (fetchApi: any, id: string) =>
+  useQuery({
+    queryKey: ['all orders of user', id],
+    queryFn: async () => {
+      const res = await fetchApi(`/orders/user/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -87,8 +105,8 @@ export const useCreateOrderByAdminMutation = (fetchApi: any) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -105,8 +123,8 @@ export const useUpdateOrderByAdminMutation = (fetchApi: any, id: string) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
@@ -119,8 +137,26 @@ export const useDeleteOrderMutation = (fetchApi: any) =>
       const res = await fetchApi(`/orders/${id}`, {
         method: 'DELETE',
       })
-      if (res.hasOwnProperty('message')) {
-        toast.error(res.message, { position: 'bottom-right' })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
+        return
+      }
+      return res.data.data
+    },
+  })
+
+export const useCancelOrderMutation = (fetchApi: any) =>
+  useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetchApi(`/orders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'Cancel' }),
+      })
+      if (res.data.hasOwnProperty('message')) {
+        toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data

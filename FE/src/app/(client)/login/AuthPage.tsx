@@ -20,9 +20,13 @@ export default function AuthPage({}: Props) {
             alt=''
             width={0}
             height={0}
-            sizes='100vw'
-            style={{ width: '100%', height: 'auto' }}
             priority
+            sizes='100vw'
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxWidth: '100%'
+            }}
           />
         </div>
         {showRegister ? (

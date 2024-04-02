@@ -8,6 +8,9 @@ const Router = express.Router()
 
 Router.get('/', productController.getProducts)
 
+Router.get('/search', productController.getProductsByName)
+
+
 Router.post('/checkList', productValidation.checkList, productController.checkList)
 
 Router.post('/', Auth, AdminAuth, productValidation.createNew, productController.createNew)
