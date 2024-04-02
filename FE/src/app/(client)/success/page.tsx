@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
 type Props = {}
@@ -58,7 +58,8 @@ export default function Success({}: Props) {
                           src={product.images[0]}
                           alt=''
                           className='item-img__img'
-                          layout='fill'
+                          fill
+                          sizes='100vw'
                         />
                       </div>
                       <div className='item-info'>

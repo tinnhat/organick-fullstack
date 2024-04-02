@@ -1,5 +1,5 @@
 'use client'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import React, { useState } from 'react'
 import LoginForm from './loginForm'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
@@ -20,9 +20,13 @@ export default function AuthPage({}: Props) {
             alt=''
             width={0}
             height={0}
-            sizes='100vw'
-            style={{ width: '100%', height: 'auto' }}
             priority
+            sizes='100vw'
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxWidth: '100%'
+            }}
           />
         </div>
         {showRegister ? (

@@ -13,7 +13,7 @@ import { useDebounce } from '@uidotdev/usehooks'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import './style.scss'
@@ -205,7 +205,16 @@ export default function OrderHistory({}: Props) {
                   </div>
                   {order.listDetailProducts.map((product: any) => (
                     <div className='product-info' key={product._id}>
-                      <Image src={product.image} alt='' width={100} height={100} />
+                      <Image
+                        src={product.image}
+                        alt=''
+                        width={100}
+                        height={100}
+                        style={{
+                          maxWidth: '100%',
+                          height: 'auto',
+                        }}
+                      />
                       <div className='product-straight'>
                         <p className='product-name'>{product.name}</p>
                         <p className='product-quantity'>x{product.quantityAddtoCart}</p>

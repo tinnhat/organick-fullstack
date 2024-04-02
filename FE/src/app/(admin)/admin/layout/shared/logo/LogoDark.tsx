@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { styled } from '@mui/material'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 
 const LinkStyled = styled(Link)(() => ({
   height: '64px',
@@ -12,7 +12,17 @@ const LinkStyled = styled(Link)(() => ({
 const Logo = () => {
   return (
     <LinkStyled href='/'>
-      <Image src='/images/logos/dark-logo.svg' alt='logo' height={64} width={174} priority />
+      <Image
+        src='/images/logos/dark-logo.svg'
+        alt='logo'
+        height={64}
+        width={174}
+        priority
+        style={{
+          maxWidth: '100%',
+          height: 'auto',
+        }}
+      />
     </LinkStyled>
   )
 }
