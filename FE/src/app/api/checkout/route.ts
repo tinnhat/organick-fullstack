@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
-const HOST = 'http://localhost:3000'
+const HOST = process.env.HOST_FE
 const getActiveProducts = async () => {
   const products = await stripe.products.list()
   const availableProducts = products.data.filter((product: any) => product.active)

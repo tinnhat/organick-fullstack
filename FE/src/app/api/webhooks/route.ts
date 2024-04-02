@@ -53,7 +53,7 @@ const webhookHandler = async (req: NextRequest) => {
         isPaid: true
       }
       //call api update database
-      const order = await fetch(`http://localhost:8017/v1/orders/checkout/${checkoutSession.id}`, {
+      const order = await fetch(`${process.env.HOST_BE}/orders/checkout/${checkoutSession.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

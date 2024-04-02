@@ -38,7 +38,7 @@ export default function ModalCart({ setShowCart }: Props) {
   const handleCheckout = async () => {
     setShowRedirect(true)
     //check quantity truoc
-    const checkQuantity = await fetch('http://localhost:8017/v1/products/checkList', {
+    const checkQuantity = await fetch(`${process.env.HOST_BE}/products/checkList`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

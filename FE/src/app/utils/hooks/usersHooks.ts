@@ -61,7 +61,7 @@ export const useRegisterMutation = () =>
       if (isConfirmed) data.append('isConfirmed', isConfirmed.toString())
       if (file) data.append('file', file)
 
-      const res = await fetch('http://localhost:8017/v1/users', {
+      const res = await fetch(`${process.env.HOST_BE}/users`, {
         method: 'POST',
         body: data,
       })

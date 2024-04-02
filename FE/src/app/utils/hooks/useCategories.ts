@@ -5,7 +5,7 @@ export const useGetCategoriesQuery = () =>
   useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const res = await fetch('http://localhost:8017/v1/categories', {
+      const res = await fetch(`${process.env.HOST_BE}/categories`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

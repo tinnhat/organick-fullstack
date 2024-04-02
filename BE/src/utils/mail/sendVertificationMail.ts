@@ -1,3 +1,4 @@
+import { env } from '~/config/environment'
 import createMailTransporter from './createMailTransporter'
 
 const sendVerificationMail = (user: any) => {
@@ -9,7 +10,7 @@ const sendVerificationMail = (user: any) => {
     subject: 'Verify your email address',
     html: `<h1>Verify your email address</h1>
     <p>Please click on the following link to verify your email address:</p>
-    <a href="http://localhost:3000/verifyEmail?emailToken=${user.emailToken}">Verify your Email</a>
+    <a href="${env.HOST_FE}/verifyEmail?emailToken=${user.emailToken}">Verify your Email</a>
     `
   }
 

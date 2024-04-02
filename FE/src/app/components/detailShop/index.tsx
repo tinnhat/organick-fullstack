@@ -65,23 +65,34 @@ export default function DetailShop({}: Props) {
 
   useEffect(() => {
     if (star === null && categoriesFilter.length === 0) return
-
-    let itemsSet
+    //check filter
     if (search) {
-      itemsSet = cloneDeep(dataSearch)
+      let itemsSet = cloneDeep(dataSearch)
+      if (star) {
+        itemsSet = itemsSet.filter((item: Product) => item.star === star)
+        setItems(itemsSet)
+      }
+      if (categoriesFilter.length > 0) {
+        const filteredData = itemsSet.filter((item: Product) =>
+          categoriesFilter.includes(item.categoryId!)
+        )
+
+        setItems(filteredData)
+      }
     } else {
-      itemsSet = cloneDeep(allProducts)
-    }
+      let itemsSet = cloneDeep(allProducts)
+      if (star) {
+        itemsSet = itemsSet.filter((item: Product) => item.star === star)
+        setItems(itemsSet)
+      }
+      if (categoriesFilter.length > 0) {
+        const filteredData = itemsSet.filter((item: Product) =>
+          categoriesFilter.includes(item.categoryId!)
+        )
 
-    if (star) {
-      itemsSet = itemsSet.filter((item: Product) => item.star === star)
+        setItems(filteredData)
+      }
     }
-
-    if (categoriesFilter.length > 0) {
-      itemsSet = itemsSet.filter((item: Product) => categoriesFilter.includes(item.categoryId!))
-    }
-
-    setItems(itemsSet)
   }, [star, categoriesFilter])
 
   if (isLoading) {
@@ -104,7 +115,7 @@ export default function DetailShop({}: Props) {
     //call api search by name
     ;(async () => {
       setLoading(true)
-      const response = await fetch(`http://localhost:8017/v1/products/search?name=${search}`)
+      const response = await fetch(`${process.env.HOST_BE}/products/search?name=${search}`)
       const data = await response.json()
       if (!data.data) {
         toast.error('Not found product', {
@@ -167,12 +178,14 @@ export default function DetailShop({}: Props) {
           >
             <div className='product-tag'>{product.category && product.category[0]?.name}</div>
             {typeof product.image === 'string' || product.image instanceof Buffer ? (
-              <Image 
+              <Image
                 src={product.image.toString()}
                 alt=''
                 className='product-img'
-                layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center'
-               
+                layout='fill'
+                sizes='(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px'
+                objectFit='cover'
+                objectPosition='center'
               />
             ) : (
               <div>No image available</div>

@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+console.log(process.env.HOST_BE)
 export const useGetProductsQuery = (page: number, pageSize: number) =>
   useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:8017/v1/products/?page=${page}&pageSize=${pageSize}`,
+        `${process.env.HOST_BE}/products/?page=${page}&pageSize=${pageSize}`,
         {
           method: 'GET',
         }
@@ -19,7 +20,7 @@ export const useGetAllProductsQuery = () =>
   useQuery({
     queryKey: ['All products'],
     queryFn: async () => {
-      const res = await fetch('http://localhost:8017/v1/products', {
+      const res = await fetch(`${process.env.HOST_BE}/products`, {
         method: 'GET',
       })
       const result = await res.json()
@@ -135,7 +136,7 @@ export const useGetProductsOfferQuery = (page: number, pageSize: number) =>
     queryKey: ['products show offer'],
     queryFn: async () => {
       const res = await fetch(
-        `http://localhost:8017/v1/products/?page=${page}&pageSize=${pageSize}`,
+        `${process.env.HOST_BE}/products/?page=${page}&pageSize=${pageSize}`,
         {
           method: 'GET',
         }
@@ -149,7 +150,7 @@ export const useGetProductByIdQuery = (id: string) =>
   useQuery({
     queryKey: ['product by id', id],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:8017/v1/products/${id}`, {
+      const res = await fetch(`${process.env.HOST_BE}/products/${id}`, {
         method: 'GET',
       })
       const result = await res.json()
