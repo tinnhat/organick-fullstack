@@ -1,7 +1,7 @@
 import React from 'react'
 import BannerImg from '@/app/components/bannerImg'
 import './style.scss'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 type Props = {}
 
 export default function Portfolio({}: Props) {

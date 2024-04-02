@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { styled } from '@mui/material'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 
 const LinkStyled = styled(Link)(() => ({
   height: '64px',
   width: '174px',
   overflow: 'hidden',
-  display: 'block'
+  display: 'block',
 }))
 
 const Logo = () => {

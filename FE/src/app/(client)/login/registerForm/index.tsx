@@ -3,7 +3,7 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useMutation } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import React, { useState } from 'react'
 import * as yup from 'yup'
 import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
@@ -71,7 +71,7 @@ export default function RegisterForm({ setShowRegister }: Props) {
                   Upload
                 </label>
                 <input id='file-upload' type='file' onChange={handleChangeImage} />
-                <Image 
+                <Image
                   style={{
                     borderRadius: '50%',
                     marginTop: '5px',

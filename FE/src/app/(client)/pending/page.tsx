@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
 type Props = {}
@@ -45,7 +45,7 @@ export default function Cancel({}: Props) {
                   return (
                     <li className='item' key={item.id}>
                       <div className='item-img'>
-                        <Image 
+                        <Image
                           src={product.images[0]}
                           alt=''
                           className='item-img__img'

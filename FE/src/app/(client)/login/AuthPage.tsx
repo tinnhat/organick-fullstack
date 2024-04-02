@@ -1,5 +1,5 @@
 'use client'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import React, { useState } from 'react'
 import LoginForm from './loginForm'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +15,7 @@ export default function AuthPage({}: Props) {
     <div className='container'>
       <div className='auth-container'>
         <div className='bkg-login-img'>
-          <Image 
+          <Image
             src='/assets/img/bkgLogin.webp'
             alt=''
             width={0}

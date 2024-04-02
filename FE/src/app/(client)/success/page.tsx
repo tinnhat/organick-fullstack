@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
 type Props = {}
@@ -54,7 +54,7 @@ export default function Success({}: Props) {
                   return (
                     <li className='item' key={item.id}>
                       <div className='item-img'>
-                        <Image 
+                        <Image
                           src={product.images[0]}
                           alt=''
                           className='item-img__img'
@@ -80,16 +80,14 @@ export default function Success({}: Props) {
             <div className='info-checkout'>
               <div className='address-box'>
                 <p className='address'>
-                  Address: {' '}
-                  <span>{order.custom_fields[1].text.value}</span>
+                  Address: <span>{order.custom_fields[1].text.value}</span>
                 </p>
                 <p className='phone'>
-                  Phone: {' '} <span>{order.custom_fields[0].numeric.value}</span>
+                  Phone: <span>{order.custom_fields[0].numeric.value}</span>
                 </p>
                 {order.custom_fields[2].text.value && (
                   <p className='address'>
-                    Note: {' '}
-                    <span>{order.custom_fields[2].text.value}</span>
+                    Note: <span>{order.custom_fields[2].text.value}</span>
                   </p>
                 )}
               </div>

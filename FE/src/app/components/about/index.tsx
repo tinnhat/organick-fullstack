@@ -1,6 +1,6 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import './style.scss'
 type Props = {}
 
@@ -20,7 +20,7 @@ export default function About({}: Props) {
             </p>
             <div className='about-sub-box'>
               <p className='about-sub-icon'>
-                <Image 
+                <Image
                   src={'/assets/img/Group1.svg'}
                   alt=''
                   className='sub-box-icon'
@@ -37,7 +37,7 @@ export default function About({}: Props) {
             </div>
             <div className='about-sub-box'>
               <p className='about-sub-icon'>
-                <Image 
+                <Image
                   src={'/assets/img/Group2.webp'}
                   alt=''
                   className='sub-box-icon'
