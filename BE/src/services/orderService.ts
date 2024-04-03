@@ -8,6 +8,7 @@ import ApiError from '~/utils/ApiError'
 import { responseData } from '~/utils/algorithms'
 /* eslint-disable no-useless-catch */
 import stripePackage from 'stripe'
+import { env } from '~/config/environment'
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
 
 const getActiveProducts = async () => {
@@ -115,8 +116,8 @@ const createNewByAdmin = async (reqBody: any) => {
     const session = await stripe.checkout.sessions.create({
       line_items: stripeItems,
       mode: 'payment',
-      success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/pending?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${env.HOST_FE}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.HOST_FE}/pending?session_id={CHECKOUT_SESSION_ID}`,
       custom_fields: [
         {
           key: 'phone',
@@ -276,6 +277,7 @@ const updateOrderInfo = async (id: string, data: any) => {
     }
     const changeData = {
       ...getOrder,
+      status: data.status,
       address: data.address,
       phone: data.phone,
       note: data.note,
@@ -296,10 +298,6 @@ const updateOrderInfo = async (id: string, data: any) => {
 const deleteOrderById = async (id: string) => {
   try {
     const category = await orderModel.findOneById(id)
-    // check trong product co dang su dung category nay k
-    // co 2 case:
-    // case 1: product con hang va dang su dung category nay -> se thong bao khong xoa dc do product con hang va product van dang active
-    // case 2: product khong con hang va dang su dung category nay -> se khong xoa dc neu product dang active ( neu k active co the xoa dc)
     if (!category) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
     }

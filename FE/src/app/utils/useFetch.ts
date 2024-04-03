@@ -7,7 +7,7 @@ const useFetch = () => {
   const { data: session, status, update } = useSession()
   let accessToken = session?.user.access_token
 
-  let baseURL = 'http://localhost:8017/v1'
+  let baseURL = process.env.HOST_BE
 
   let originalRequest = async (url: string, config: any = {}) => {
     let response = await fetch(`${baseURL}${url}`, config)
@@ -33,7 +33,7 @@ const useFetch = () => {
         headers: {
           'Content-Type': 'application/json',
           refreshToken: refreshToken,
-        }
+        },
       })
       let result = await response.json()
       //update lai session cua nextAuth

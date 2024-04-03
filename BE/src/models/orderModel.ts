@@ -79,8 +79,6 @@ const getOrdersByUser = async (id: string, page: number, pageSize: number) => {
     const skip = (page - 1) * pageSize
     let result: any = []
     if (!isNaN(skip) && pageSize) {
-      console.log('vo day')
-
       result = await getDB()
         .collection(ORDER_COLLECTION_NAME)
         .aggregate([

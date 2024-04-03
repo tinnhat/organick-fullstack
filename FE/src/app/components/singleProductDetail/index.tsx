@@ -1,26 +1,37 @@
 'use client'
+import client from '@/app/client'
 import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { cloneDeep } from 'lodash'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import LoadingCustom from '../loading'
-import './style.scss'
-import { useQueryClient } from '@tanstack/react-query'
-import client from '@/app/client'
 import ErrorFetchingProduct from '../errorFetchingProduct/indext'
+import LoadingCustom from '../loading'
 import RelatedProduct from '../relatedProduct'
-import { cloneDeep } from 'lodash'
+import './style.scss'
 type Props = {
   params: any
 }
 
 export default function SingleProductDetail({ params }: Props) {
+  const { data: session } = useSession()
+  const router = useRouter()
   const productRef = useRef<any>(null)
   const { data: product, isLoading, isError } = useGetProductByIdQuery(params.id)
   const [isAdding, setIsAdding] = useState(false)
   const handleAddtoCart = () => {
+    if (!session) {
+      toast.error('Please login first', {
+        position: 'bottom-right',
+        duration: 3000,
+      })
+      router.push('/login')
+      return
+    }
     if (productRef.current) {
       if (productRef.current.value === 0) return
       if (productRef.current.value > product.quantity) {
@@ -75,7 +86,16 @@ export default function SingleProductDetail({ params }: Props) {
         <div className='container'>
           <div className='product-container'>
             <div className='img-box-product'>
-              <Image src={product.image} alt='' className='img-box-product__img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image
+                src={product.image}
+                alt=''
+                className='img-box-product__img'
+                layout='fill'
+                sizes='(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px'
+                objectFit='cover'
+                objectPosition='center'
+                priority
+              />
               {product.quantity === 0 && <div className='product-sold-out'>Sold out</div>}
             </div>
             <div className='product-info'>

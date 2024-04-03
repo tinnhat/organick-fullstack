@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
       async authorize(credentials: any, req: any): Promise<any> {
         const { email, password } = credentials
         //call api login
-        const response = await fetch('http://localhost:8017/v1/users/login', {
+        const response = await fetch(`${process.env.HOST_BE}/users/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const authOptions: AuthOptions = {
       if (trigger === 'update') {
         return {
           ...token,
-          ...session.user
+          ...session.user,
         }
       }
       return { ...token, ...user }

@@ -56,7 +56,6 @@ const getProductsByName = async (name: string) => {
 
 const getProductInfo = async (productId: string) => {
   try {
-    console.log(productId)
     const getProduct = await productModel.findOneById(productId)
     if (!getProduct) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')

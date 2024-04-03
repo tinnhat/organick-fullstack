@@ -23,7 +23,7 @@ export default function VerifyEmail({}: Props) {
       if (session) {
         return router.push('/home')
       }
-      const res = await fetch('http://localhost:8017/v1/users/verify-email', {
+      const res = await fetch(`${process.env.HOST_BE}/users/verify-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
