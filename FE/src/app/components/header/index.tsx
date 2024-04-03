@@ -18,7 +18,7 @@ const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality'
 export default function Header({}: Props) {
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user?._id)
   const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
@@ -26,13 +26,14 @@ export default function Header({}: Props) {
   const handleShowCart = () => {
     setShowCart(true)
   }
+  console.log(status)
 
   return (
     <header className='header'>
       <div className='container'>
         <div className='header-container'>
           <Link className='header-logo' href='/'>
-            <Image 
+            <Image
               src={'/assets/img/Logo.svg'}
               alt=''
               className='logo-img'
@@ -66,12 +67,12 @@ export default function Header({}: Props) {
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
               <p className='cart-box-number'>Cart({userCart ? userCart.length : 0})</p>
             </div>
-            {session!?.user ? (
+            {status === 'authenticated' ? (
               <div className='avatar-box'>
                 {isLoading ? (
                   <DotLoader size={20} color='#274c5b' />
                 ) : (
-                  <Image 
+                  <Image
                     priority
                     src={userInfo?.avatar}
                     alt=''
@@ -100,6 +101,10 @@ export default function Header({}: Props) {
                     Logout
                   </div>
                 </div>
+              </div>
+            ) : status === 'loading' ? (
+              <div className='loading-container'>
+                <div className='loading-text'>Loading...</div>
               </div>
             ) : (
               <button className='btn-login' onClick={() => router.push('/login')}>

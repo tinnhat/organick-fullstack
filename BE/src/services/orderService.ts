@@ -277,6 +277,7 @@ const updateOrderInfo = async (id: string, data: any) => {
     }
     const changeData = {
       ...getOrder,
+      status: data.status,
       address: data.address,
       phone: data.phone,
       note: data.note,
@@ -297,10 +298,6 @@ const updateOrderInfo = async (id: string, data: any) => {
 const deleteOrderById = async (id: string) => {
   try {
     const category = await orderModel.findOneById(id)
-    // check trong product co dang su dung category nay k
-    // co 2 case:
-    // case 1: product con hang va dang su dung category nay -> se thong bao khong xoa dc do product con hang va product van dang active
-    // case 2: product khong con hang va dang su dung category nay -> se khong xoa dc neu product dang active ( neu k active co the xoa dc)
     if (!category) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
     }

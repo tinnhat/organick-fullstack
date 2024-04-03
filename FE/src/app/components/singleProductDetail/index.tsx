@@ -1,19 +1,18 @@
 'use client'
+import client from '@/app/client'
 import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Image from 'next/image'
-import { useRef, useState } from 'react'
-import { toast } from 'sonner'
-import LoadingCustom from '../loading'
-import './style.scss'
-import { useQueryClient } from '@tanstack/react-query'
-import client from '@/app/client'
-import ErrorFetchingProduct from '../errorFetchingProduct/indext'
-import RelatedProduct from '../relatedProduct'
 import { cloneDeep } from 'lodash'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
+import { toast } from 'sonner'
+import ErrorFetchingProduct from '../errorFetchingProduct/indext'
+import LoadingCustom from '../loading'
+import RelatedProduct from '../relatedProduct'
+import './style.scss'
 type Props = {
   params: any
 }
@@ -95,6 +94,7 @@ export default function SingleProductDetail({ params }: Props) {
                 sizes='(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px'
                 objectFit='cover'
                 objectPosition='center'
+                priority
               />
               {product.quantity === 0 && <div className='product-sold-out'>Sold out</div>}
             </div>

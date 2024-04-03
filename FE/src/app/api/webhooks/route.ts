@@ -50,7 +50,8 @@ const webhookHandler = async (req: NextRequest) => {
             quantity: item.quantity
           }
         }),
-        isPaid: true
+        isPaid: true,
+        status: 'Complete'
       }
       //call api update database
       const order = await fetch(`${process.env.HOST_BE}/orders/checkout/${checkoutSession.id}`, {

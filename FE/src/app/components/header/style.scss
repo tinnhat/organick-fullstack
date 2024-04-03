@@ -86,6 +86,19 @@ ul {
           font-size: 1.2em;
         }
       }
+      .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 10px;
+      }
+
+      .loading-text {
+        font-size: 1rem;
+        font-weight: bold;
+        color: $green-leaf-color; /* Adjust text color */
+      }
+
       .btn-login {
         font-size: 18px;
         padding: 10px 20px;
@@ -124,7 +137,7 @@ ul {
           .item {
             cursor: pointer;
             word-wrap: none;
-            padding:  6px 10px;
+            padding: 6px 10px;
             transition: all 0.2s linear;
             &:hover {
               background-color: $white-color;
