@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
-import ApiError from '../utils/ApiError'
+import ApiError from '~/utils/ApiError'
 import isEmpty from 'lodash/isEmpty'
-import { StatusOrder } from '../utils/constants'
+import { StatusOrder } from '~/utils/constants'
 const createNew = async (req: Request, res: Response, next: NextFunction) => {
   const check = Joi.object({
     address: Joi.string().required().min(0).max(255).trim().strict().messages({

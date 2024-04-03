@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { StatusCodes } from 'http-status-codes'
-import ApiError from '../utils/ApiError'
+import ApiError from '~/utils/ApiError'
 import { Request, Response } from 'express'
-import { checkPermission } from '../utils/algorithms'
+import { checkPermission } from '~/utils/algorithms'
 
 //validate data neu bi loi se quang loi , neu ok -> chuyen data sang controller
 const createNew = async (req: Request, res: Response, next: any) => {

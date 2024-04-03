@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { categoryController } from '../../controllers/categoryController'
-import { AdminAuth } from '../../middlewares/adminMiddleware'
-import { Auth } from '../../middlewares/authMiddleware'
-import { categoryValidation } from '../../validations/categoryValidation'
+import { categoryController } from '~/controllers/categoryController'
+import { AdminAuth } from '~/middlewares/adminMiddleware'
+import { Auth } from '~/middlewares/authMiddleware'
+import { categoryValidation } from '~/validations/categoryValidation'
 
 const Router = express.Router()
 

@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
-import { categoryModel } from '../models/categoryModel'
-import ApiError from '../utils/ApiError'
-import { responseData } from '../utils/algorithms'
+import { categoryModel } from '~/models/categoryModel'
+import ApiError from '~/utils/ApiError'
+import { responseData } from '~/utils/algorithms'
 /* eslint-disable no-useless-catch */
 
 const createNew = async (reqBody: any) => {
