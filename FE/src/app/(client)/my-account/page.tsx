@@ -1,8 +1,8 @@
 import FormMyAccount from '@/app/components/formMyAccount'
 import './style.scss'
-type Props = {}
 
-export default function MyAccount({}: Props) {
+
+export default function MyAccount() {
   return (
     <div className='my-account'>
       <div className='container'>

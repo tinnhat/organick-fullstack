@@ -30,9 +30,9 @@ import Loading from '../loading'
 import AddUser from './addUser'
 import DeleteUser from './deleteUser'
 
-type Props = {}
 
-export default function Users({}: Props) {
+
+export default function Users() {
   const fetchApi = useFetch()
   const { data: allUsers, isLoading, refetch } = useGetAllUsersQuery(fetchApi)
   const [users, setUsers] = useState<User[]>([])

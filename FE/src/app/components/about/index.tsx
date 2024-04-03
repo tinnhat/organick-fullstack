@@ -2,9 +2,9 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import './style.scss'
-type Props = {}
 
-export default function About({}: Props) {
+
+export default function About() {
   return (
     <section className='about'>
       <div className='container'>

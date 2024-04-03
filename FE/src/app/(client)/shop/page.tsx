@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   title: 'Shop',
 }
 
-type Props = {}
 
-export default function Shop({}: Props) {
+
+export default function Shop() {
   return (
     <div className='shop-page'>
       <BannerImg pic={'/assets/img/shop-page.webp'} />

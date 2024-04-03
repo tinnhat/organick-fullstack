@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   title: 'Not Found',
 }
 
-type Props = {}
 
-export default function NotFound({}: Props) {
+
+export default function NotFound() {
   return (
     <>
       <title>Not Found | Organick</title>

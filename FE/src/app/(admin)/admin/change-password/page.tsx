@@ -11,7 +11,7 @@ import useFetch from '@/app/utils/useFetch'
 import { signOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 
-type Props = {}
+
 
 type InfoPassword = {
   password: string
@@ -31,7 +31,7 @@ const validationSchema = yup.object({
   confirmPassword: yup.string().oneOf([yup.ref('newPassword'), undefined], 'Passwords must match'),
 })
 
-export default function ChangePassword({}: Props) {
+export default function ChangePassword() {
   const fetchApi = useFetch()
   const { data: session } = useSession()
   const initialValues: InfoPassword = { password: '', newPassword: '', confirmPassword: '' }

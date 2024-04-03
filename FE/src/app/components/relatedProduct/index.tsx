@@ -5,9 +5,9 @@ import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons'
 
 import './style.scss'
-type Props = {}
 
-export default function RelatedProduct({}: Props) {
+
+export default function RelatedProduct() {
   return (
     <section className='related-product'>
       <div className='container'>

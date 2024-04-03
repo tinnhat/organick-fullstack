@@ -25,9 +25,9 @@ import { DotLoader } from 'react-spinners'
 import { cloneDeep, sortBy } from 'lodash'
 import { toast } from 'sonner'
 
-type Props = {}
 
-export default function DetailShop({}: Props) {
+
+export default function DetailShop() {
   const [pageNumber, setPageNumber] = useState(0)
   const [quantityDefaultShow, setQuantityDefaultShow] = useState(20)
   const { data: allProducts, isLoading, isError } = useGetAllProductsQuery()

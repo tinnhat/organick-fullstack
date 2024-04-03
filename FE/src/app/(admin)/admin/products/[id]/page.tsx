@@ -32,7 +32,7 @@ import Loading from '../../loading'
 import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
 import { toast } from 'sonner'
 
-type Props = {}
+
 
 type MyFormValues = {
   name: string
@@ -73,7 +73,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 })
 
-export default function ProductDetail({}: Props) {
+export default function ProductDetail() {
   const fetchApi = useFetch()
   const params = useParams()
   const route = useRouter()

@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useGetProductsOfferQuery, useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
-type Props = {}
 
-export default function Offer({}: Props) {
+
+export default function Offer() {
   const router = useRouter()
   const { data: allProducts, isLoading, isError } = useGetProductsOfferQuery(3, 4)
   return (

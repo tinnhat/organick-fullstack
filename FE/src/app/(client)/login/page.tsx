@@ -6,9 +6,9 @@ import AuthPage from './AuthPage'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
 
-type Props = {}
 
-export default function Login({}: Props) {
+
+export default function Login() {
   const [isLoading, setIsLoading] = useState(true)
   const route = useRouter()
   useEffect(() => {

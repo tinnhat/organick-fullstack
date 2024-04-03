@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import React from 'react'
 import './style.scss'
-type Props = {}
 
-export default function WhoWeAre({}: Props) {
+
+export default function WhoWeAre() {
   return (
     <section className='whoWeAre'>
       <div className='whoWeAre-picture-box'>

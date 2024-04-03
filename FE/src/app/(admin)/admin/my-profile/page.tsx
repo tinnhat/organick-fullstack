@@ -17,7 +17,7 @@ import Loading from '../loading'
 import client from '@/app/client'
 import { toast } from 'sonner'
 
-type Props = {}
+
 
 type Info = {
   email: string
@@ -42,7 +42,7 @@ const validationSchema = yup.object({
     .min(4, 'Name should be of minimum 4 characters length'),
 })
 
-export default function MyProfile({}: Props) {
+export default function MyProfile() {
   const [file, setFile] = useState<File | undefined>(undefined)
   const fetchApi = useFetch()
   const { data: session, update } = useSession()

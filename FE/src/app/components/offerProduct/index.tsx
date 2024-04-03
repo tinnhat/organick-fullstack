@@ -2,9 +2,9 @@ import React from 'react'
 import './style.scss'
 import Image from 'next/image'
 
-type Props = {}
 
-export default function OfferProduct({}: Props) {
+
+export default function OfferProduct() {
   return (
     <section className='offer-product'>
       <div className='container'>

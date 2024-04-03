@@ -31,9 +31,9 @@ import * as XLSX from 'xlsx'
 import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
 import Loading from '../loading'
 
-type Props = {}
 
-export default function Products({}: Props) {
+
+export default function Products() {
   const { data: allProduct, isLoading, refetch } = useGetAllProductsQuery()
   const [products, setProducts] = useState<Product[]>([])
   const [productsShow, setProductsShow] = useState<Product[]>([])

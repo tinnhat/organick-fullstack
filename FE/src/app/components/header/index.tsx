@@ -13,9 +13,9 @@ import ModalCart from '../modalCart'
 import './style.scss'
 import { DotLoader } from 'react-spinners'
 
-type Props = {}
+
 const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality']
-export default function Header({}: Props) {
+export default function Header() {
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
   const { data: session, status } = useSession()

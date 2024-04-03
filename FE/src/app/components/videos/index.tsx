@@ -1,9 +1,9 @@
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './style.scss'
-type Props = {}
 
-export default function Videos({}: Props) {
+
+export default function Videos() {
   return (
     <section className='video'>
       <p className='video-title'>Organic Only</p>

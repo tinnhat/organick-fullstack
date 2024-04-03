@@ -3,9 +3,9 @@ import './style.scss'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInstagram, faFacebook, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons'
-type Props = {}
 
-export default function Footer({}: Props) {
+
+export default function Footer() {
   return (
     <footer className='footer'>
       <div className='container'>

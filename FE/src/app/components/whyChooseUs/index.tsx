@@ -2,9 +2,9 @@ import React from 'react'
 import './style.scss'
 import Image from 'next/image'
 
-type Props = {}
 
-export default function WhyChooseUs({}: Props) {
+
+export default function WhyChooseUs() {
   return (
     <section className='choos'>
       <div className='container'>

@@ -2,9 +2,9 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import './style.scss'
-type Props = {}
 
-export default function HeaderBanner({}: Props) {
+
+export default function HeaderBanner() {
   return (
     <section className='header-banner' data-aos='zoom-in-down'>
       <div className='container'>

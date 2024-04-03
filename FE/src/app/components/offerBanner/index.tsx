@@ -1,8 +1,8 @@
 import React from 'react'
 import './style.scss'
-type Props = {}
 
-export default function OfferBanner({}: Props) {
+
+export default function OfferBanner() {
   return (
     <section className='offer-banner'>
       <div className='container'>

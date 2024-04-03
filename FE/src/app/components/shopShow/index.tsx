@@ -8,9 +8,9 @@ import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { useGetProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { useRouter } from 'next/navigation'
 
-type Props = {}
 
-export default function ShopShow({}: Props) {
+
+export default function ShopShow() {
   const router = useRouter()
   const { data: allProducts, isLoading, isError } = useGetProductsQuery(1, 8)
   return (

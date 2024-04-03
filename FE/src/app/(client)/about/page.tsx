@@ -8,9 +8,9 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'About',
 }
-type Props = {}
 
-export default function AboutPage({}: Props) {
+
+export default function AboutPage() {
   return (
     <div className='about-page'>
       <BannerImg pic={'/assets/img/aboutBanner.webp'} />

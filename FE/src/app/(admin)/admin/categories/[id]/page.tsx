@@ -23,7 +23,7 @@ import {
 import { toast } from 'sonner'
 import Loading from '../../loading'
 
-type Props = {}
+
 
 type MyFormValues = {
   name: string
@@ -38,7 +38,7 @@ const validationSchema = yup.object({
   _destroy: yup.boolean(),
 })
 
-export default function CategoryDetail({}: Props) {
+export default function CategoryDetail() {
   const fetchApi = useFetch()
   const params = useParams()
   const route = useRouter()

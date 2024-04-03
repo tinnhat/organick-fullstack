@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
-type Props = {}
 
-export default function Cancel({}: Props) {
+
+export default function Cancel() {
   const route = useRouter()
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(true)

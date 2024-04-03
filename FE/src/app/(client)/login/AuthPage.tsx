@@ -6,9 +6,9 @@ import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import RegisterForm from './registerForm'
 
-type Props = {}
 
-export default function AuthPage({}: Props) {
+
+export default function AuthPage() {
   const [showRegister, setShowRegister] = useState(false)
 
   return (

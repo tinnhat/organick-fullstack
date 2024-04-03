@@ -1,9 +1,9 @@
 import React from 'react'
 import './style.scss'
 import Image from 'next/image'
-type Props = {}
 
-export default function ServicesInfo({}: Props) {
+
+export default function ServicesInfo() {
   return (
     <section className='service-info'>
       <div className='container'>

@@ -1,9 +1,9 @@
 import React from 'react'
 import './style.scss'
 import Image from 'next/image'
-type Props = {}
 
-export default function ErrorFetchingProduct({}: Props) {
+
+export default function ErrorFetchingProduct() {
   return (
     <div className='error-fetching-container'>
       <Image width={300} height={300} alt='' src='/images/backgrounds/error.webp' />

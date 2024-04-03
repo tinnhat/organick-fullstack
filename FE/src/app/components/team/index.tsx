@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import './style.scss'
 
-type Props = {}
 
-export default function Team({}: Props) {
+
+export default function Team() {
   return (
     <section className='team'>
       <div className='container'>

@@ -2,9 +2,9 @@
 import React from 'react'
 import './style.scss'
 import Image from 'next/image'
-type Props = {}
 
-export default function ServiceSingle({}: Props) {
+
+export default function ServiceSingle() {
   return (
     <section className='service-single'>
       <div className='container'>

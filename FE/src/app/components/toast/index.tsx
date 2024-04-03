@@ -1,9 +1,9 @@
 import React from 'react'
 import { Toaster } from 'sonner'
 import './style.scss'
-type Props = {}
 
-export default function ToastContainer({}: Props) {
+
+export default function ToastContainer() {
   return (
     <Toaster
       closeButton={true}

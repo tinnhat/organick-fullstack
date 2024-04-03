@@ -1,8 +1,8 @@
 import React from 'react'
 import './style.scss'
-type Props = {}
 
-export default function Gallery({}: Props) {
+
+export default function Gallery() {
   return (
     <section className='gallery'>
       <div className='gallery-container' data-aos='fade-up' data-aos-duration='1000'>

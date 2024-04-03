@@ -30,9 +30,9 @@ import Loading from '../loading'
 import AddOrder from './addOrder'
 import DeleteOrder from './deleteOrder'
 
-type Props = {}
 
-export default function Orders({}: Props) {
+
+export default function Orders() {
   const fetchApi = useFetch()
   const { data: allOrders, isLoading, refetch } = useGetOrdersQuery(fetchApi)
   const [orders, setOrders] = useState<Order[]>([])

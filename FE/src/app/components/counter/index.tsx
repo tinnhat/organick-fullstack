@@ -3,9 +3,9 @@ import './style.scss'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
-type Props = {}
 
-export default function Counter({}: Props) {
+
+export default function Counter() {
   return (
     <section className='counter'>
       <div className='container'>

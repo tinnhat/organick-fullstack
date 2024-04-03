@@ -38,7 +38,7 @@ import {
 import Loading from '../../loading'
 import { toast } from 'sonner'
 
-type Props = {}
+
 
 type MyFormValues = {
   address: string
@@ -82,7 +82,7 @@ const TypographyCus = ({ data, showToolTip }: { data: any; showToolTip: boolean 
   )
 }
 
-export default function OrderDetail({}: Props) {
+export default function OrderDetail() {
   const params = useParams()
   const route = useRouter()
   const [cart, setCart] = useState<Product[]>([])

@@ -17,7 +17,7 @@ import ErrorField from '../errorField'
 import { toast } from 'sonner'
 import client from '@/app/client'
 
-type Props = {}
+
 
 type Info = {
   fullname: string
@@ -46,7 +46,7 @@ const validationSchemaInfoPassword = yup.object({
   confirmPassword: yup.string().oneOf([yup.ref('newPassword'), undefined], 'Passwords must match'),
 })
 
-export default function FormMyAccount({}: Props) {
+export default function FormMyAccount() {
   const fetchApi = useFetch()
   const { data: session, update } = useSession()
   const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user._id)

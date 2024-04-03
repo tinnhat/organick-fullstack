@@ -1,8 +1,8 @@
 import React from 'react'
 import './style.scss'
-type Props = {}
 
-export default function NewLatter({}: Props) {
+
+export default function NewLatter() {
   return (
     <section className='newsLatteer'>
       <div className='container'>

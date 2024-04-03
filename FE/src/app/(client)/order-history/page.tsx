@@ -19,9 +19,9 @@ import { useCallback, useEffect, useState } from 'react'
 import './style.scss'
 import ReactPaginate from 'react-paginate'
 import { toast } from 'sonner'
-type Props = {}
 
-export default function OrderHistory({}: Props) {
+
+export default function OrderHistory() {
   const router = useRouter()
   const fetchApi = useFetch()
   const [page, setPage] = useState(1)

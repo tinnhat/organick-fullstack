@@ -3,13 +3,13 @@ import BannerImg from '@/app/components/bannerImg'
 import './style.scss'
 import Image from 'next/image'
 import { Metadata } from 'next'
-type Props = {}
+
 export const metadata: Metadata = {
   title: 'Portfolio',
 }
 
 
-export default function Portfolio({}: Props) {
+export default function Portfolio() {
   return (
     <div className='portfolio'>
       <BannerImg pic={'/assets/img/portfolioBanner.webp'} />

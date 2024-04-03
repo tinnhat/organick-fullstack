@@ -1,8 +1,8 @@
 import React from 'react'
 import './style.scss'
-type Props = {}
 
-export default function Blog({}: Props) {
+
+export default function Blog() {
   return (
     <section className='blog'>
       <div className='container'>
