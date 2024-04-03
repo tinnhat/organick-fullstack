@@ -70,26 +70,28 @@ export default function DetailShop({}: Props) {
       let itemsSet = cloneDeep(dataSearch)
       if (star) {
         itemsSet = itemsSet.filter((item: Product) => item.star === star)
+        setPageNumber(0)
         setItems(itemsSet)
       }
       if (categoriesFilter.length > 0) {
         const filteredData = itemsSet.filter((item: Product) =>
           categoriesFilter.includes(item.categoryId!)
         )
-
+        setPageNumber(0)
         setItems(filteredData)
       }
     } else {
       let itemsSet = cloneDeep(allProducts)
       if (star) {
         itemsSet = itemsSet.filter((item: Product) => item.star === star)
+        setPageNumber(0)
         setItems(itemsSet)
       }
       if (categoriesFilter.length > 0) {
         const filteredData = itemsSet.filter((item: Product) =>
           categoriesFilter.includes(item.categoryId!)
         )
-
+        setPageNumber(0)
         setItems(filteredData)
       }
     }
@@ -154,6 +156,7 @@ export default function DetailShop({}: Props) {
 
   const handleClearFilter = () => {
     setLoading(true)
+    setPageNumber(0)
     setStar(0)
     setSearch('')
     handleClear()
