@@ -6,13 +6,13 @@ type Props = {
   params: { slug: string; id: string }
 }
 
-// export async function generateStaticParams() {
-//   const res = await fetch(`${process.env.HOST_BE}/products`, {
-//     method: 'GET',
-//   })
-//   const result = await res.json()
-//   return result.data.map((item: any) => ({ slug: item.slug, id: item._id }))
-// }
+export async function generateStaticParams() {
+  const res = await fetch(`${process.env.HOST_BE}/products`, {
+    method: 'GET',
+  })
+  const result = await res.json()
+  return result.data.map((item: any) => ({ slug: item.slug, id: item._id }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const res = await fetch(`${process.env.HOST_BE}/products/${params.id}`, {
