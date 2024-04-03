@@ -1,4 +1,4 @@
-import { env } from '~/config/environment'
+import { env } from '../../config/environment'
 import createMailTransporter from './createMailTransporter'
 
 const sendVerificationMail = (user: any) => {

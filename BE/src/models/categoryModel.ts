@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { getDB } from '~/config/mongodb'
-import { validateBeforeCreate } from '~/utils/algorithms'
+import { getDB } from '../config/mongodb'
+import { validateBeforeCreate } from '../utils/algorithms'
 
 const CATEGORY_COLLECTION_NAME = 'categories'
 const CATEGORY_SCHEMA = Joi.object({

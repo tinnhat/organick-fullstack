@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
-import ApiError from '~/utils/ApiError'
+import ApiError from '../utils/ApiError'
 
 const createNew = async (req: Request, res: Response, next: NextFunction) => {
   const check = Joi.object({

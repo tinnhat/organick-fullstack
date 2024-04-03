@@ -2,18 +2,18 @@ import bcrypt, { hashSync } from 'bcryptjs'
 import { StatusCodes } from 'http-status-codes'
 import CryptoJS from 'crypto-js'
 /* eslint-disable no-useless-catch */
-import { userModel } from '~/models/userModel'
-import ApiError from '~/utils/ApiError'
+import { userModel } from '../models/userModel'
+import ApiError from '../utils/ApiError'
 import {
   generateRandomPassword,
   generateRefreshToken,
   generateToken,
   responseData,
   uploadImage
-} from '~/utils/algorithms'
-import { DEFAULT_AVATAR } from '~/utils/constants'
-import sendVerificationMail from '~/utils/mail/sendVertificationMail'
-import resetPasswordMail from '~/utils/mail/resetPasswordEmail'
+} from '../utils/algorithms'
+import { DEFAULT_AVATAR } from '../utils/constants'
+import sendVerificationMail from '../utils/mail/sendVertificationMail'
+import resetPasswordMail from '../utils/mail/resetPasswordEmail'
 
 /* eslint-disable no-useless-catch */
 const createNew = async (reqBody: any, reqFile: any) => {

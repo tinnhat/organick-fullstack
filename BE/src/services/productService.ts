@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes'
 import { ObjectId } from 'mongodb'
-import { categoryModel } from '~/models/categoryModel'
-import { productModel } from '~/models/productModel'
-import ApiError from '~/utils/ApiError'
-import { responseData, slugify, uploadImage } from '~/utils/algorithms'
+import { categoryModel } from '../models/categoryModel'
+import { productModel } from '../models/productModel'
+import ApiError from '../utils/ApiError'
+import { responseData, slugify, uploadImage } from '../utils/algorithms'
 /* eslint-disable no-useless-catch */
 import stripePackage from 'stripe'
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)

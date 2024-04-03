@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { getDB } from '~/config/mongodb'
-import { validateBeforeCreate } from '~/utils/algorithms'
+import { getDB } from '../config/mongodb'
+import { validateBeforeCreate } from '../utils/algorithms'
 import { userModel } from './userModel'
 
 const ORDER_COLLECTION_NAME = 'orders'

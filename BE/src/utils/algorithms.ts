@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import ApiError from './ApiError'
 import cloudinary from 'cloudinary'
 import Multer from 'multer'
-import { env } from '~/config/environment'
+import { env } from '../config/environment'
 
 export const generateToken = (user: User) => {
   return jwt.sign(

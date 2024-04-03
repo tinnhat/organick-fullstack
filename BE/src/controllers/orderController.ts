@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { orderServices } from '~/services/orderService'
-import { productServices } from '~/services/productService'
+import { orderServices } from '../services/orderService'
+import { productServices } from '../services/productService'
 
 const createNew = async (req: Request, res: Response, next: any) => {
   try {

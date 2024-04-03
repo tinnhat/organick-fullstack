@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { getDB } from '~/config/mongodb'
-import { validateBeforeCreate } from '~/utils/algorithms'
-import { DEFAULT_AVATAR } from '~/utils/constants'
+import { getDB } from '../config/mongodb'
+import { validateBeforeCreate } from '../utils/algorithms'
+import { DEFAULT_AVATAR } from '../utils/constants'
 
 const USER_COLLECTION_NAME = 'users'
 const USER_SCHEMA = Joi.object({

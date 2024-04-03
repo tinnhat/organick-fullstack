@@ -1,10 +1,10 @@
 import express from 'express'
-import { orderController } from '~/controllers/orderController'
-import { productController } from '~/controllers/productController'
-import { AdminAuth } from '~/middlewares/adminMiddleware'
-import { Auth } from '~/middlewares/authMiddleware'
-import { orderValidation } from '~/validations/orderValidation'
-import { productValidation } from '~/validations/productValidation'
+import { orderController } from '../../controllers/orderController'
+import { productController } from '../../controllers/productController'
+import { AdminAuth } from '../../middlewares/adminMiddleware'
+import { Auth } from '../../middlewares/authMiddleware'
+import { orderValidation } from '../../validations/orderValidation'
+import { productValidation } from '../../validations/productValidation'
 
 const Router = express.Router()
 
