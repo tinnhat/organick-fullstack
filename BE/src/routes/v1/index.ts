@@ -1,11 +1,10 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { userRoute } from './userRoute'
-import { categoryRoute } from './categoryRoute'
-import { productRoute } from './productRoute'
-import { orderRoute } from './orderRoute'
 import { authRoute } from './authRoute'
-import { webHooksRoute } from './webhookRoute'
+import { categoryRoute } from './categoryRoute'
+import { orderRoute } from './orderRoute'
+import { productRoute } from './productRoute'
+import { userRoute } from './userRoute'
 
 const Router = express.Router()
 
@@ -16,8 +15,6 @@ Router.get('/', (req: Request, res: Response) => {
 })
 
 Router.use('/users', userRoute)
-
-Router.use('/webhook_endpoints', webHooksRoute)
 
 Router.use('/categories', categoryRoute)
 
