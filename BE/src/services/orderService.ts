@@ -1,14 +1,15 @@
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
 import { ObjectId } from 'mongodb'
-import { orderModel } from '~/models/orderModel'
-import { productModel } from '~/models/productModel'
-import { userModel } from '~/models/userModel'
-import ApiError from '~/utils/ApiError'
-import { responseData } from '~/utils/algorithms'
 /* eslint-disable no-useless-catch */
 import stripePackage from 'stripe'
-import { env } from '~/config/environment'
+import { userModel } from '../models/userModel'
+import ApiError from '../utils/ApiError'
+import { productModel } from '../models/productModel'
+import { orderModel } from '../models/orderModel'
+import { responseData } from '../utils/algorithms'
+import { env } from '../config/environment'
+
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
 
 const getActiveProducts = async () => {

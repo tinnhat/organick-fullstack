@@ -1,9 +1,9 @@
-import { WHITE_LIST } from '~/utils/constants'
+
+import ApiError from '../utils/ApiError'
+import { WHITE_LIST } from '../utils/constants'
 import { env } from './environment'
 import { StatusCodes } from 'http-status-codes'
-import ApiError from '~/utils/ApiError'
 
-// Cấu hình CORS Option trong dự án thực tế (Video số 62 trong chuỗi MERN Stack Pro)
 export const corsOptions: any = {
   origin: function (origin: string, callback: any) {
     // Cho phép việc gọi API bằng POSTMAN trên môi trường dev,

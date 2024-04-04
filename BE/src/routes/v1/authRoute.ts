@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { userServices } from '~/services/userService'
+import { userServices } from '../../services/userService'
 
 const Router = express.Router()
 

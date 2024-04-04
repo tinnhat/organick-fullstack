@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { userController } from '~/controllers/userController'
-import { AdminAuth } from '~/middlewares/adminMiddleware'
-import { Auth } from '~/middlewares/authMiddleware'
-import { userValidation } from '~/validations/userValidation'
+import { Auth } from '../../middlewares/authMiddleware'
+import { AdminAuth } from '../../middlewares/adminMiddleware'
+import { userController } from '../../controllers/userController'
+import { userValidation } from '../../validations/userValidation'
+
 
 const Router = express.Router()
 

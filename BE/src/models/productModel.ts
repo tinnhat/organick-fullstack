@@ -1,8 +1,8 @@
 import Joi from 'joi'
 import { ObjectId } from 'mongodb'
-import { getDB } from '~/config/mongodb'
-import { validateBeforeCreate } from '~/utils/algorithms'
 import { categoryModel } from './categoryModel'
+import { validateBeforeCreate } from '../utils/algorithms'
+import { getDB } from '../config/mongodb'
 
 const PRODUCT_COLLECTION_NAME = 'products'
 const PRODUCT_SCHEMA = Joi.object({

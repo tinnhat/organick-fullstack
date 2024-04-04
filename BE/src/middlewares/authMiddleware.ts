@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { userModel } from '~/models/userModel'
+import { userModel } from '../models/userModel'
 
 export const Auth = (req: any, res: Response, next: NextFunction) => {
   const { authorization } = req.headers

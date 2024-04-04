@@ -1,9 +1,8 @@
 import express from 'express'
-import { productController } from '~/controllers/productController'
-import { AdminAuth } from '~/middlewares/adminMiddleware'
-import { Auth } from '~/middlewares/authMiddleware'
-import { productValidation } from '~/validations/productValidation'
-
+import { productController } from '../../controllers/productController'
+import { productValidation } from '../../validations/productValidation'
+import { Auth } from '../../middlewares/authMiddleware'
+import { AdminAuth } from '../../middlewares/adminMiddleware'
 const Router = express.Router()
 
 Router.get('/', productController.getProducts)

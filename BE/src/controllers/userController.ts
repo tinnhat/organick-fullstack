@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { userServices } from '~/services/userService'
+import { userServices } from '../services/userService'
 
 const createNew = async (req: Request, res: Response, next: any) => {
   try {
