@@ -9,7 +9,7 @@ const getActiveProducts = async () => {
 
 export const POST = async (request: any) => {
   //products do client gui len co the la mang
-  const { products } = await request.json()
+  const { products, email } = await request.json()
   //check quantity product
 
   //get nhung product dang active
@@ -55,6 +55,7 @@ export const POST = async (request: any) => {
   }
 
   const session = await stripe.checkout.sessions.create({
+    customer_email: email,
     line_items: stripeItems,
     mode: 'payment',
     success_url: `${HOST}/success?session_id={CHECKOUT_SESSION_ID}`,

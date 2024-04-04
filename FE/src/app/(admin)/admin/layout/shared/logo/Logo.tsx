@@ -3,26 +3,30 @@ import { styled } from '@mui/material'
 import Image from 'next/image'
 
 const LinkStyled = styled(Link)(() => ({
-  height: '64px',
-  width: '174px',
-  overflow: 'hidden',
-  display: 'block',
+  display: 'flex',
+  alignItems: 'center',
+}))
+
+const TextStyled = styled('p')(() => ({
+  fontSize: '20px',
+  fontWeight: 'bold',
+  color: '#fff',
+  paddingLeft: '4px',
+  marginBottom: 0,
 }))
 
 const Logo = () => {
   return (
-    <LinkStyled href='/'>
+    <LinkStyled className='header-logo' href='/'>
       <Image
-        src='/images/logos/light-logo.svg'
-        alt='logo'
-        height={64}
-        width={174}
+        src={'/assets/img/Logo.svg'}
+        alt=''
+        className='logo-img'
+        width={50}
+        height={50}
         priority
-        style={{
-          maxWidth: '100%',
-          height: 'auto',
-        }}
       />
+      <TextStyled className='header-logo-name'>Organick</TextStyled>
     </LinkStyled>
   )
 }

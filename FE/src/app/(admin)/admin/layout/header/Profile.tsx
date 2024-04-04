@@ -79,7 +79,7 @@ const Profile = () => {
             <ListItemButton component={Link} href='/admin/change-password'>
               <ListItemText primary='Change Password' />
             </ListItemButton>
-            <ListItemButton component='a' href='/home'>
+            <ListItemButton component={Link} href='/home'>
               <ListItemText primary='Switch to client' />
             </ListItemButton>
           </List>

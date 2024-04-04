@@ -50,6 +50,7 @@ export default function ModalCart({ setShowCart }: Props) {
             quantityAddtoCart: product.quantityAddtoCart,
           }
         }),
+        email: session?.user.email,
       }),
     })
     const result = await checkQuantity.json()

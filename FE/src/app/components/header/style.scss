@@ -255,6 +255,11 @@ ul {
         }
         .cart-box {
           display: flex;
+          transition: all 0.3s linear;
+          &:hover{
+            background-color: $green-leaf-color;
+            color: $white-color;
+          }
         }
         .btn-login {
           display: none;
