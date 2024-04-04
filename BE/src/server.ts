@@ -1,12 +1,13 @@
 import express, { Request, Response } from 'express'
 import { env } from './config/environment'
-import { corsOptions } from './config/cors'
+
 import cors from 'cors'
 import exitHook from 'async-exit-hook'
 import { closeDB, connectToDatabase } from './config/mongodb'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { APIs_V1 } from './routes/v1'
 import multer from 'multer'
+import { corsOptions } from './config/cors'
 
 const startServer = () => {
   const upload = multer()
@@ -22,7 +23,7 @@ const startServer = () => {
 
   app.listen(port, () => {
     // eslint-disable-next-line no-console
-    console.log(`Running at http://${env.APP_HOST}:${port}`)
+    console.log(`Running at port ${port}`)
   })
 
   //đóng các tác vụ trước khi close app
