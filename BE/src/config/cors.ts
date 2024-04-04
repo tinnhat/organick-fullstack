@@ -5,7 +5,7 @@ import { env } from './environment'
 import { StatusCodes } from 'http-status-codes'
 
 export const corsOptions: any = {
-  origin: function (origin: string, callback: any) {
+  origin: function (origin: any, callback: any) {
     // Cho phép việc gọi API bằng POSTMAN trên môi trường dev,
     // Thông thường khi sử dụng postman thì cái origin sẽ có giá trị là undefined
     if (!origin && env.BUILD_MODE === 'dev') {
