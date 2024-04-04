@@ -5,6 +5,7 @@ import { categoryRoute } from './categoryRoute'
 import { productRoute } from './productRoute'
 import { orderRoute } from './orderRoute'
 import { authRoute } from './authRoute'
+import { webHooksRoute } from './webhookRoute'
 
 const Router = express.Router()
 
@@ -15,6 +16,8 @@ Router.get('/', (req: Request, res: Response) => {
 })
 
 Router.use('/users', userRoute)
+
+Router.use('/webhook_endpoints', webHooksRoute)
 
 Router.use('/categories', categoryRoute)
 
