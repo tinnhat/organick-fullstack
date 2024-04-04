@@ -11,7 +11,7 @@ import multer from 'multer'
 const startServer = () => {
   const upload = multer()
   const app = express()
-  const port = Number(env.APP_PORT!) || 4000
+  const port = env.APP_PORT! || 4000
   app.use(cors(corsOptions))
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
@@ -20,7 +20,7 @@ const startServer = () => {
   //middleware xu ly loi
   app.use(errorHandlingMiddleware)
 
-  app.listen(port, env.APP_HOST!, () => {
+  app.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`Running at http://${env.APP_HOST}:${port}`)
   })
