@@ -1,8 +1,5 @@
 
-import ApiError from '../utils/ApiError'
 import { WHITE_LIST } from '../utils/constants'
-import { env } from './environment'
-import { StatusCodes } from 'http-status-codes'
 
 export const corsOptions: any = function (req, callback) {
   let corsOptions
