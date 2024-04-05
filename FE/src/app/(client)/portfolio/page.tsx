@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: 'Portfolio',
 }
 
-
 export default function Portfolio() {
   return (
     <div className='portfolio'>

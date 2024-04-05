@@ -1,7 +1,6 @@
 import FormMyAccount from '@/app/components/formMyAccount'
 import './style.scss'
 
-
 export default function MyAccount() {
   return (
     <div className='my-account'>

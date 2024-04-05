@@ -1,9 +1,11 @@
-import { ProductsMock, UsersMock } from '@/app/common/mockData'
+import { useCreateOrderByAdminMutation } from '@/app/utils/hooks/ordersHooks'
+import { useGetAllUsersQuery } from '@/app/utils/hooks/usersHooks'
+import useFetch from '@/app/utils/useFetch'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Autocomplete,
   Avatar,
   Box,
-  Grid,
   Stack,
   Table,
   TableBody,
@@ -13,22 +15,17 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import { Form, Formik } from 'formik'
-import * as yup from 'yup'
-import BaseCard from '../../components/shared/BaseCard'
-import DeleteIcon from '@mui/icons-material/Delete'
-import AddProductCus from '../../components/addProductCus'
+import { cloneDeep } from 'lodash'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { useGetAllUsersQuery } from '@/app/utils/hooks/usersHooks'
-import useFetch from '@/app/utils/useFetch'
-import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
-import { cloneDeep } from 'lodash'
-import { useCreateOrderByAdminMutation } from '@/app/utils/hooks/ordersHooks'
+import * as yup from 'yup'
+import AddProductCus from '../../components/addProductCus'
+import BaseCard from '../../components/shared/BaseCard'
 
 type Props = {
   open: boolean

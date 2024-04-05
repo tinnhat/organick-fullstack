@@ -1,9 +1,9 @@
 'use client'
-import React from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import BaseCard from '../../components/shared/BaseCard'
-import { Form, Formik } from 'formik'
-import * as yup from 'yup'
+import {
+  useGetCategoryInfoByIdQuery,
+  useUpdateCategoryInfoMutation,
+} from '@/app/utils/hooks/useCategories'
+import useFetch from '@/app/utils/useFetch'
 import {
   Box,
   Button,
@@ -15,12 +15,11 @@ import {
   Grid,
   TextField,
 } from '@mui/material'
-import useFetch from '@/app/utils/useFetch'
-import {
-  useGetCategoryInfoByIdQuery,
-  useUpdateCategoryInfoMutation,
-} from '@/app/utils/hooks/useCategories'
+import { Form, Formik } from 'formik'
+import { useParams, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import * as yup from 'yup'
+import BaseCard from '../../components/shared/BaseCard'
 import Loading from '../../loading'
 
 

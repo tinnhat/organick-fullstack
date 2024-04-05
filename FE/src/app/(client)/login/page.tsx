@@ -1,12 +1,10 @@
 'use client'
-import { getSession, useSession } from 'next-auth/react'
+import LoadingCustom from '@/app/components/loading'
+import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import AuthPage from './AuthPage'
 import './style.scss'
-import LoadingCustom from '@/app/components/loading'
-
-
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(true)

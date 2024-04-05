@@ -1,6 +1,5 @@
 import BannerImg from '@/app/components/bannerImg'
 import SingleProductDetail from '@/app/components/singleProductDetail'
-import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
 import { Metadata } from 'next'
 type Props = {
   params: { slug: string; id: string }

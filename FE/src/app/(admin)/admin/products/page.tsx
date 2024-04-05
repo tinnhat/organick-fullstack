@@ -1,9 +1,11 @@
 'use client'
+import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
 import CloseIcon from '@mui/icons-material/Close'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
+import { Avatar } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 import Table from '@mui/material/Table'
@@ -14,24 +16,17 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
-import BaseCard from '../components/shared/BaseCard'
-import AddProduct from './addProduct'
-import { useRouter } from 'next/navigation'
-import { ProductsMock } from '@/app/common/mockData'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
-import DeleteProduct from './deleteProduct'
-import { Avatar, Checkbox } from '@mui/material'
-import TypographyTooltip from '../components/typograhyTooltip'
+import { cloneDeep } from 'lodash'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
-import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
+import BaseCard from '../components/shared/BaseCard'
+import TypographyTooltip from '../components/typograhyTooltip'
 import Loading from '../loading'
-
-
+import AddProduct from './addProduct'
+import DeleteProduct from './deleteProduct'
 
 export default function Products() {
   const { data: allProduct, isLoading, refetch } = useGetAllProductsQuery()
@@ -289,7 +284,10 @@ export default function Products() {
                               <TableCell>
                                 <Box display='flex' alignItems='center'>
                                   <Box>
-                                    <TypographyTooltip data={product.category![0].name} showToolTip={true} />
+                                    <TypographyTooltip
+                                      data={product.category![0].name}
+                                      showToolTip={true}
+                                    />
                                   </Box>
                                 </Box>
                               </TableCell>

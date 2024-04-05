@@ -1,22 +1,19 @@
 'use client'
+import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
+import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import {
   Avatar,
   Box,
-  Button,
+  ClickAwayListener,
   Grid,
   InputAdornment,
   TextField,
   Tooltip,
-  Typography,
-  ClickAwayListener,
+  Typography
 } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
-import SearchIcon from '@mui/icons-material/Search'
-import AddIcon from '@mui/icons-material/Add'
-import React, { useEffect, useState } from 'react'
-import { ProductsMock } from '@/app/common/mockData'
-import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { cloneDeep } from 'lodash'
+import React, { useEffect, useState } from 'react'
 
 type Props = {
   cart: Product[]

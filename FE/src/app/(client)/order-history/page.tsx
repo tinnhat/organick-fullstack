@@ -3,23 +3,19 @@ import LoadingCustom from '@/app/components/loading'
 import {
   useCancelOrderMutation,
   useGetAllOrdersOfUserQuery,
-  useGetOrderDetailQuery,
-  useGetOrdersOfUserQuery,
+  useGetOrdersOfUserQuery
 } from '@/app/utils/hooks/ordersHooks'
 import useFetch from '@/app/utils/useFetch'
 import { faChevronLeft, faChevronRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useDebounce } from '@uidotdev/usehooks'
-import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import './style.scss'
 import ReactPaginate from 'react-paginate'
 import { toast } from 'sonner'
-
+import './style.scss'
 
 export default function OrderHistory() {
   const router = useRouter()
@@ -32,32 +28,32 @@ export default function OrderHistory() {
   const [status, setStatus] = useState([
     {
       text: 'All',
-      active: true,
+      active: true
     },
     {
       text: 'Pending',
-      active: false,
+      active: false
     },
     {
       text: 'Cancel',
-      active: false,
+      active: false
     },
     {
       text: 'Complete',
-      active: false,
-    },
+      active: false
+    }
   ])
   const { data: session } = useSession()
   const {
     data: ordersByUser,
     isLoading,
     isError,
-    refetch: refetchOrdersByUser,
+    refetch: refetchOrdersByUser
   } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
   const {
     data: allOrdersByUser,
     isLoading: isLoadingAllOrders,
-    refetch: refetchAllOrders,
+    refetch: refetchAllOrders
   } = useGetAllOrdersOfUserQuery(fetchApi, session?.user._id)
   const { mutateAsync: cancelOrder } = useCancelOrderMutation(fetchApi)
   const [items, setItems] = useState(ordersByUser || [])
@@ -67,7 +63,7 @@ export default function OrderHistory() {
       const res = await fetchApi(
         `/orders/user/${session?.user._id}/?page=${page}&pageSize=${ordersDefaultShow}`,
         {
-          method: 'GET',
+          method: 'GET'
         }
       )
       return res.data.data
@@ -131,7 +127,7 @@ export default function OrderHistory() {
   const handleSearch = async () => {
     if (!search) return
     const result = await fetchApi(`/orders/${search}`, {
-      method: 'GET',
+      method: 'GET'
     })
     if (result.data.hasOwnProperty('message')) {
       toast.error('Not found', { position: 'bottom-right' })
@@ -142,8 +138,8 @@ export default function OrderHistory() {
     setItems([
       {
         ...result.data.data,
-        listDetailProducts: result.data.data.listProductsDetail,
-      },
+        listDetailProducts: result.data.data.listProductsDetail
+      }
     ])
     setStatus((prev: any) => {
       return prev.map((val: any) => {
@@ -212,7 +208,7 @@ export default function OrderHistory() {
                         height={100}
                         style={{
                           maxWidth: '100%',
-                          height: 'auto',
+                          height: 'auto'
                         }}
                       />
                       <div className='product-straight'>
@@ -247,13 +243,13 @@ export default function OrderHistory() {
                     {order.isPaid ||
                     order.status === 'Complete' ||
                     order.status === 'Cancel' ? null : (
-                      <button
-                        className='btn-checkout'
-                        onClick={() => router.push(order.stripeCheckoutLink)}
-                      >
+                        <button
+                          className='btn-checkout'
+                          onClick={() => router.push(order.stripeCheckoutLink)}
+                        >
                         Checkout
-                      </button>
-                    )}
+                        </button>
+                      )}
                     {order.status === 'Complete' || order.status === 'Cancel' ? null : (
                       <button className='btn-cancel' onClick={() => handleCancelOrder(order._id)}>
                         Cancel Order

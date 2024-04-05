@@ -1,14 +1,13 @@
 import ErrorField from '@/app/components/errorField'
+import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
 import { faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useMutation } from '@tanstack/react-query'
 import { Form, Formik } from 'formik'
 import Image from 'next/image'
-import React, { useState } from 'react'
-import * as yup from 'yup'
-import { useRegisterMutation } from '@/app/utils/hooks/usersHooks'
-import { signIn } from 'next-auth/react'
+import { useState } from 'react'
 import { toast } from 'sonner'
+import * as yup from 'yup'
+
 type Props = {
   setShowRegister: (value: boolean) => void
 }

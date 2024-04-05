@@ -1,9 +1,11 @@
 'use client'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
 import CloseIcon from '@mui/icons-material/Close'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SearchIcon from '@mui/icons-material/Search'
+import { Checkbox } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 import Table from '@mui/material/Table'
@@ -14,23 +16,17 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useEffect, useState } from 'react'
-import BaseCard from '../components/shared/BaseCard'
-import AddCategory from './addCategory'
-import { useRouter } from 'next/navigation'
-import { CategoriesMock } from '@/app/common/mockData'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { cloneDeep } from 'lodash'
 import { useDebounce } from '@uidotdev/usehooks'
-import DeleteCategory from './deleteCategory'
-import { Checkbox } from '@mui/material'
-import TypographyTooltip from '../components/typograhyTooltip'
+import { cloneDeep } from 'lodash'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx'
-import useFetch from '@/app/utils/useFetch'
-import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import BaseCard from '../components/shared/BaseCard'
+import TypographyTooltip from '../components/typograhyTooltip'
 import Loading from '../loading'
+import AddCategory from './addCategory'
+import DeleteCategory from './deleteCategory'
 
 type Props = {}
 
@@ -167,7 +163,7 @@ export default function Categories({}: Props) {
                               sx={{ cursor: 'pointer' }}
                               onClick={() => {
                                 setSearch('')
-                                setCategoriesShow(CategoriesMock)
+                                setCategoriesShow(categories)
                               }}
                             />
                           ) : (
