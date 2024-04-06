@@ -1,9 +1,9 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import BaseCard from '../../components/shared/BaseCard'
-import { Form, Formik } from 'formik'
-import * as yup from 'yup'
+import { useEditProductMutation, useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
+import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import useFetch from '@/app/utils/useFetch'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import {
   Avatar,
   Box,
@@ -23,16 +23,13 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
-import { faSignLanguage } from '@fortawesome/free-solid-svg-icons'
-import useFetch from '@/app/utils/useFetch'
-import { useEditProductMutation, useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
-import Loading from '../../loading'
-import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
+import { Form, Formik } from 'formik'
+import { useParams, useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-
-
+import * as yup from 'yup'
+import BaseCard from '../../components/shared/BaseCard'
+import Loading from '../../loading'
 
 type MyFormValues = {
   name: string

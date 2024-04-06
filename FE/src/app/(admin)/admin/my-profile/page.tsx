@@ -17,12 +17,11 @@ import Loading from '../loading'
 import client from '@/app/client'
 import { toast } from 'sonner'
 
-
-
 type Info = {
   email: string
   fullname: string
 }
+
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',

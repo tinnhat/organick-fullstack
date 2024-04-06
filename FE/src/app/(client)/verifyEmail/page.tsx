@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import './style.scss'
 
-
 export default function VerifyEmail() {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(true)

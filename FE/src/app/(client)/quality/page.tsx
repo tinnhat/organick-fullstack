@@ -7,8 +7,6 @@ export const metadata: Metadata = {
   title: 'Quality',
 }
 
-
-
 export default function Quality() {
   return (
     <div className='quality'>

@@ -12,7 +12,7 @@ const TextStyled = styled('p')(() => ({
   fontWeight: 'bold',
   color: '#fff',
   paddingLeft: '4px',
-  marginBottom: 0,
+  margin: 0,
 }))
 
 const Logo = () => {

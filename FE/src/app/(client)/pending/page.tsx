@@ -1,10 +1,10 @@
 'use client'
 
+import LoadingCustom from '@/app/components/loading'
+import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import './style.scss'
-import LoadingCustom from '@/app/components/loading'
 
 
 export default function Cancel() {

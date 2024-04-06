@@ -6,7 +6,6 @@ import Image from 'next/image'
 import './style.scss'
 import LoadingCustom from '@/app/components/loading'
 
-
 export default function Success() {
   const route = useRouter()
   const searchParams = useSearchParams()
