@@ -2,7 +2,8 @@
 Organick is shop selling about organick food like: vegetable, fruit,.... and that includes a user interface and an admin management interface
 # Deploy
 - [https://organick-fullstack.vercel.app/](https://organick-fullstack.vercel.app/home)
-## Reference UI: [Theme]([https://organick-template.webflow.io/](https://organick-template.webflow.io/))
+## Reference UI:
+- [https://organick-template.webflow.io/](https://organick-template.webflow.io/)
 ## Technical
 ## Front-end:
 - NextJS, Typescript, Martial UI(MUI), HTML/CSS(SCSS), Stripe, React-query
