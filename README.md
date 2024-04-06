@@ -1,6 +1,6 @@
-# Organick
+# Organick Food Shop
 Organick is shop selling about organick food like: vegetable, fruit,.... and that includes a user interface and an admin management interface
-# Deloy
+# Deploy
 - [https://barter-ts.vercel.app/](https://organick-fullstack.vercel.app/home)
 ## Reference UI: [theme]([https://demosktthemes.com/free/barter/](https://organick-template.webflow.io/))
 ## Technical
@@ -16,7 +16,10 @@ Organick is shop selling about organick food like: vegetable, fruit,.... and tha
 + Forgot password
 + Upload avatar/image (use cloudinary to storage)
 + Send email when forgot password and confirm account when register
-+ CRUD Product, User, Category, Order, management Porduct in stripe (for admin)
++ User Management(create, edit, delete)
++ Product Management(create, edit, delete)
++ Order Management(create, edit, delete)
++ Category Management(create, edit, delete)
 + Pagination for admin table and search in any page
 + Add product to card ( includes check quantity in stock)
 + Filter Product (star, category, DESC or ASC, search by name)
