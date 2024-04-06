@@ -9,6 +9,7 @@ import { productModel } from '../models/productModel'
 import { orderModel } from '../models/orderModel'
 import { responseData } from '../utils/algorithms'
 import { env } from '../config/environment'
+import moment from 'moment'
 
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
 
@@ -115,6 +116,7 @@ const createNewByAdmin = async (reqBody: any) => {
       }
     }
     const session = await stripe.checkout.sessions.create({
+      customer_email: userExist.email,
       line_items: stripeItems,
       mode: 'payment',
       success_url: `${env.HOST_FE}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -298,11 +300,36 @@ const updateOrderInfo = async (id: string, data: any) => {
 
 const deleteOrderById = async (id: string) => {
   try {
-    const category = await orderModel.findOneById(id)
-    if (!category) {
+    const order = await orderModel.findOneById(id)
+    if (!order) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
     }
     await orderModel.findAndRemove(id)
+  } catch (error) {
+    throw error
+  }
+}
+
+const checkSessionExpire = async (id: string) => {
+  try {
+    const order = await orderModel.findOneBySessionId(id)
+    if (!order) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'Session order not found')
+    }
+    // await orderModel.findAndRemove(id)
+    const session = await stripe.checkout.sessions.retrieve(order.checkOutSessionId)
+    //check time
+    const timeExpire = moment(session.expires_at * 1000).format('YYYY-MM-DD HH:mm:ss')
+    const timeNow = moment().format('YYYY-MM-DD HH:mm:ss')
+    if (timeExpire < timeNow) {
+      //update status
+      await orderModel.findAndUpdate(order._id, {
+        status: 'Expired'
+      })
+    }
+    return responseData({
+      timeExpire: new Date(session.expires_at * 1000)
+    })
   } catch (error) {
     throw error
   }
@@ -316,5 +343,6 @@ export const orderServices = {
   deleteOrderById,
   updateOrderInfo,
   getOrdersByUser,
-  createNewByAdmin
+  createNewByAdmin,
+  checkSessionExpire
 }

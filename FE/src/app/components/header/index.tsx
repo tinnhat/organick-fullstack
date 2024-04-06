@@ -26,7 +26,6 @@ export default function Header() {
   const handleShowCart = () => {
     setShowCart(true)
   }
-  console.log(status)
 
   return (
     <header className='header'>

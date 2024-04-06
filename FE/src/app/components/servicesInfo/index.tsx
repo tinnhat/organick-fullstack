@@ -35,7 +35,7 @@ export default function ServicesInfo() {
               </div>
             </div>
             <div className='center-box'>
-              <Image src={'/assets/img/snack-services.webp'} alt='' className='center-box__img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image src={'/assets/img/snack-services.webp'} alt='' className='center-box__img' layout='fill'  />
             </div>
             <div className='box text-left'>
               <div className='child-box'>

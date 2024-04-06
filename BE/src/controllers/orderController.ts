@@ -69,8 +69,17 @@ const updateOrderInfo = async (req: Request, res: Response, next: any) => {
 
 const deleteOrderById = async (req: Request, res: Response, next: any) => {
   try {
-    const product = await orderServices.deleteOrderById(req.params.id)
-    res.status(StatusCodes.OK).json(product)
+    const orderDelete = await orderServices.deleteOrderById(req.params.id)
+    res.status(StatusCodes.OK).json(orderDelete)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const checkSessionExpire = async (req: Request, res: Response, next: any) => {
+  try {
+    const orderCheck = await orderServices.checkSessionExpire(req.params.sessionId)
+    res.status(StatusCodes.OK).json(orderCheck)
   } catch (error) {
     next(error)
   }
@@ -84,5 +93,6 @@ export const orderController = {
   updateOrderInfo,
   deleteOrderById,
   getOrdersByUser,
-  createNewByAdmin
+  createNewByAdmin,
+  checkSessionExpire
 }

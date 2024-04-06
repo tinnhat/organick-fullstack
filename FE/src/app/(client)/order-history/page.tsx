@@ -3,7 +3,7 @@ import LoadingCustom from '@/app/components/loading'
 import {
   useCancelOrderMutation,
   useGetAllOrdersOfUserQuery,
-  useGetOrdersOfUserQuery
+  useGetOrdersOfUserQuery,
 } from '@/app/utils/hooks/ordersHooks'
 import useFetch from '@/app/utils/useFetch'
 import { faChevronLeft, faChevronRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
@@ -28,32 +28,32 @@ export default function OrderHistory() {
   const [status, setStatus] = useState([
     {
       text: 'All',
-      active: true
+      active: true,
     },
     {
       text: 'Pending',
-      active: false
+      active: false,
     },
     {
       text: 'Cancel',
-      active: false
+      active: false,
     },
     {
       text: 'Complete',
-      active: false
-    }
+      active: false,
+    },
   ])
   const { data: session } = useSession()
   const {
     data: ordersByUser,
     isLoading,
     isError,
-    refetch: refetchOrdersByUser
+    refetch: refetchOrdersByUser,
   } = useGetOrdersOfUserQuery(fetchApi, session?.user._id, page, ordersDefaultShow)
   const {
     data: allOrdersByUser,
     isLoading: isLoadingAllOrders,
-    refetch: refetchAllOrders
+    refetch: refetchAllOrders,
   } = useGetAllOrdersOfUserQuery(fetchApi, session?.user._id)
   const { mutateAsync: cancelOrder } = useCancelOrderMutation(fetchApi)
   const [items, setItems] = useState(ordersByUser || [])
@@ -63,7 +63,7 @@ export default function OrderHistory() {
       const res = await fetchApi(
         `/orders/user/${session?.user._id}/?page=${page}&pageSize=${ordersDefaultShow}`,
         {
-          method: 'GET'
+          method: 'GET',
         }
       )
       return res.data.data
@@ -127,7 +127,7 @@ export default function OrderHistory() {
   const handleSearch = async () => {
     if (!search) return
     const result = await fetchApi(`/orders/${search}`, {
-      method: 'GET'
+      method: 'GET',
     })
     if (result.data.hasOwnProperty('message')) {
       toast.error('Not found', { position: 'bottom-right' })
@@ -138,8 +138,8 @@ export default function OrderHistory() {
     setItems([
       {
         ...result.data.data,
-        listDetailProducts: result.data.data.listProductsDetail
-      }
+        listDetailProducts: result.data.data.listProductsDetail,
+      },
     ])
     setStatus((prev: any) => {
       return prev.map((val: any) => {
@@ -156,6 +156,27 @@ export default function OrderHistory() {
     refetchOrdersByUser()
     refetchAllOrders()
     toast.success('Cancel order successfully', { position: 'bottom-right' })
+  }
+  const handleCheckoutStripe = (order: Order) => {
+    //call api check session xem con han hay k -> neu het han thi update thanh expire luon
+    ;(async () => {
+      const res = await fetch(`${process.env.HOST_BE}/orders/checkout/${order.checkOutSessionId}`, {
+        method: 'GET',
+      })
+      const result = await res.json()
+      const timeExpire = moment(result?.data?.timeExpire).format('YYYY-MM-DD HH:mm:ss')
+      const timeNow = moment().format('YYYY-MM-DD HH:mm:ss')
+      if (timeExpire < timeNow) {
+        //FE chi can toast , BE se check va update luon
+        toast.info('Your checkout session expire. Please add new product and try again', {
+          position: 'bottom-right',
+        })
+        refetchOrdersByUser()
+        refetchAllOrders()
+        return
+      }
+      router.push(order.stripeCheckoutLink!)
+    })()
   }
 
   if (isLoading && isLoadingAllOrders) return <LoadingCustom />
@@ -208,7 +229,7 @@ export default function OrderHistory() {
                         height={100}
                         style={{
                           maxWidth: '100%',
-                          height: 'auto'
+                          height: 'auto',
                         }}
                       />
                       <div className='product-straight'>
@@ -242,15 +263,15 @@ export default function OrderHistory() {
                   <div className='action-for-order'>
                     {order.isPaid ||
                     order.status === 'Complete' ||
-                    order.status === 'Cancel' ? null : (
-                        <button
-                          className='btn-checkout'
-                          onClick={() => router.push(order.stripeCheckoutLink)}
-                        >
+                    order.status === 'Cancel' ||
+                    order.status === 'Expired' ? null : (
+                      <button className='btn-checkout' onClick={() => handleCheckoutStripe(order)}>
                         Checkout
-                        </button>
-                      )}
-                    {order.status === 'Complete' || order.status === 'Cancel' ? null : (
+                      </button>
+                    )}
+                    {order.status === 'Complete' ||
+                    order.status === 'Cancel' ||
+                    order.status === 'Expired' ? null : (
                       <button className='btn-cancel' onClick={() => handleCancelOrder(order._id)}>
                         Cancel Order
                       </button>

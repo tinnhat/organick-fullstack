@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-console.log(process.env.HOST_BE)
 export const useGetProductsQuery = (page: number, pageSize: number) =>
   useQuery({
     queryKey: ['products'],
@@ -9,23 +8,23 @@ export const useGetProductsQuery = (page: number, pageSize: number) =>
       const res = await fetch(
         `${process.env.HOST_BE}/products/?page=${page}&pageSize=${pageSize}`,
         {
-          method: 'GET',
+          method: 'GET'
         }
       )
       const result = await res.json()
       return result.data
-    },
+    }
   })
 export const useGetAllProductsQuery = () =>
   useQuery({
     queryKey: ['All products'],
     queryFn: async () => {
       const res = await fetch(`${process.env.HOST_BE}/products`, {
-        method: 'GET',
+        method: 'GET'
       })
       const result = await res.json()
       return result.data
-    },
+    }
   })
 
 export const useAddProductMutation = (fetchApi: any) =>
@@ -38,7 +37,7 @@ export const useAddProductMutation = (fetchApi: any) =>
       priceSale,
       star,
       categoryId,
-      file,
+      file
     }: {
       name: string
       description: string
@@ -61,14 +60,14 @@ export const useAddProductMutation = (fetchApi: any) =>
 
       const res = await fetchApi('/products', {
         method: 'POST',
-        body: data,
+        body: data
       })
       if (res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
-    },
+    }
   })
 
 export const useEditProductMutation = (fetchApi: any, id: string) =>
@@ -82,7 +81,7 @@ export const useEditProductMutation = (fetchApi: any, id: string) =>
       star,
       categoryId,
       _destroy,
-      file,
+      file
     }: {
       name: string
       description: string
@@ -107,28 +106,28 @@ export const useEditProductMutation = (fetchApi: any, id: string) =>
 
       const res = await fetchApi(`/products/${id}`, {
         method: 'PUT',
-        body: data,
+        body: data
       })
       if (res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
-    },
+    }
   })
 
 export const useDeleteProductMutation = (fetchApi: any) =>
   useMutation({
     mutationFn: async (id: string) => {
       const res = await fetchApi(`/products/${id}`, {
-        method: 'DELETE',
+        method: 'DELETE'
       })
       if (res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
       return res.data.data
-    },
+    }
   })
 
 export const useGetProductsOfferQuery = (page: number, pageSize: number) =>
@@ -138,12 +137,12 @@ export const useGetProductsOfferQuery = (page: number, pageSize: number) =>
       const res = await fetch(
         `${process.env.HOST_BE}/products/?page=${page}&pageSize=${pageSize}`,
         {
-          method: 'GET',
+          method: 'GET'
         }
       )
       const result = await res.json()
       return result.data
-    },
+    }
   })
 
 export const useGetProductByIdQuery = (id: string) =>
@@ -151,9 +150,9 @@ export const useGetProductByIdQuery = (id: string) =>
     queryKey: ['product by id', id],
     queryFn: async () => {
       const res = await fetch(`${process.env.HOST_BE}/products/${id}`, {
-        method: 'GET',
+        method: 'GET'
       })
       const result = await res.json()
       return result.data
-    },
+    }
   })

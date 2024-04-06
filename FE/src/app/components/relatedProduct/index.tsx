@@ -18,7 +18,7 @@ export default function RelatedProduct() {
           <div className='row-products'>
             <div className='product-box'>
               <div className='product-tag'>Vegetable</div>
-              <Image src={'/assets/img/product1.webp'} alt='' className='product-img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image src={'/assets/img/product1.webp'} alt='' className='product-img' layout='fill'  />
               <p className='product-name'>Calabrese Broccoli</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -37,7 +37,7 @@ export default function RelatedProduct() {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Fresh</div>
-              <Image src={'/assets/img/product2.webp'} alt='' className='product-img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image src={'/assets/img/product2.webp'} alt='' className='product-img' layout='fill'  />
               <p className='product-name'>Fresh Banana Fruites</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -56,7 +56,7 @@ export default function RelatedProduct() {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Millets</div>
-              <Image src={'/assets/img/product3.webp'} alt='' className='product-img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image src={'/assets/img/product3.webp'} alt='' className='product-img' layout='fill'  />
               <p className='product-name'>White Nuts</p>
               <div className='straight'></div>
               <div className='price-start-box'>
@@ -75,7 +75,7 @@ export default function RelatedProduct() {
             </div>
             <div className='product-box'>
               <div className='product-tag'>Vegetable</div>
-              <Image src={'/assets/img/product4.webp'} alt='' className='product-img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+              <Image src={'/assets/img/product4.webp'} alt='' className='product-img' layout='fill'  />
               <p className='product-name'>Vegan Red Tomato</p>
               <div className='straight'></div>
               <div className='price-start-box'>

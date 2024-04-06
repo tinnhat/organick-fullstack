@@ -28,7 +28,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
           <div className='choos-img-box'>
-            <Image src={'/assets/img/whyChooseUs.webp'} alt='' className='choos-img' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' />
+            <Image src={'/assets/img/whyChooseUs.webp'} alt='' className='choos-img' layout='fill'  />
           </div>
         </div>
         <div className='choos-info-box'>
