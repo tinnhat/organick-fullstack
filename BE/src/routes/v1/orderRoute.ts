@@ -10,6 +10,8 @@ Router.get('/', Auth, AdminAuth, orderController.getOrders)
 
 Router.post('/', Auth, orderValidation.createNew, orderController.createNew)
 
+Router.get('/checkout/:sessionId', orderController.checkSessionExpire)
+
 Router.post('/admin', Auth, AdminAuth, orderValidation.createNew, orderController.createNewByAdmin)
 
 Router.get('/user/:id', Auth, orderValidation.getOrdersByUser, orderController.getOrdersByUser)

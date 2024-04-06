@@ -19,7 +19,7 @@ export default function Team() {
           </p>
           <div className='list-team'>
             <div className='member'>
-              <Image src={'/assets/img/team1.webp'} alt='' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' className='member-img' />
+              <Image src={'/assets/img/team1.webp'} alt='' layout='fill'  className='member-img' />
               <div className='member-info'>
                 <p className='member-name'>Giovani Bacardo</p>
                 <div className='member-contact'>
@@ -32,7 +32,7 @@ export default function Team() {
               </div>
             </div>
             <div className='member'>
-              <Image src={'/assets/img/team2.webp'} alt='' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' className='member-img' />
+              <Image src={'/assets/img/team2.webp'} alt='' layout='fill'  className='member-img' />
               <div className='member-info'>
                 <p className='member-name'>Marianne Loreno</p>
                 <div className='member-contact'>
@@ -45,7 +45,7 @@ export default function Team() {
               </div>
             </div>
             <div className='member'>
-              <Image src={'/assets/img/team3.webp'} alt='' layout='fill' sizes="(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw, 800px" objectFit='cover' objectPosition='center' className='member-img' />
+              <Image src={'/assets/img/team3.webp'} alt='' layout='fill'  className='member-img' />
               <div className='member-info'>
                 <p className='member-name'>Riga Pelore</p>
                 <div className='member-contact'>

@@ -6,6 +6,8 @@ type Order = {
   listProduct: Product[]
   totalPrice: number
   statusId?: string
+  stripeCheckoutLink?: string
+  checkOutSessionId?: string
   status?: string
   userId: string
   updateAt: Date | string
