@@ -77,7 +77,9 @@ export default function OrderHistory() {
           const product = order.listDetailProducts.find(
             (item: any) => item._id === order.listProducts[i]._id
           )
-          if (product) product.quantityAddtoCart = order.listProducts[i].quantityAddtoCart
+          if (product) {
+            product['quantityAddtoCart'] = order.listProducts[i].quantityAddtoCart
+          }
         }
       })
       setItems(ordersByUser)
@@ -120,6 +122,16 @@ export default function OrderHistory() {
     setPage(selected)
     setLoading(true)
     const result = await newConcatOrder(selected + 1, ordersDefaultShow)
+    result.forEach((order: any) => {
+      for (let i = 0; i < order.listProducts.length; i++) {
+        const product = order.listDetailProducts.find(
+          (item: any) => item._id === order.listProducts[i]._id
+        )
+        if (product) {
+          product['quantityAddtoCart'] = order.listProducts[i].quantityAddtoCart
+        }
+      }
+    })
     setItems(result)
     setLoading(false)
   }
