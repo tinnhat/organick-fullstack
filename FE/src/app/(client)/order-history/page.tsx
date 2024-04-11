@@ -79,8 +79,6 @@ export default function OrderHistory() {
           )
           if (product) {
             product['quantityAddtoCart'] = order.listProducts[i].quantityAddtoCart
-            console.log(product)
-            console.log(order.listProducts[i].quantityAddtoCart)
           }
         }
       })
