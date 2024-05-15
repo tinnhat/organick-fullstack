@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Quality() {
   return (
     <div className='quality'>
-      <BannerImg pic={'/assets/img/qualityBanner.png'} />
+      <BannerImg pic={'/assets/img/qualitybanner.webp'} />
       <ServiceSingle />
     </div>
   )
