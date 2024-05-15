@@ -6,7 +6,7 @@ import Image from 'next/image'
 export default function ServicesInfo() {
   return (
     <section className='service-info'>
-      <div className='container' data-aos='fade-up' data-aos-duration='1500'>
+      <div className='container'>
         <div className='service-info-container' >
           <p className='service-info-title'>What we Grow</p>
           <p className='service-info-sub-title'>Better Agriculture for Better Future</p>
