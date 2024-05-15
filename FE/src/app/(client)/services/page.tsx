@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Services() {
   return (
     <div className='service'>
-      <BannerImg pic={'/assets/img/servicesBanner.webp'} />
+      <BannerImg pic={'/assets/img/servicesBanner.png'} />
       <ServicesInfo />
       <Videos />
     </div>
