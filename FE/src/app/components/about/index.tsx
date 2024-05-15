@@ -7,8 +7,8 @@ import './style.scss'
 export default function About() {
   return (
     <section className='about'>
-      <div className='container'>
-        <div className='about-container' data-aos='fade-up' data-aos-duration='1000'>
+      <div className='container' data-aos='fade-up' data-aos-duration='1000'>
+        <div className='about-container'>
           <div className='about-box-img'></div>
           <div className='about-box-content'>
             <p className='about-title'>About Us</p>
