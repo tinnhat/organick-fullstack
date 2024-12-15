@@ -9,7 +9,7 @@ Organick is shop selling about organick food like: vegetable, fruit,.... and tha
 - NextJS, Typescript, Martial UI(MUI), HTML/CSS(SCSS), Stripe, React-query
 ## Back-end:
 - Typescript, ExpressJS, Cloudinary(Image)
-- Database: MongoBD
+- Database: MongoDB
 ## Feature:
 + Login/Signup (Remember login)
 + Authentication with Next Auth
