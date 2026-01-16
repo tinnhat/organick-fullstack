@@ -97,7 +97,6 @@ export default function ModalCart({ setShowCart }: Props) {
         }
       })
       .catch(err => {
-        console.log(err)
         toast.error('Something went wrong!', {
           position: 'top-center',
         })

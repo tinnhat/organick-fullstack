@@ -17,8 +17,6 @@ const webhookHandler = async (req: NextRequest) => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       // On error, log and return the error message.
-      if (err! instanceof Error) console.log(err)
-      console.log(`❌ Error message: ${errorMessage}`)
 
       return NextResponse.json(
         {

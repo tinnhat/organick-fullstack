@@ -9,8 +9,7 @@ export const GET = async (req: NextRequest, context: any) => {
       expand: ['line_items', 'line_items.data.price.product']
     })
     return NextResponse.json({ session }, { status: 200 })
-  } catch (error) {
-    console.log(error)
+   } catch (error) {
     return NextResponse.json({ message: 'Something went wrong' }, { status: 500 })
 
   }

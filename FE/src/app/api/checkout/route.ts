@@ -35,7 +35,6 @@ export const POST = async (request: any) => {
       }
     }
   } catch (error) {
-    console.log('error: ', error)
   }
   activeProducts = await getActiveProducts()
   let stripeItems: any = []

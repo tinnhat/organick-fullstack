@@ -32,7 +32,6 @@ export default function LoginForm({ setShowRegister }: Props) {
         location.replace('/')
       }
     } catch (error) {
-      console.log(error)
     } finally {
       setIsLoading(false)
     }

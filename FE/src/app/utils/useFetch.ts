@@ -46,8 +46,7 @@ const useFetch = () => {
         },
       })
       return result
-    } catch (error) {
-      console.log(error)
+     } catch (error) {
       //signout
       signOut()
       toast.error('Please login again', { position: 'bottom-right' })
