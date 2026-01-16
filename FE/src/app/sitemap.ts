@@ -1,15 +1,18 @@
 import { MetadataRoute } from 'next'
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const res = await fetch(`${process.env.HOST_BE}/products`, {
-    method: 'GET',
-  })
-  const result = await res.json()
-  const productEntries: MetadataRoute.Sitemap = result.data.map((product: any) => ({
-    url: `${process.env.HOST_FE}/shop/${product.slug}/${product._id}`,
-    lastModified: new Date(product.updatedAt),
-    priority: 0.5,
-  }))
+  let productEntries: MetadataRoute.Sitemap = []
+  if (process.env.HOST_BE) {
+    const res = await fetch(`${process.env.HOST_BE}/products`, {
+      method: 'GET',
+    })
+    const result = await res.json()
+    productEntries = result.data.map((product: any) => ({
+      url: `${process.env.HOST_FE}/shop/${product.slug}/${product._id}`,
+      lastModified: new Date(product.updatedAt),
+      priority: 0.5,
+    }))
+  }
   return [
     {
       url: `${process.env.HOST_FE}/home`,

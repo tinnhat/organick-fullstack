@@ -13,7 +13,7 @@ module.exports = {
     ]
   },
   images: {
-    domains: ['res.cloudinary.com', process.env.HOST_FE],
+    domains: ['res.cloudinary.com', process.env.HOST_FE].filter(Boolean),
   },
   reactStrictMode: false,
 }

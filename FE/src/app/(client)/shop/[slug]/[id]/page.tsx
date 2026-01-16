@@ -6,6 +6,7 @@ type Props = {
 }
 
 export async function generateStaticParams() {
+  if (!process.env.HOST_BE) return []
   const res = await fetch(`${process.env.HOST_BE}/products`, {
     method: 'GET',
   })
