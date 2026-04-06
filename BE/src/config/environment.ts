@@ -13,5 +13,8 @@ export const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   MAIL_USERNAME: process.env.MAIL_USERNAME,
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
-  HOST_FE: process.env.HOST_FE
+  HOST_FE: process.env.HOST_FE,
+  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:3000',
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 }

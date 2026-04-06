@@ -9,7 +9,11 @@
 # testing
 /coverage
 
-# next.js
+# e2e test results
+/test-results/
+/playwright-report/
+
+# build output
 /.next/
 /out/
 
@@ -27,6 +31,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel

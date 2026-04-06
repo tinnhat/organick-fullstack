@@ -1,3 +1,4 @@
+// ============ FEATURE: notifications START ============
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Box from '@mui/material/Box'
@@ -10,6 +11,8 @@ import Logo from '../shared/logo/Logo'
 // components
 import { IconMenu2 } from '@tabler/icons-react'
 import Profile from './Profile'
+import NotificationBell from '@/components/notification/NotificationBell'
+// ============ FEATURE: notifications END ============
 
 interface ItemType {
   toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void
@@ -56,9 +59,12 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           <IconMenu2 width='22' height='22' />
         </IconButton>
         <Box flexGrow={1} />
+// ============ FEATURE: notifications START ============
         <Stack spacing={1} direction='row' alignItems='center'>
+          <NotificationBell />
           <Profile />
         </Stack>
+// ============ FEATURE: notifications END ============
       </ToolbarStyled>
     </AppBarStyled>
   )

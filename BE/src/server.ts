@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { env } from './config/environment'
+import { createServer } from 'http'
 
 import cors from 'cors'
 import exitHook from 'async-exit-hook'
@@ -8,6 +9,7 @@ import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import { APIs_V1 } from './routes/v1'
 import multer from 'multer'
 import { corsOptions } from './config/cors'
+import { initializeSocket } from './config/socket'
 
 const startServer = () => {
   const upload = multer()
@@ -18,20 +20,22 @@ const startServer = () => {
   app.use(express.urlencoded({ extended: true }))
   app.use(upload.single('file'))
   app.use('/v1', APIs_V1)
-  //middleware xu ly loi
   app.use(errorHandlingMiddleware)
 
-  app.listen(port, () => {
+  const httpServer = createServer(app)
+
+  initializeSocket(httpServer)
+
+  const server = httpServer.listen(port, () => {
     // eslint-disable-next-line no-console
     console.log(`Running at port ${port}`)
   })
 
-  //đóng các tác vụ trước khi close app
   exitHook(() => {
     closeDB()
   })
 }
-// su dung IIFE
+
 ;(async () => {
   try {
     await connectToDatabase()

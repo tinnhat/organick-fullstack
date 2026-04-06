@@ -1,9 +1,12 @@
+// ============ FEATURE: websocket-chat START ============
 import {
   IconBoxMultiple,
   IconHome,
   IconPoint,
   IconStar,
-  IconUser
+  IconUser,
+  IconTicket,
+  IconMessageCircle
 } from '@tabler/icons-react'
 import { uniqueId } from 'lodash'
 
@@ -37,7 +40,20 @@ const Menuitems = [
     title: 'Categories',
     icon: IconPoint,
     href: '/admin/categories'
+  },
+  {
+    id: uniqueId(),
+    title: 'Coupons',
+    icon: IconTicket,
+    href: '/admin/coupons'
+  },
+  {
+    id: uniqueId(),
+    title: 'Chat',
+    icon: IconMessageCircle,
+    href: '/admin/chat'
   }
 ]
+// ============ FEATURE: websocket-chat END ============
 
 export default Menuitems

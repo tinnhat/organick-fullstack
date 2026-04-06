@@ -29,9 +29,21 @@ type Product = {
   price: number
   image: string | Buffer | undefined
   star: number
+  reviewCount?: number
   updateAt: Date | string
   createdAt: Date | string
   _destroy: boolean
+}
+
+type Review = {
+  _id: string
+  productId: string
+  userId: User
+  rating: number
+  comment: string
+  isEdited?: boolean
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 type User = {
@@ -62,3 +74,45 @@ type Status = {
   createdAt: Date | string
   _destroy: boolean
 }
+
+// ============ FEATURE: websocket-chat START ============
+type Message = {
+  _id: string
+  senderId: string
+  receiverId: string
+  content: string
+  isRead: boolean
+  createdAt: Date | string
+}
+
+type Conversation = {
+  _id: string
+  userId: string
+  userName: string
+  userEmail: string
+  userAvatar?: string
+  lastMessage?: string
+  lastMessageAt?: Date | string
+  unreadCount: number
+  isOnline: boolean
+}
+
+type TypingStatus = {
+  userId: string
+  isTyping: boolean
+}
+// ============ FEATURE: websocket-chat END ============
+
+// ============ FEATURE: notifications START ============
+type NotificationType = 'order' | 'chat' | 'review' | 'system'
+
+type Notification = {
+  _id: string
+  type: NotificationType
+  title: string
+  message: string
+  isRead: boolean
+  relatedId?: string
+  createdAt: Date | string
+}
+// ============ FEATURE: notifications END ============

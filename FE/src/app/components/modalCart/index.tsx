@@ -9,8 +9,9 @@ import { cloneDeep, isEmpty } from 'lodash'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import ApplyCoupon from '../coupon/ApplyCoupon'
 import './style.scss'
 
 type Props = {
@@ -28,11 +29,41 @@ export default function ModalCart({ setShowCart }: Props) {
   const router = useRouter()
   const { data: user } = useQuery<any>({ queryKey: ['User Cart'] })
   const [showRedirect, setShowRedirect] = useState(false)
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string
+    type: 'percentage' | 'fixed'
+    value: number
+    discount: number
+  } | null>(null)
+
   useEffect(() => {
     if (!isEmpty(user)) {
       setCart(user)
     }
   }, [user])
+
+  const totalAmount = useMemo(() => {
+    if (!cart || cart.length === 0) return 0
+    return cart.reduce((sum: number, item: any) => sum + item.price * item.quantityAddtoCart, 0)
+  }, [cart])
+
+  const finalAmount = useMemo(() => {
+    if (!appliedCoupon) return totalAmount
+    return Math.max(0, totalAmount - appliedCoupon.discount)
+  }, [totalAmount, appliedCoupon])
+
+  const handleApplyCoupon = (coupon: {
+    code: string
+    type: 'percentage' | 'fixed'
+    value: number
+    discount: number
+  }) => {
+    setAppliedCoupon(coupon)
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+  }
 
   const handleCheckout = async () => {
     setShowRedirect(true)
@@ -69,6 +100,7 @@ export default function ModalCart({ setShowCart }: Props) {
         // day la cho truyen product thanh toan
         products: cart,
         customerEmail: session?.user.email,
+        couponCode: appliedCoupon?.code,
       }),
     })
       .then(async res => {
@@ -87,7 +119,8 @@ export default function ModalCart({ setShowCart }: Props) {
                 quantityAddtoCart: product.quantityAddtoCart,
               }
             }),
-            totalPrice: 999,
+            totalPrice: finalAmount,
+            couponCode: appliedCoupon?.code || '',
             stripeCheckoutLink: data.session.url,
             checkOutSessionId: data.session.id,
           }
@@ -188,9 +221,23 @@ export default function ModalCart({ setShowCart }: Props) {
                   )
                 })}
             </ul>
+            <ApplyCoupon
+              onApply={handleApplyCoupon}
+              onRemove={handleRemoveCoupon}
+              totalAmount={totalAmount}
+              appliedCoupon={appliedCoupon}
+            />
             <div className='total'>
+              {appliedCoupon && (
+                <>
+                  <p className='total-text'>Original Total</p>
+                  <p className='total-price'>${totalAmount.toFixed(2)} USD</p>
+                  <p className='total-text'>Discount ({appliedCoupon.code})</p>
+                  <p className='total-price' style={{ color: 'green' }}>-${appliedCoupon.discount.toFixed(2)}</p>
+                </>
+              )}
               <p className='total-text'>Total</p>
-              <p className='total-price'>$13.00 USD</p>
+              <p className='total-price'>${finalAmount.toFixed(2)} USD</p>
             </div>
             <button className='btn-continue' onClick={showRedirect ? () => {} : handleCheckout}>
               {showRedirect ? 'Redirecting...' : 'Continue to Checkout'}

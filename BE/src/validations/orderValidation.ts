@@ -42,7 +42,10 @@ const createNew = async (req: Request, res: Response, next: NextFunction) => {
     }),
     stripeCheckoutLink: Joi.string().default('').optional(),
     checkOutSessionId: Joi.string().default('').optional(),
-    isPaid: Joi.boolean().default(false).optional()
+    isPaid: Joi.boolean().default(false).optional(),
+    couponId: Joi.string().optional().allow(null),
+    couponCode: Joi.string().optional().allow(null),
+    discountAmount: Joi.number().min(0).default(0)
   })
   try {
     if (req.body.listProducts.length === 0) {
@@ -121,7 +124,10 @@ const updateOrderInfo = async (req: any, res: Response, next: any) => {
     _destroy: Joi.boolean().default(false),
     isPaid: Joi.boolean().optional().default(false),
     stripeCheckoutLink: Joi.string().default('').optional(),
-    checkOutSessionId: Joi.string().default('').optional()
+    checkOutSessionId: Joi.string().default('').optional(),
+    couponId: Joi.string().optional().allow(null),
+    couponCode: Joi.string().optional().allow(null),
+    discountAmount: Joi.number().min(0).default(0)
   })
   try {
     if (isEmpty(req.body)) {

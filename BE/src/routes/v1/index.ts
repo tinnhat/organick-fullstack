@@ -5,6 +5,10 @@ import { categoryRoute } from './categoryRoute'
 import { orderRoute } from './orderRoute'
 import { productRoute } from './productRoute'
 import { userRoute } from './userRoute'
+import { reviewRoute } from './reviewRoute'
+import { notificationRoute } from './notificationRoute'
+import { chatRoute } from './chatRoute'
+import { couponRoute } from './couponRoute'
 
 const Router = express.Router()
 
@@ -23,5 +27,13 @@ Router.use('/products', productRoute)
 Router.use('/orders', orderRoute)
 
 Router.use('/auth', authRoute)
+
+Router.use('/reviews', reviewRoute)
+
+Router.use('/notifications', notificationRoute)
+
+Router.use('/chat', chatRoute)
+
+Router.use('/coupons', couponRoute)
 
 export const APIs_V1 = Router

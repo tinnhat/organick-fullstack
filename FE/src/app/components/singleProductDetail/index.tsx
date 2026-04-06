@@ -1,6 +1,9 @@
 'use client'
+import { Box, Typography } from '@mui/material'
 import client from '@/app/client'
 import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
+import { useGetReviewsByProductIdQuery, useAddReviewMutation, useEditReviewMutation, useDeleteReviewMutation } from '@/app/utils/hooks/reviewsHooks'
+import useFetch from '@/app/utils/useFetch'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { cloneDeep } from 'lodash'
@@ -12,6 +15,7 @@ import { toast } from 'sonner'
 import ErrorFetchingProduct from '../errorFetchingProduct/index'
 import LoadingCustom from '../loading'
 import RelatedProduct from '../relatedProduct'
+import { ReviewForm, ReviewList } from '@/components/review'
 import './style.scss'
 type Props = {
   params: any
@@ -21,8 +25,16 @@ export default function SingleProductDetail({ params }: Props) {
   const { data: session } = useSession()
   const router = useRouter()
   const productRef = useRef<any>(null)
+  const fetchApi = useFetch()
   const { data: product, isLoading, isError } = useGetProductByIdQuery(params.id)
+  const { data: reviews } = useGetReviewsByProductIdQuery(params.id)
   const [isAdding, setIsAdding] = useState(false)
+  const [editingReview, setEditingReview] = useState<any>(null)
+
+  const addReviewMutation = useAddReviewMutation(fetchApi)
+  const editReviewMutation = useEditReviewMutation(fetchApi, editingReview?._id || '')
+  const deleteReviewMutation = useDeleteReviewMutation(fetchApi)
+
   const handleAddtoCart = () => {
     if (!session) {
       toast.error('Please login first', {
@@ -78,6 +90,34 @@ export default function SingleProductDetail({ params }: Props) {
       }, 3500)
     }
   }
+
+  const handleReviewSubmit = async (data: { rating: number; comment: string }) => {
+    if (!session) {
+      toast.error('Please login first', { position: 'bottom-right' })
+      router.push('/login')
+      return
+    }
+    if (editingReview) {
+      await editReviewMutation.mutateAsync(data)
+      setEditingReview(null)
+    } else {
+      await addReviewMutation.mutateAsync({ productId: params.id, ...data })
+    }
+  }
+
+  const handleReviewEdit = (review: any) => {
+    setEditingReview(review)
+  }
+
+  const handleReviewDelete = async (reviewId: string) => {
+    await deleteReviewMutation.mutateAsync(reviewId)
+  }
+
+  const reviewsList = reviews || []
+  const averageRating = reviewsList.length > 0
+    ? reviewsList.reduce((acc: number, r: Review) => acc + r.rating, 0) / reviewsList.length
+    : product?.star || 0
+
   if (isLoading) return <LoadingCustom />
   if (isError) return <ErrorFetchingProduct />
   return (
@@ -151,6 +191,30 @@ export default function SingleProductDetail({ params }: Props) {
             carbs. Simple sugars — such as glucose and fructose — make up 70% and 80% of the carbs
             in raw.
           </p>
+
+          {/* ============ FEATURE: shop-ui START ============ */}
+          <Box sx={{ mt: 6 }}>
+            <Typography variant='h5' sx={{ mb: 3, fontWeight: 600, color: '#274c5b' }}>
+              Customer Reviews
+            </Typography>
+            <ReviewForm
+              productId={params.id}
+              existingReview={editingReview}
+              onSubmit={handleReviewSubmit}
+              onCancel={editingReview ? () => setEditingReview(null) : undefined}
+            />
+            <Box sx={{ mt: 4 }}>
+              <ReviewList
+                reviews={reviewsList}
+                averageRating={averageRating}
+                totalReviews={reviewsList.length}
+                currentUserId={session?.user?._id}
+                onEdit={handleReviewEdit}
+                onDelete={handleReviewDelete}
+              />
+            </Box>
+          </Box>
+          {/* ============ FEATURE: shop-ui END ============ */}
         </div>
       </section>
       <RelatedProduct />

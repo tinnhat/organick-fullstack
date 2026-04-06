@@ -1,1 +1,25 @@
 .github
+
+# Build output
+BE/dist/
+FE/.next/
+FE/out/
+
+# Dependencies
+BE/node_modules/
+FE/node_modules/
+
+# Test coverage
+BE/coverage/
+FE/coverage/
+
+# Test results
+FE/test-results/
+FE/playwright-report/
+
+# Environment files
+.env
+BE/.env
+FE/.env
+BE/.env.local
+FE/.env.local

@@ -10,8 +10,18 @@ import { orderModel } from '../models/orderModel'
 import { responseData } from '../utils/algorithms'
 import { env } from '../config/environment'
 import moment from 'moment'
+import { notificationService } from './notificationService'
 
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
+
+const findAdminUser = async () => {
+  const users = await userModel.getUsers()
+  const admin = users.find((u: any) => u.isAdmin === true)
+  if (!admin) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Admin user not found')
+  }
+  return admin
+}
 
 const getActiveProducts = async () => {
   const products = await stripe.products.list()
@@ -42,7 +52,10 @@ const createNew = async (reqBody: any) => {
     const createdOrder = await orderModel.createNew({
       ...reqBody,
       status: 'Pending',
-      userId: new ObjectId(reqBody.userId)
+      userId: new ObjectId(reqBody.userId),
+      couponId: reqBody.couponId ? new ObjectId(reqBody.couponId) : null,
+      couponCode: reqBody.couponCode || null,
+      discountAmount: reqBody.discountAmount || 0
     })
     //update product quantity in stock
     for (let i = 0; i < reqBody.listProducts.length; i++) {
@@ -51,6 +64,18 @@ const createNew = async (reqBody: any) => {
       await productModel.findAndUpdate(reqBody.listProducts[i]._id, { quantity: newQuantity })
     }
     const getOrder = await orderModel.findOneById(createdOrder.insertedId)
+    
+    const adminUser = await findAdminUser()
+    if (adminUser) {
+      await notificationService.createNotification(
+        adminUser._id.toString(),
+        'order',
+        'New Order Received',
+        `You have a new order from ${userExist.fullname}`,
+        { orderId: createdOrder.insertedId.toString() }
+      )
+    }
+    
     return responseData(getOrder)
   } catch (error) {
     throw error
@@ -161,7 +186,10 @@ const createNewByAdmin = async (reqBody: any) => {
       status: 'Pending',
       stripeCheckoutLink: session.url,
       checkOutSessionId: session.id,
-      userId: new ObjectId(reqBody.userId)
+      userId: new ObjectId(reqBody.userId),
+      couponId: reqBody.couponId ? new ObjectId(reqBody.couponId) : null,
+      couponCode: reqBody.couponCode || null,
+      discountAmount: reqBody.discountAmount || 0
     })
     //update product quantity in stock
     for (let i = 0; i < reqBody.listProducts.length; i++) {
@@ -266,6 +294,28 @@ const editOrderInfo = async (id: string, data: any) => {
     await orderModel.findAndUpdate(id, changeData)
     //get latest data
     const orderUpdated = await orderModel.findOneById(id)
+    
+    if (data.status && data.status !== order[0].status) {
+      const statusMessages: any = {
+        'Pending': 'Your order is now pending',
+        'Processing': 'Your order is being processed',
+        'Shipped': 'Your order has been shipped',
+        'Delivered': 'Your order has been delivered',
+        'Completed': 'Your order is completed',
+        'Cancelled': 'Your order has been cancelled'
+      }
+      
+      if (orderUpdated && orderUpdated[0] && statusMessages[data.status]) {
+        await notificationService.createNotification(
+          orderUpdated[0].userId.toString(),
+          'order',
+          `Order Status: ${data.status}`,
+          statusMessages[data.status],
+          { orderId: id }
+        )
+      }
+    }
+    
     return responseData(orderUpdated)
   } catch (error) {
     throw error
@@ -291,6 +341,27 @@ const updateOrderInfo = async (id: string, data: any) => {
     }
     await orderModel.findAndUpdate(getOrder._id, changeData)
     const newOrder = await orderModel.findOneById(getOrder._id)
+
+    if (data.status && data.status !== getOrder.status) {
+      const statusMessages: any = {
+        'Pending': 'Your order is now pending',
+        'Processing': 'Your order is being processed',
+        'Shipped': 'Your order has been shipped',
+        'Delivered': 'Your order has been delivered',
+        'Completed': 'Your order is completed',
+        'Cancelled': 'Your order has been cancelled'
+      }
+      
+      if (newOrder && newOrder[0] && statusMessages[data.status]) {
+        await notificationService.createNotification(
+          newOrder[0].userId.toString(),
+          'order',
+          `Order Status: ${data.status}`,
+          statusMessages[data.status],
+          { orderId: getOrder._id.toString() }
+        )
+      }
+    }
 
     return responseData(newOrder)
   } catch (error) {

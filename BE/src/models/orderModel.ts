@@ -16,6 +16,9 @@ const ORDER_SCHEMA = Joi.object({
   isPaid: Joi.boolean().default(false),
   stripeCheckoutLink: Joi.string().default('').optional(),
   checkOutSessionId: Joi.string().default('').optional(),
+  couponId: Joi.string().optional().allow(null),
+  couponCode: Joi.string().optional().allow(null),
+  discountAmount: Joi.number().min(0).default(0),
   createdAt: Joi.date().timestamp('javascript').default(Date.now),
   updatedAt: Joi.date().timestamp('javascript').default(Date.now),
   _destroy: Joi.boolean().default(false)

@@ -1,27 +1,22 @@
 'use client'
 import { useGetCategoriesQuery } from '@/app/utils/hooks/useCategories'
-import CloseIcon from '@mui/icons-material/Close'
 import DeleteIcon from '@mui/icons-material/Delete'
-import SearchIcon from '@mui/icons-material/Search'
 import { Checkbox } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import InputAdornment from '@mui/material/InputAdornment'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useDebounce } from '@uidotdev/usehooks'
 import { cloneDeep } from 'lodash'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as XLSX from 'xlsx'
+import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
 import BaseCard from '../components/shared/BaseCard'
 import TypographyTooltip from '../components/typograhyTooltip'
 import Loading from '../loading'
@@ -35,7 +30,6 @@ export default function Categories({}: Props) {
   const [categories, setCategories] = useState<Category[]>([])
   const [categoriesShow, setCategoriesShow] = useState<Category[]>([])
   const router = useRouter()
-  const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -43,7 +37,17 @@ export default function Categories({}: Props) {
     show: false,
     id: '',
   })
-  const debouncedSearch = useDebounce(search, 500)
+  const [filters, setFilters] = useState({
+    search: '',
+    filters: {} as Record<string, string>,
+    sortKey: '',
+    sortDir: 'asc' as 'asc' | 'desc',
+  })
+
+  const columns: Column[] = [
+    { key: '_id', label: 'Id', filterable: true, sortable: true },
+    { key: 'name', label: 'Name', filterable: true, sortable: true },
+  ]
 
   useEffect(() => {
     if (allCategory) {
@@ -52,38 +56,60 @@ export default function Categories({}: Props) {
     }
   }, [allCategory])
 
-  //use useEffect to watch value and debounce
   useEffect(() => {
-    const newCategoriesShow = cloneDeep(categories)
-    if (debouncedSearch) {
-      const filtered = newCategoriesShow.filter((item: Category) => {
-        return item.name.toLowerCase().includes(search.toLowerCase())
-      })
-      setCategoriesShow(filtered)
-      setPage(0)
+    let filtered = cloneDeep(categories)
+
+    if (filters.search) {
+      filtered = filtered.filter((item: Category) =>
+        item.name.toLowerCase().includes(filters.search.toLowerCase())
+      )
     }
-  }, [debouncedSearch, categories, search])
+
+    Object.entries(filters.filters).forEach(([key, value]) => {
+      if (value) {
+        filtered = filtered.filter((item: any) => {
+          return String(item[key]).toLowerCase().includes(value.toLowerCase())
+        })
+      }
+    })
+
+    if (filters.sortKey) {
+      filtered.sort((a: any, b: any) => {
+        const aVal = a[filters.sortKey]
+        const bVal = b[filters.sortKey]
+        if (aVal < bVal) return filters.sortDir === 'asc' ? -1 : 1
+        if (aVal > bVal) return filters.sortDir === 'asc' ? 1 : -1
+        return 0
+      })
+    }
+
+    setCategoriesShow(filtered)
+  }, [filters, categories])
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage)
   }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
+  const handlePageSizeChange = (newPageSize: number) => {
+    setRowsPerPage(newPageSize)
     setPage(0)
   }
 
-  const visibleRows = React.useMemo(() => {
+  const handleFilter = (newFilters: { search: string; filters: Record<string, string>; sortKey: string; sortDir: 'asc' | 'desc' }) => {
+    setFilters(newFilters)
+  }
+
+  const handleSort = (sortKey: string, sortDir: 'asc' | 'desc') => {
+    setFilters(prev => ({ ...prev, sortKey, sortDir }))
+  }
+
+  const visibleRows = useMemo(() => {
     return categoriesShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
   }, [page, rowsPerPage, categoriesShow])
-
-  const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value)
-  }
 
   const deleteCategory = (e: any, id: string) => {
     e.preventDefault()
@@ -146,34 +172,19 @@ export default function Categories({}: Props) {
                   >
                     Export
                   </Button>
-                  <TextField
-                    value={search}
-                    onChange={handleChangeSearch}
-                    sx={{ width: { xs: '50%', md: '40%', lg: '30%' } }}
-                    id='search-basic'
-                    label='Search'
-                    type='text'
-                    variant='outlined'
-                    placeholder='Search by name'
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          {search ? (
-                            <CloseIcon
-                              sx={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                setSearch('')
-                                setCategoriesShow(categories)
-                              }}
-                            />
-                          ) : (
-                            <SearchIcon sx={{ cursor: 'pointer' }} />
-                          )}
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
                 </Box>
+                <AdminTableFilters
+                  columns={columns}
+                  data={categories}
+                  onFilter={handleFilter}
+                  onSort={handleSort}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                  totalItems={categoriesShow.length}
+                  currentPage={page}
+                  pageSize={rowsPerPage}
+                  searchPlaceholder='Search by name...'
+                />
                 <BaseCard>
                   <>
                     <TableContainer
@@ -273,14 +284,12 @@ export default function Categories({}: Props) {
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      component='div'
+                    <AdminTableFiltersPagination
                       count={categoriesShow.length}
-                      rowsPerPage={rowsPerPage}
                       page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      rowsPerPage={rowsPerPage}
+                      onPageChange={(e, newPage) => handlePageChange(newPage)}
+                      onRowsPerPageChange={(e) => handlePageSizeChange(parseInt(e.target.value, 10))}
                     />
                   </>
                 </BaseCard>

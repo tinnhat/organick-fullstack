@@ -1,36 +1,29 @@
 'use client'
 import { useGetOrdersQuery } from '@/app/utils/hooks/ordersHooks'
 import useFetch from '@/app/utils/useFetch'
-import CloseIcon from '@mui/icons-material/Close'
 import DeleteIcon from '@mui/icons-material/Delete'
-import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
-import InputAdornment from '@mui/material/InputAdornment'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useDebounce } from '@uidotdev/usehooks'
 import { cloneDeep } from 'lodash'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as XLSX from 'xlsx'
+import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
 import BaseCard from '../components/shared/BaseCard'
 import TypographyTooltip from '../components/typograhyTooltip'
 import Loading from '../loading'
 import AddOrder from './addOrder'
 import DeleteOrder from './deleteOrder'
-
-
 
 export default function Orders() {
   const fetchApi = useFetch()
@@ -38,15 +31,27 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([])
   const [ordersShow, setOrdersShow] = useState<Order[]>([])
   const router = useRouter()
-  const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [showDelete, setShowDelete] = useState({
     show: false,
-    id: ''
+    id: '',
   })
-  const debouncedSearch = useDebounce(search, 500)
+  const [filters, setFilters] = useState({
+    search: '',
+    filters: {} as Record<string, string>,
+    sortKey: '',
+    sortDir: 'asc' as 'asc' | 'desc',
+  })
+
+  const columns: Column[] = [
+    { key: '_id', label: 'Id', filterable: true, sortable: true },
+    { key: 'phone', label: 'Phone', filterable: true, sortable: true },
+    { key: 'totalPrice', label: 'Total Price', sortable: true },
+    { key: 'status', label: 'Status', filterable: true, sortable: true },
+    { key: 'createdAt', label: 'Created At', sortable: true },
+  ]
 
   useEffect(() => {
     if (allOrders) {
@@ -55,45 +60,74 @@ export default function Orders() {
     }
   }, [allOrders])
 
-  //use useEffect to watch value and debounce
   useEffect(() => {
-    const newOrderShow = cloneDeep(orders)
-    if (debouncedSearch) {
-      const filtered = newOrderShow.filter((item: Order) => {
-        return item._id.includes(search)
-      })
-      setOrdersShow(filtered)
-      setPage(0)
+    let filtered = cloneDeep(orders)
+
+    if (filters.search) {
+      filtered = filtered.filter((item: Order) =>
+        item._id.toLowerCase().includes(filters.search.toLowerCase())
+      )
     }
-  }, [debouncedSearch, orders, search])
+
+    Object.entries(filters.filters).forEach(([key, value]) => {
+      if (value) {
+        filtered = filtered.filter((item: any) => {
+          if (key === 'createdAt') {
+            return moment(item[key]).format('DD/MM/YYYY').includes(value.toLowerCase())
+          }
+          return String(item[key]).toLowerCase().includes(value.toLowerCase())
+        })
+      }
+    })
+
+    if (filters.sortKey) {
+      filtered.sort((a: any, b: any) => {
+        let aVal = a[filters.sortKey]
+        let bVal = b[filters.sortKey]
+        if (filters.sortKey === 'createdAt') {
+          aVal = new Date(aVal).getTime()
+          bVal = new Date(bVal).getTime()
+        }
+        if (aVal < bVal) return filters.sortDir === 'asc' ? -1 : 1
+        if (aVal > bVal) return filters.sortDir === 'asc' ? 1 : -1
+        return 0
+      })
+    }
+
+    setOrdersShow(filtered)
+  }, [filters, orders])
 
   const toggleDrawer = (newOpen: boolean) => {
     setOpen(newOpen)
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handlePageChange = (newPage: number) => {
     setPage(newPage)
   }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
+  const handlePageSizeChange = (newPageSize: number) => {
+    setRowsPerPage(newPageSize)
     setPage(0)
   }
 
-  const visibleRows = React.useMemo(() => {
+  const handleFilter = (newFilters: { search: string; filters: Record<string, string>; sortKey: string; sortDir: 'asc' | 'desc' }) => {
+    setFilters(newFilters)
+  }
+
+  const handleSort = (sortKey: string, sortDir: 'asc' | 'desc') => {
+    setFilters(prev => ({ ...prev, sortKey, sortDir }))
+  }
+
+  const visibleRows = useMemo(() => {
     return ordersShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
   }, [page, rowsPerPage, ordersShow])
-
-  const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value)
-  }
 
   const deleteOrder = (e: any, id: string) => {
     e.preventDefault()
     e.stopPropagation()
     setShowDelete({
       show: true,
-      id
+      id,
     })
   }
 
@@ -150,7 +184,7 @@ export default function Orders() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    mb: 2
+                    mb: 2,
                   }}
                 >
                   <Button variant='contained' color='primary' onClick={() => toggleDrawer(true)}>
@@ -159,7 +193,7 @@ export default function Orders() {
                   <Button
                     sx={{
                       mr: 'auto',
-                      ml: 2
+                      ml: 2,
                     }}
                     variant='contained'
                     color='secondary'
@@ -167,34 +201,19 @@ export default function Orders() {
                   >
                     Export
                   </Button>
-                  <TextField
-                    value={search}
-                    onChange={handleChangeSearch}
-                    sx={{ width: { xs: '50%', md: '40%', lg: '30%' } }}
-                    id='search-basic'
-                    label='Search'
-                    type='text'
-                    variant='outlined'
-                    placeholder='Search by order id'
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='end'>
-                          {search ? (
-                            <CloseIcon
-                              sx={{ cursor: 'pointer' }}
-                              onClick={() => {
-                                setSearch('')
-                                setOrdersShow(orders)
-                              }}
-                            />
-                          ) : (
-                            <SearchIcon sx={{ cursor: 'pointer' }} />
-                          )}
-                        </InputAdornment>
-                      )
-                    }}
-                  />
                 </Box>
+                <AdminTableFilters
+                  columns={columns}
+                  data={orders}
+                  onFilter={handleFilter}
+                  onSort={handleSort}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                  totalItems={ordersShow.length}
+                  currentPage={page}
+                  pageSize={rowsPerPage}
+                  searchPlaceholder='Search by order id...'
+                />
                 <BaseCard>
                   <>
                     <TableContainer
@@ -330,14 +349,12 @@ export default function Orders() {
                         </TableBody>
                       </Table>
                     </TableContainer>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      component='div'
+                    <AdminTableFiltersPagination
                       count={ordersShow.length}
-                      rowsPerPage={rowsPerPage}
                       page={page}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      rowsPerPage={rowsPerPage}
+                      onPageChange={(e, newPage) => handlePageChange(newPage)}
+                      onRowsPerPageChange={(e) => handlePageSizeChange(parseInt(e.target.value, 10))}
                     />
                   </>
                 </BaseCard>
