@@ -5,6 +5,8 @@ import { Trash } from '@phosphor-icons/react'
 import { Message } from '@/app/type.d'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { useSocket } from '@/hooks/useSocket'
+import { SOCKET_EVENTS } from '@/lib/socketEvents'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -13,10 +15,12 @@ dayjs.extend(relativeTime)
 interface MessageBubbleProps {
   message: Message
   isSent: boolean
+  onDelete?: (messageId: string) => void
 }
 
-const MessageBubble = ({ message, isSent }: MessageBubbleProps) => {
+const MessageBubble = ({ message, isSent, onDelete }: MessageBubbleProps) => {
   const { data: session } = useSession()
+  const { socket } = useSocket()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const canDelete =
     message.senderId === session?.user?._id &&
@@ -32,8 +36,11 @@ const MessageBubble = ({ message, isSent }: MessageBubbleProps) => {
   }
 
   const handleDelete = () => {
-    // Emit delete event to socket
     setAnchorEl(null)
+    if (socket) {
+      socket.emit(SOCKET_EVENTS.CLIENT.DELETE_MESSAGE, { messageId: message._id })
+    }
+    onDelete?.(message._id)
   }
 
   return (

@@ -5,7 +5,7 @@ import { env } from './environment'
 import { chatService } from '../services/chatService'
 
 interface OnlineUser {
-  socketId: string
+  socketIds: Set<string>
   userId: string
   isAdmin: boolean
 }
@@ -53,7 +53,16 @@ const initializeSocket = (httpServer: HTTPServer) => {
     const userId = socket.user._id
     const isAdmin = socket.user.isAdmin
 
-    onlineUsers.set(userId, { socketId: socket.id, userId, isAdmin })
+    const existingUser = onlineUsers.get(userId)
+    if (existingUser) {
+      existingUser.socketIds.add(socket.id)
+    } else {
+      onlineUsers.set(userId, {
+        socketIds: new Set([socket.id]),
+        userId,
+        isAdmin
+      })
+    }
 
     socket.join(`user_${userId}`)
 
@@ -156,8 +165,14 @@ const initializeSocket = (httpServer: HTTPServer) => {
     })
 
     socket.on('disconnect', () => {
-      onlineUsers.delete(userId)
-      io.emit('user_offline', { userId, isAdmin })
+      const user = onlineUsers.get(userId)
+      if (user) {
+        user.socketIds.delete(socket.id)
+        if (user.socketIds.size === 0) {
+          onlineUsers.delete(userId)
+          io.emit('user_offline', { userId, isAdmin })
+        }
+      }
     })
   })
 

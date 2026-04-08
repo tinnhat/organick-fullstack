@@ -84,11 +84,11 @@ export default function ApplyCoupon({ onApply, onRemove, totalAmount, appliedCou
       let discount = 0
       if (couponData.type === 'percentage') {
         discount = (totalAmount * couponData.value) / 100
+        discount = Math.min(discount, totalAmount)
       } else {
         discount = couponData.value
+        discount = Math.min(discount, totalAmount)
       }
-
-      discount = Math.min(discount, totalAmount)
 
       setValidatedCoupon({
         ...couponData,

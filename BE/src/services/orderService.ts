@@ -1,18 +1,58 @@
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
-import { ObjectId } from 'mongodb'
+import { ObjectId, ClientSession } from 'mongodb'
+import { isAfter } from 'date-fns'
 /* eslint-disable no-useless-catch */
 import stripePackage from 'stripe'
+import { getDB } from '../config/mongodb'
 import { userModel } from '../models/userModel'
 import ApiError from '../utils/ApiError'
 import { productModel } from '../models/productModel'
 import { orderModel } from '../models/orderModel'
+import { couponModel } from '../models/couponModel'
 import { responseData } from '../utils/algorithms'
 import { env } from '../config/environment'
 import moment from 'moment'
 import { notificationService } from './notificationService'
 
 const stripe = new stripePackage(process.env.STRIPE_SECRET_KEY!)
+
+const calculateDiscount = async (couponCode: string, orderAmount: number, userId: string) => {
+  const coupon = await couponModel.findOneByCode(couponCode)
+  if (!coupon) {
+    return { valid: false, discountAmount: 0 }
+  }
+  if (!coupon.isActive || coupon._destroy) {
+    return { valid: false, discountAmount: 0 }
+  }
+  if (isAfter(new Date(), new Date(coupon.expiresAt))) {
+    return { valid: false, discountAmount: 0 }
+  }
+  if (orderAmount < coupon.minOrderAmount) {
+    return { valid: false, discountAmount: 0 }
+  }
+  if (coupon.maxUses !== null && coupon.usedBy.length >= coupon.maxUses) {
+    return { valid: false, discountAmount: 0 }
+  }
+  const alreadyUsed = coupon.usedBy.some((use: any) => use.userId.toString() === userId.toString())
+  if (alreadyUsed) {
+    return { valid: false, discountAmount: 0 }
+  }
+
+  let discountAmount = 0
+  if (coupon.type === 'percentage') {
+    discountAmount = (orderAmount * coupon.value) / 100
+  } else {
+    discountAmount = coupon.value
+  }
+  discountAmount = Math.min(discountAmount, orderAmount)
+
+  return {
+    valid: true,
+    discountAmount,
+    couponId: coupon._id
+  }
+}
 
 const findAdminUser = async () => {
   const users = await userModel.getUsers()
@@ -31,87 +71,127 @@ const getActiveProducts = async () => {
 
 const createNew = async (reqBody: any) => {
   try {
-    //check xem co user hay khong
     const userExist = await userModel.findOneById(reqBody.userId)
     if (!userExist) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    //check xem product co ton tai hay khong
 
-    for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
+    let discountAmount = 0
+    let couponId: ObjectId | null = null
+    const couponCode = reqBody.couponCode || null
+
+    if (couponCode) {
+      const discountResult = await calculateDiscount(couponCode, reqBody.totalPrice, reqBody.userId)
+      if (!discountResult.valid) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid or expired coupon')
+      }
+      discountAmount = discountResult.discountAmount
+      couponId = discountResult.couponId ? new ObjectId(discountResult.couponId) : null
+    }
+
+    const listProducts = reqBody.listProducts.map((item: any) => ({
+      _id: new ObjectId(item._id),
+      quantityAddtoCart: item.quantityAddtoCart,
+      price: item.price,
+      name: item.name
+    }))
+
+    const originalQuantities: { productId: string; originalQty: number }[] = []
+
+    for (let i = 0; i < listProducts.length; i++) {
+      const product = await productModel.findOneById(listProducts[i]._id.toString())
       if (!product) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
-      } else {
-        //co product -> check so luong
-        if (product.quantity < reqBody.listProducts[i].quantityAddtoCart) {
-          throw new ApiError(StatusCodes.NOT_FOUND, `Quantity of product: "${product.name}" in stock is not enough`)
-        }
       }
+      if (product.quantity < listProducts[i].quantityAddtoCart) {
+        throw new ApiError(StatusCodes.NOT_FOUND, `Quantity of product: "${product.name}" in stock is not enough`)
+      }
+      originalQuantities.push({ productId: listProducts[i]._id.toString(), originalQty: product.quantity })
     }
+
     const createdOrder = await orderModel.createNew({
       ...reqBody,
       status: 'Pending',
       userId: new ObjectId(reqBody.userId),
-      couponId: reqBody.couponId ? new ObjectId(reqBody.couponId) : null,
-      couponCode: reqBody.couponCode || null,
-      discountAmount: reqBody.discountAmount || 0
+      couponId,
+      couponCode,
+      discountAmount,
+      listProducts
     })
-    //update product quantity in stock
-    for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
-      const newQuantity = product.quantity - reqBody.listProducts[i].quantityAddtoCart
-      await productModel.findAndUpdate(reqBody.listProducts[i]._id, { quantity: newQuantity })
+
+    for (let i = 0; i < listProducts.length; i++) {
+      const product = await productModel.findOneById(listProducts[i]._id.toString())
+      const newQuantity = product.quantity - listProducts[i].quantityAddtoCart
+      await productModel.findAndUpdate(listProducts[i]._id.toString(), { quantity: newQuantity })
     }
+
     const getOrder = await orderModel.findOneById(createdOrder.insertedId)
-    
+
     const adminUser = await findAdminUser()
     if (adminUser) {
       await notificationService.createNotification(
         adminUser._id.toString(),
         'order',
         'New Order Received',
-        `You have a new order from ${userExist.fullname}`,
+        `You have a new order from ${getOrder[0].userId?.fullname || 'a user'}`,
         { orderId: createdOrder.insertedId.toString() }
       )
     }
-    
+
     return responseData(getOrder)
   } catch (error) {
+    for (const { productId, originalQty } of originalQuantities) {
+      await productModel.findAndUpdate(productId, { quantity: originalQty })
+    }
     throw error
   }
 }
 
 const createNewByAdmin = async (reqBody: any) => {
+  const originalQuantities: { productId: string; originalQty: number }[] = []
   try {
-    //check xem co user hay khong
     const userExist = await userModel.findOneById(reqBody.userId)
     if (!userExist) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
     }
-    //check xem product co ton tai hay khong
 
-    for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
+    let discountAmount = 0
+    let couponId: ObjectId | null = null
+    const couponCode = reqBody.couponCode || null
+
+    if (couponCode) {
+      const discountResult = await calculateDiscount(couponCode, reqBody.totalPrice, reqBody.userId)
+      if (!discountResult.valid) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid or expired coupon')
+      }
+      discountAmount = discountResult.discountAmount
+      couponId = discountResult.couponId ? new ObjectId(discountResult.couponId) : null
+    }
+
+    const listProducts = reqBody.listProducts.map((item: any) => ({
+      _id: new ObjectId(item._id),
+      quantityAddtoCart: item.quantityAddtoCart,
+      price: item.price,
+      name: item.name
+    }))
+
+    for (let i = 0; i < listProducts.length; i++) {
+      const product = await productModel.findOneById(listProducts[i]._id.toString())
       if (!product) {
         throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
-      } else {
-        //co product -> check so luong
-        if (product.quantity < reqBody.listProducts[i].quantityAddtoCart) {
-          throw new ApiError(StatusCodes.NOT_FOUND, `Quantity of product: "${product.name}" in stock is not enough`)
-        }
       }
+      if (product.quantity < listProducts[i].quantityAddtoCart) {
+        throw new ApiError(StatusCodes.NOT_FOUND, `Quantity of product: "${product.name}" in stock is not enough`)
+      }
+      originalQuantities.push({ productId: listProducts[i]._id.toString(), originalQty: product.quantity })
     }
-    //tao checkout tren stripe -> luu lai link + checkout session
-    //get list product active in stripe
     let activeProducts = await getActiveProducts()
     try {
-      for (const product of reqBody.listProducts) {
-        const stripeProduct = activeProducts.find((activeProduct: any) => activeProduct.id === product._id)
-        //chua co product
+      for (const product of listProducts) {
+        const stripeProduct = activeProducts.find((activeProduct: any) => activeProduct.id === product._id.toString())
         if (stripeProduct === undefined) {
           await stripe.products.create({
-            id: product._id,
+            id: product._id.toString(),
             active: true,
             name: product.name,
             description: product.description,
@@ -129,11 +209,10 @@ const createNewByAdmin = async (reqBody: any) => {
     }
     activeProducts = await getActiveProducts()
     const stripeItems: any = []
-    for (const product of reqBody.listProducts) {
-      const stripeProduct = activeProducts.find((activeProduct: any) => activeProduct.id === product._id)
+    for (const product of listProducts) {
+      const stripeProduct = activeProducts.find((activeProduct: any) => activeProduct.id === product._id.toString())
 
       if (stripeProduct) {
-        //push product thanh toan len stripe de show UI checkout
         await stripeItems.push({
           price: stripeProduct.default_price,
           quantity: product.quantityAddtoCart
@@ -180,26 +259,28 @@ const createNewByAdmin = async (reqBody: any) => {
     if (!session) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Create Checkout Session error')
     }
-    //luu vao BE
     const createdOrder = await orderModel.createNew({
       ...reqBody,
       status: 'Pending',
       stripeCheckoutLink: session.url,
       checkOutSessionId: session.id,
       userId: new ObjectId(reqBody.userId),
-      couponId: reqBody.couponId ? new ObjectId(reqBody.couponId) : null,
-      couponCode: reqBody.couponCode || null,
-      discountAmount: reqBody.discountAmount || 0
+      couponId,
+      couponCode,
+      discountAmount,
+      listProducts
     })
-    //update product quantity in stock
-    for (let i = 0; i < reqBody.listProducts.length; i++) {
-      const product = await productModel.findOneById(reqBody.listProducts[i]._id)
-      const newQuantity = product.quantity - reqBody.listProducts[i].quantityAddtoCart
-      await productModel.findAndUpdate(reqBody.listProducts[i]._id, { quantity: newQuantity })
+    for (let i = 0; i < listProducts.length; i++) {
+      const product = await productModel.findOneById(listProducts[i]._id.toString())
+      const newQuantity = product.quantity - listProducts[i].quantityAddtoCart
+      await productModel.findAndUpdate(listProducts[i]._id.toString(), { quantity: newQuantity })
     }
     const getOrder = await orderModel.findOneById(createdOrder.insertedId)
     return responseData(getOrder)
   } catch (error) {
+    for (const { productId, originalQty } of originalQuantities) {
+      await productModel.findAndUpdate(productId, { quantity: originalQty })
+    }
     throw error
   }
 }

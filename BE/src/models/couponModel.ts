@@ -95,6 +95,53 @@ const findAndUpdate = async (id: string, data: any) => {
   }
 }
 
+const atomicApplyCoupon = async (
+  code: string,
+  userId: ObjectId,
+  orderAmount: number,
+  minOrderAmount: number,
+  maxUses: number | null,
+  expiresAt: Date,
+  userIdString: string
+) => {
+  try {
+    const now = new Date()
+    const query: any = {
+      code,
+      isActive: true,
+      _destroy: false,
+      expiresAt: { $gt: now },
+      minOrderAmount: { $lte: orderAmount },
+      usedBy: {
+        $not: {
+          $elemMatch: { userId: userId }
+        }
+      }
+    }
+
+    if (maxUses !== null) {
+      query.$expr = { $lt: [{ $size: '$usedBy' }, maxUses] }
+    }
+
+    const result = await getDB()
+      .collection(COUPON_COLLECTION_NAME)
+      .findOneAndUpdate(
+        query,
+        {
+          $push: {
+            usedBy: { userId, usedAt: now }
+          },
+          $set: { updatedAt: now }
+        },
+        { returnDocument: 'after' }
+      )
+
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 const findAndRemove = async (id: string) => {
   try {
     const result = await getDB()
@@ -114,5 +161,6 @@ export const couponModel = {
   getCoupons,
   findAndUpdate,
   findAndRemove,
+  atomicApplyCoupon,
   COUPON_COLLECTION_NAME
 }

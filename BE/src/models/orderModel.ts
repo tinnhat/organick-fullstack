@@ -67,11 +67,30 @@ const findOneBySessionId = async (id: string) => {
   }
 }
 
-const getOrders = async () => {
+const getOrders = async (page: number = 1, pageSize: number = 10) => {
   try {
-    const result = await getDB().collection(ORDER_COLLECTION_NAME).find({}).toArray()
+    const maxPageSize = 100
+    const validPageSize = Math.min(pageSize > 0 ? pageSize : 10, maxPageSize)
+    const skip = (page - 1) * validPageSize
+
+    const result = await getDB()
+      .collection(ORDER_COLLECTION_NAME)
+      .find({})
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(validPageSize)
+      .toArray()
+
+    const total = await getDB().collection(ORDER_COLLECTION_NAME).countDocuments({})
+
     if (!result) return null
-    return result
+    return {
+      orders: result,
+      total,
+      page,
+      pageSize: validPageSize,
+      totalPages: Math.ceil(total / validPageSize)
+    }
   } catch (error) {
     throw new Error(error as string)
   }

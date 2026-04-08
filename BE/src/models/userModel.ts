@@ -74,14 +74,32 @@ const saveRefreshToken = async (userId: string, refreshToken: string) => {
   }
 }
 
-const getUsers = async () => {
+const getUsers = async (page: number = 1, pageSize: number = 10) => {
   try {
+    const maxPageSize = 100
+    const validPageSize = Math.min(pageSize > 0 ? pageSize : 10, maxPageSize)
+    const skip = (page - 1) * validPageSize
+
     const result = await getDB()
       .collection(USER_COLLECTION_NAME)
-      .aggregate([{ $sort: { _destroy: 1 } }])
+      .aggregate([
+        { $match: { _destroy: false } },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: validPageSize }
+      ])
       .toArray()
+
+    const total = await getDB().collection(USER_COLLECTION_NAME).countDocuments({ _destroy: false })
+
     if (!result) return null
-    return result
+    return {
+      users: result,
+      total,
+      page,
+      pageSize: validPageSize,
+      totalPages: Math.ceil(total / validPageSize)
+    }
   } catch (error) {
     throw new Error(error as string)
   }

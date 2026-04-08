@@ -75,7 +75,7 @@ export default function AdminTableFilters({
       sortDir,
     }
     onFilter(newFilters)
-  }, [debouncedSearch, filters, sortKey, sortDir])
+  }, [debouncedSearch, filters, sortKey, sortDir, onFilter])
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value)

@@ -121,25 +121,6 @@ const applyCoupon = async (code: string, userId: string, orderAmount: number) =>
     if (!coupon) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Coupon not found')
     }
-    if (!coupon.isActive) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon is not active')
-    }
-    if (coupon._destroy) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon has been deleted')
-    }
-    if (isAfter(new Date(), new Date(coupon.expiresAt))) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon has expired')
-    }
-    if (orderAmount < coupon.minOrderAmount) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, `Minimum order amount is ${coupon.minOrderAmount}`)
-    }
-    if (coupon.maxUses !== null && coupon.usedBy.length >= coupon.maxUses) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon usage limit has been reached')
-    }
-    const alreadyUsed = coupon.usedBy.some((use: any) => use.userId.toString() === userId.toString())
-    if (alreadyUsed) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'You have already used this coupon')
-    }
 
     let discountAmount = 0
     if (coupon.type === 'percentage') {
@@ -149,16 +130,74 @@ const applyCoupon = async (code: string, userId: string, orderAmount: number) =>
     }
     discountAmount = Math.min(discountAmount, orderAmount)
 
-    await couponModel.findAndUpdate(coupon._id.toString(), {
-      usedBy: [...coupon.usedBy, { userId: new ObjectId(userId), usedAt: new Date() }]
-    })
+    const userObjectId = new ObjectId(userId)
+    const result = await couponModel.atomicApplyCoupon(
+      code.toUpperCase(),
+      userObjectId,
+      orderAmount,
+      coupon.minOrderAmount,
+      coupon.maxUses,
+      coupon.expiresAt,
+      userId
+    )
+
+    if (!result) {
+      const couponAgain = await couponModel.findOneByCode(code)
+      if (!couponAgain) {
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Coupon not found')
+      }
+      if (couponAgain.usedBy.some((use: any) => use.userId.toString() === userId.toString())) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'You have already used this coupon')
+      }
+      if (couponAgain.maxUses !== null && couponAgain.usedBy.length >= couponAgain.maxUses) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon usage limit has been reached')
+      }
+      if (isAfter(new Date(), new Date(couponAgain.expiresAt))) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Coupon has expired')
+      }
+      if (orderAmount < couponAgain.minOrderAmount) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, `Minimum order amount is ${couponAgain.minOrderAmount}`)
+      }
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to apply coupon')
+    }
 
     return responseData({
-      couponId: coupon._id,
-      couponCode: coupon.code,
+      couponId: result._id,
+      couponCode: result.code,
       discountAmount,
       originalAmount: orderAmount,
       finalAmount: orderAmount - discountAmount
+    })
+  } catch (error) {
+    throw error
+  }
+}
+    discountAmount = Math.min(discountAmount, orderAmount)
+    finalAmount = orderAmount - discountAmount
+
+    const userObjectId = new ObjectId(userId)
+    const now = new Date()
+
+    const result = await couponModel.atomicApplyCoupon(
+      code.toUpperCase(),
+      userObjectId,
+      orderAmount,
+      coupon.minOrderAmount,
+      coupon.maxUses,
+      coupon.expiresAt,
+      userId
+    )
+
+    if (!result) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to apply coupon - may be invalid, expired, or usage limit reached')
+    }
+
+    return responseData({
+      couponId: result.couponId,
+      couponCode: result.couponCode,
+      discountAmount,
+      originalAmount: orderAmount,
+      finalAmount
     })
   } catch (error) {
     throw error

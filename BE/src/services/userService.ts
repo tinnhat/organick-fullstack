@@ -132,9 +132,9 @@ const changePassword = async (id: string, data: any) => {
   }
 }
 
-const getUsers = async () => {
+const getUsers = async (page: number = 1, pageSize: number = 10) => {
   try {
-    const allUsers = await userModel.getUsers()
+    const allUsers = await userModel.getUsers(page, pageSize)
     return responseData(allUsers)
   } catch (error) {
     throw error

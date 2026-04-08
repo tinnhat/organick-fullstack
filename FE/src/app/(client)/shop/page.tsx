@@ -57,7 +57,7 @@ export default function ShopPage() {
 
     if (filters.categories.length > 0) {
       result = result.filter((product: Product) =>
-        filters.categories.includes(product.categoryId!)
+        product.category?.some(cat => filters.categories.includes(cat._id))
       )
     }
 
