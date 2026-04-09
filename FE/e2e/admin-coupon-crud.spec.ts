@@ -4,9 +4,9 @@ import { test, expect, Page } from '@playwright/test';
 test.describe('Admin Coupon CRUD', () => {
   const loginAsAdmin = async (page: Page) => {
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'admin@example.com');
-    await page.fill('input[name="password"]', 'adminpass123');
-    await page.click('button[type="submit"]');
+await page.fill('#email', 'admin@gmail.com');
+      await page.fill('#password', '123456789');
+    await page.click('form button:has-text("Login")');
     await page.waitForURL('**/admin**', { timeout: 10000 });
   };
 

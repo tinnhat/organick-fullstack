@@ -55,7 +55,7 @@ const calculateDiscount = async (couponCode: string, orderAmount: number, userId
 }
 
 const findAdminUser = async () => {
-  const users = await userModel.getUsers()
+  const { users } = await userModel.getUsers()
   const admin = users.find((u: any) => u.isAdmin === true)
   if (!admin) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Admin user not found')
@@ -70,6 +70,7 @@ const getActiveProducts = async () => {
 }
 
 const createNew = async (reqBody: any) => {
+  const originalQuantities: { productId: string; originalQty: number }[] = []
   try {
     const userExist = await userModel.findOneById(reqBody.userId)
     if (!userExist) {
@@ -95,8 +96,6 @@ const createNew = async (reqBody: any) => {
       price: item.price,
       name: item.name
     }))
-
-    const originalQuantities: { productId: string; originalQty: number }[] = []
 
     for (let i = 0; i < listProducts.length; i++) {
       const product = await productModel.findOneById(listProducts[i]._id.toString())

@@ -4,9 +4,9 @@ import { test, expect, Page } from '@playwright/test';
 test.describe('Chat', () => {
   const loginIfNeeded = async (page: Page) => {
     if (page.url().includes('/login')) {
-      await page.fill('input[name="email"]', 'test@example.com');
-      await page.fill('input[name="password"]', 'password123');
-      await page.click('button[type="submit"]');
+      await page.fill('#email', 'admin@gmail.com');
+      await page.fill('#password', '123456789');
+      await page.click('form button:has-text("Login")');
       await page.waitForURL('**/');
     }
   };

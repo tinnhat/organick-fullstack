@@ -4,13 +4,13 @@ import { Page } from '@playwright/test';
 
 export const testUsers = {
   regular: {
-    email: 'test@example.com',
-    password: 'password123',
-    name: 'Test User'
+    email: 'admin@gmail.com',
+    password: '123456789',
+    name: 'Admin User'
   },
   admin: {
-    email: 'admin@example.com',
-    password: 'adminpass123',
+    email: 'admin@gmail.com',
+    password: '123456789',
     name: 'Admin User'
   }
 };
@@ -18,9 +18,9 @@ export const testUsers = {
 export async function login(page: Page, userType: 'regular' | 'admin' = 'regular') {
   const user = testUsers[userType];
   await page.goto('/login');
-  await page.fill('input[name="email"]', user.email);
-  await page.fill('input[name="password"]', user.password);
-  await page.click('button[type="submit"]');
+  await page.fill('#email', user.email);
+  await page.fill('#password', user.password);
+  await page.click('form button:has-text("Login")');
   await page.waitForURL('**/', { timeout: 10000 });
 }
 

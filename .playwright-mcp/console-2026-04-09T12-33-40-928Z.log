@@ -1,0 +1,875 @@
+[      50ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[     217ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29834
+[     261ms] Error: Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at getNotFoundError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.js:124:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getModuleBuildError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js:104:27)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:29:49)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:27:21)
+[     242ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[     243ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     243ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     243ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `---- @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     243ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     243ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     271ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     271ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     271ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     271ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[     271ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2400ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2400ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2400ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2400ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2400ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[    2421ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[   90026ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[   90131ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29834
+[   90146ms] Error: Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at getNotFoundError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.js:124:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getModuleBuildError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js:104:27)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:29:49)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:27:21)
+[   90142ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   90144ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90144ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90144ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `---- @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90144ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90144ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90415ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[   90497ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29834
+[   90505ms] Error: Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found
+
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at getNotFoundError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.js:124:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getModuleBuildError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js:104:27)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:29:49)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:27:21)
+[   90505ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[   90506ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90506ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90506ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `---- @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90506ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[   90506ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  469548ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:25:1
+Module not found: Can't resolve '../../components/shared/BaseCard'
+  23 | import { toast } from 'sonner'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+> 25 | import BaseCard from '../../components/shared/BaseCard'
+     | ^
+  26 | import TypographyTooltip from '../../components/typograhyTooltip'
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  469548ms] [ERROR] ./src/app/(admin)/admin/coupons/page.tsx:26:1
+Module not found: Can't resolve '../../components/typograhyTooltip'
+  24 | import AdminTableFilters, { AdminTableFiltersPagination, Column } from '@/components/admin/AdminTableFilters'
+  25 | import BaseCard from '../../components/shared/BaseCard'
+> 26 | import TypographyTooltip from '../../components/typograhyTooltip'
+     | ^
+  27 | import Loading from '../../loading'
+  28 | import AddCoupon from './addCoupon'
+  29 |
+
+https://nextjs.org/docs/messages/module-not-found @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  469548ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  469548ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  469548ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  470657ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  470657ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  470657ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  546410ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  548343ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:27:1
+Module not found: Can't resolve '../components/addProductCus'
+  25 | import { toast } from 'sonner'
+  26 | import * as yup from 'yup'
+> 27 | import AddProductCus from '../components/addProductCus'
+     | ^
+  28 | import BaseCard from '../components/shared/BaseCard'
+  29 |
+  30 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  548343ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:28:1
+Module not found: Can't resolve '../components/shared/BaseCard'
+  26 | import * as yup from 'yup'
+  27 | import AddProductCus from '../components/addProductCus'
+> 28 | import BaseCard from '../components/shared/BaseCard'
+     | ^
+  29 |
+  30 | type Props = {
+  31 |   open: boolean
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  548343ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:13:1]
+ 13 | import './_index.scss'
+ 14 | const inter = Inter({ subsets: ['latin'] })
+ 15 | config.autoAddCss = false
+ 16 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 17 |   title: {
+ 18 |     template: '%s | Organick',
+ 19 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  548343ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  548343ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  572926ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  573332ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:27:1
+Module not found: Can't resolve '../components/addProductCus'
+  25 | import { toast } from 'sonner'
+  26 | import * as yup from 'yup'
+> 27 | import AddProductCus from '../components/addProductCus'
+     | ^
+  28 | import BaseCard from '../components/shared/BaseCard'
+  29 |
+  30 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  573332ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:28:1
+Module not found: Can't resolve '../components/shared/BaseCard'
+  26 | import * as yup from 'yup'
+  27 | import AddProductCus from '../components/addProductCus'
+> 28 | import BaseCard from '../components/shared/BaseCard'
+     | ^
+  29 |
+  30 | type Props = {
+  31 |   open: boolean
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  573332ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:12:1]
+ 12 | import './_index.scss'
+ 13 | const inter = Inter({ subsets: ['latin'] })
+ 14 | config.autoAddCss = false
+ 15 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 16 |   title: {
+ 17 |     template: '%s | Organick',
+ 18 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  573332ms] [ERROR] ./src/app/components/modalCart/index.tsx:6:1
+Module not found: Can't resolve '@stripe/stripe-js'
+  4 | import { faXmark } from '@fortawesome/free-solid-svg-icons'
+  5 | import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+> 6 | import { loadStripe } from '@stripe/stripe-js'
+    | ^
+  7 | import { useQuery } from '@tanstack/react-query'
+  8 | import { cloneDeep, isEmpty } from 'lodash'
+  9 | import { useSession } from 'next-auth/react'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  573332ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  574399ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  574872ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:27:1
+Module not found: Can't resolve '../components/addProductCus'
+  25 | import { toast } from 'sonner'
+  26 | import * as yup from 'yup'
+> 27 | import AddProductCus from '../components/addProductCus'
+     | ^
+  28 | import BaseCard from '../components/shared/BaseCard'
+  29 |
+  30 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  574872ms] [ERROR] ./src/app/(admin)/admin/orders/addOrder/index.tsx:28:1
+Module not found: Can't resolve '../components/shared/BaseCard'
+  26 | import * as yup from 'yup'
+  27 | import AddProductCus from '../components/addProductCus'
+> 28 | import BaseCard from '../components/shared/BaseCard'
+     | ^
+  29 |
+  30 | type Props = {
+  31 |   open: boolean
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/(admin)/admin/orders/page.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  574873ms] [ERROR] ./src/app/(client)/layout.tsx
+Error: 
+  x You are attempting to export "metadata" from a component marked with "use client", which is disallowed. Either remove the export, or the "use client" directive. Read more: https://nextjs.org/
+  | docs/getting-started/react-essentials#the-use-client-directive
+  | 
+  | 
+    ,-[/Users/nhattin/Develop/organick-fullstack/FE/src/app/(client)/layout.tsx:12:1]
+ 12 | import './_index.scss'
+ 13 | const inter = Inter({ subsets: ['latin'] })
+ 14 | config.autoAddCss = false
+ 15 | export const metadata: Metadata = {
+    :              ^^^^^^^^
+ 16 |   title: {
+ 17 |     template: '%s | Organick',
+ 18 |     default: 'Organick',
+    `----
+
+Import trace for requested module:
+./src/app/(client)/layout.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  574873ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  586605ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:63
+[  587607ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:63
+[  589678ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[  590352ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  590614ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  591458ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  592257ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:221
+[  593874ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  599264ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  599650ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  600192ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  600381ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62
+[  600459ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/_next/static/webpack/cc4731b7f28a888d.webpack.hot-update.json:0
+[  600459ms] [WARNING] [Fast Refresh] performing full reload
+
+Fast Refresh will perform a full reload when you edit a file that's imported by modules outside of the React rendering tree.
+You might have a file which exports a React component but also exports a value that is imported by a non-React component file.
+Consider migrating the non-React component export to a separate file and importing it into both files.
+
+It is also possible the parent component of the component you edited is a class component, which disables Fast Refresh.
+Fast Refresh requires at least one parent function component in your React tree. @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/hot-reloader-client.js:347
+[  600494ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[  600726ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///./node_modules/react-dom/cjs/react-dom.development.js:29834
+[  600773ms] Error: Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at getNotFoundError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/parseNotFoundError.js:124:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getModuleBuildError (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/webpackModuleError.js:104:27)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:29:49)
+    at async (file:///Users/nhattin/Develop/organick-fullstack/FE/node_modules/next/dist/build/webpack/plugins/wellknown-errors-plugin/index.js:27:21)
+[  600767ms] [LOG] [HMR] connected @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/pages/websocket.js:38
+[  600768ms] [ERROR] ./src/app/components/modalCart/index.tsx:14:1
+Module not found: Can't resolve '../coupon/ApplyCoupon'
+  12 | import { useEffect, useMemo, useState } from 'react'
+  13 | import { toast } from 'sonner'
+> 14 | import ApplyCoupon from '../coupon/ApplyCoupon'
+     | ^
+  15 | import './style.scss'
+  16 |
+  17 | type Props = {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/app/components/header/index.tsx @ webpack-internal:///./node_modules/next/dist/client/components/react-dev-overlay/internal/helpers/hydration-error-info.js:62

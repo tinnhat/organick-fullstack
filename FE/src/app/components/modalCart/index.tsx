@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import ApplyCoupon from '../coupon/ApplyCoupon'
+import ApplyCoupon from '../../../components/coupon/ApplyCoupon'
 import './style.scss'
 
 type Props = {

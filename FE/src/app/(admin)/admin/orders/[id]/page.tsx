@@ -34,7 +34,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import * as yup from 'yup'
-import BaseCard from '../../components/shared/BaseCard'
+import BaseCard from '../components/shared/BaseCard'
 import Loading from '../../loading'
 
 type MyFormValues = {

@@ -172,37 +172,6 @@ const applyCoupon = async (code: string, userId: string, orderAmount: number) =>
     throw error
   }
 }
-    discountAmount = Math.min(discountAmount, orderAmount)
-    finalAmount = orderAmount - discountAmount
-
-    const userObjectId = new ObjectId(userId)
-    const now = new Date()
-
-    const result = await couponModel.atomicApplyCoupon(
-      code.toUpperCase(),
-      userObjectId,
-      orderAmount,
-      coupon.minOrderAmount,
-      coupon.maxUses,
-      coupon.expiresAt,
-      userId
-    )
-
-    if (!result) {
-      throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to apply coupon - may be invalid, expired, or usage limit reached')
-    }
-
-    return responseData({
-      couponId: result.couponId,
-      couponCode: result.couponCode,
-      discountAmount,
-      originalAmount: orderAmount,
-      finalAmount
-    })
-  } catch (error) {
-    throw error
-  }
-}
 
 export const couponServices = {
   createCoupon,

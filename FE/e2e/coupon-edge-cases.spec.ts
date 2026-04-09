@@ -4,16 +4,29 @@ import { test, expect, Page } from '@playwright/test';
 test.describe('Coupon Edge Cases', () => {
   const loginIfNeeded = async (page: Page) => {
     if (page.url().includes('/login')) {
-      await page.fill('input[name="email"]', 'test@example.com');
-      await page.fill('input[name="password"]', 'password123');
-      await page.click('button[type="submit"]');
+      await page.fill('#email', 'admin@gmail.com');
+      await page.fill('#password', '123456789');
+      await page.click('form button:has-text("Login")');
       await page.waitForURL('**/');
     }
   };
 
   test('shows error for expired coupon', async ({ page }) => {
-    await page.goto('/checkout');
+    await page.goto('/shop');
     await loginIfNeeded(page);
+    await page.waitForTimeout(2000);
+
+    // Add item to cart
+    const productCard = page.locator('.products-grid > div').first();
+    await productCard.hover();
+    await page.waitForTimeout(500);
+    const addToCartButton = page.locator('[class*="product-overlay"] button').first();
+    await addToCartButton.click();
+    await page.waitForTimeout(500);
+
+    // Open cart modal
+    await page.locator('.cart-box').first().click();
+    await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
     if (await couponInput.isVisible({ timeout: 3000 })) {
@@ -27,8 +40,21 @@ test.describe('Coupon Edge Cases', () => {
   });
 
   test('shows error when coupon max uses exceeded', async ({ page }) => {
-    await page.goto('/checkout');
+    await page.goto('/shop');
     await loginIfNeeded(page);
+    await page.waitForTimeout(2000);
+
+    // Add item to cart
+    const productCard = page.locator('.products-grid > div').first();
+    await productCard.hover();
+    await page.waitForTimeout(500);
+    const addToCartButton = page.locator('[class*="product-overlay"] button').first();
+    await addToCartButton.click();
+    await page.waitForTimeout(500);
+
+    // Open cart modal
+    await page.locator('.cart-box').first().click();
+    await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
     if (await couponInput.isVisible({ timeout: 3000 })) {
@@ -42,8 +68,21 @@ test.describe('Coupon Edge Cases', () => {
   });
 
   test('user cannot use same coupon twice', async ({ page }) => {
-    await page.goto('/checkout');
+    await page.goto('/shop');
     await loginIfNeeded(page);
+    await page.waitForTimeout(2000);
+
+    // Add item to cart
+    const productCard = page.locator('.products-grid > div').first();
+    await productCard.hover();
+    await page.waitForTimeout(500);
+    const addToCartButton = page.locator('[class*="product-overlay"] button').first();
+    await addToCartButton.click();
+    await page.waitForTimeout(500);
+
+    // Open cart modal
+    await page.locator('.cart-box').first().click();
+    await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
     if (await couponInput.isVisible({ timeout: 3000 })) {
@@ -56,8 +95,22 @@ test.describe('Coupon Edge Cases', () => {
         await expect(discountElement).toBeVisible();
       }
 
+      // Reload page and try again
       await page.reload();
       await loginIfNeeded(page);
+      await page.waitForTimeout(2000);
+
+      // Add another item
+      const productCard2 = page.locator('.products-grid > div').first();
+      await productCard2.hover();
+      await page.waitForTimeout(500);
+      const addToCartButton2 = page.locator('[class*="product-overlay"] button').first();
+      await addToCartButton2.click();
+      await page.waitForTimeout(500);
+
+      // Open cart modal
+      await page.locator('.cart-box').first().click();
+      await page.waitForTimeout(500);
 
       const couponInputAfterReload = page.locator('[data-testid="coupon-input"]');
       if (await couponInputAfterReload.isVisible({ timeout: 3000 })) {
@@ -72,8 +125,21 @@ test.describe('Coupon Edge Cases', () => {
   });
 
   test('coupon only valid for minimum order amount', async ({ page }) => {
-    await page.goto('/checkout');
+    await page.goto('/shop');
     await loginIfNeeded(page);
+    await page.waitForTimeout(2000);
+
+    // Add item to cart
+    const productCard = page.locator('.products-grid > div').first();
+    await productCard.hover();
+    await page.waitForTimeout(500);
+    const addToCartButton = page.locator('[class*="product-overlay"] button').first();
+    await addToCartButton.click();
+    await page.waitForTimeout(500);
+
+    // Open cart modal
+    await page.locator('.cart-box').first().click();
+    await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
     if (await couponInput.isVisible({ timeout: 3000 })) {

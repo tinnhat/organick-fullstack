@@ -1,9 +1,7 @@
 // ============ FEATURE: websocket-chat START ============
-'use client'
 import Footer from '@/app/components/footer'
 import Header from '@/app/components/header'
 import NewLatter from '@/app/components/newslatter'
-import FloatingChatButton from '@/components/chat/FloatingChatButton'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -31,7 +29,6 @@ export default function ClientLayout({
       <AOSComponent>{children}</AOSComponent>
       <NewLatter />
       <Footer />
-      <FloatingChatButton />
     </>
   )
 }

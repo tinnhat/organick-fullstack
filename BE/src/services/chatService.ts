@@ -33,7 +33,7 @@ const getOrCreateConversation = async (userId: string) => {
 
 const findAdminUser = async () => {
   const { userModel } = await import('../models/userModel')
-  const users = await userModel.getUsers()
+  const { users } = await userModel.getUsers()
   const admin = users.find((u: any) => u.isAdmin === true)
   if (!admin) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Admin user not found')

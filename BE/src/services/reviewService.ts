@@ -67,7 +67,7 @@ const createReview = async (userId: string, productId: string, orderId: string, 
 }
 
 const findAdminUser = async () => {
-  const users = await userModel.getUsers()
+  const { users } = await userModel.getUsers()
   const admin = users.find((u: any) => u.isAdmin === true)
   return admin || null
 }

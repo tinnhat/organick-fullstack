@@ -1,0 +1,45 @@
+- generic [active]:
+  - alert [ref=e1]
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - heading "Build Error" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Failed to compile
+      - generic [ref=e9]:
+        - text: Next.js (14.2.35) is outdated
+        - link "(learn more)" [ref=e11] [cursor=pointer]:
+          - /url: https://nextjs.org/docs/messages/version-staleness
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - link "./src/app/(admin)/admin/orders/addOrder/index.tsx:27:1" [ref=e14] [cursor=pointer]:
+          - text: ./src/app/(admin)/admin/orders/addOrder/index.tsx:27:1
+          - img
+        - generic [ref=e18]:
+          - generic [ref=e19]: "Module not found: Can't resolve '../components/addProductCus'"
+          - generic [ref=e20]: 25 |
+          - text: import
+          - generic [ref=e21]: "{ toast }"
+          - text: from 'sonner'
+          - generic [ref=e22]: 26 |
+          - text: import * as
+          - generic [ref=e23]: yup
+          - text: from 'yup' >
+          - generic [ref=e24]: 27 |
+          - text: import AddProductCus from '../components/addProductCus'
+          - generic [ref=e25]: "|"
+          - text: ^
+          - generic [ref=e26]: 28 |
+          - text: import BaseCard from '../components/shared/BaseCard'
+          - generic [ref=e27]: 29 |
+          - generic [ref=e28]: 30 |
+          - generic [ref=e29]: type
+          - text: Props =
+          - generic [ref=e30]: "{"
+          - generic [ref=e31]:
+            - link "https://nextjs.org/docs/messages/module-not-found" [ref=e32] [cursor=pointer]:
+              - /url: https://nextjs.org/docs/messages/module-not-found
+            - text: "Import trace for requested module:"
+          - link "./src/app/(admin)/admin/orders/page.tsx" [ref=e33] [cursor=pointer]:
+            - text: ./src/app/(admin)/admin/orders/page.tsx
+            - img [ref=e34]
+      - contentinfo [ref=e38]:
+        - paragraph [ref=e39]: This error occurred during the build process and can only be dismissed by fixing the error.

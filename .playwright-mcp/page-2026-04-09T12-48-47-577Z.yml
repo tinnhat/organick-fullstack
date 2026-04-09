@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Organick" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - paragraph [ref=e6]: Organick
+      - img [ref=e8]
+      - generic [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+        - paragraph [ref=e14]: Cart(0)
+  - generic [ref=e18]:
+    - paragraph [ref=e19]: Welcome to Organick
+    - paragraph [ref=e20]: Login
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]: Email
+        - textbox "Email" [ref=e24]:
+          - /placeholder: Enter your email
+      - generic [ref=e25]:
+        - generic [ref=e26]: Password
+        - textbox "Password" [ref=e27]:
+          - /placeholder: Enter your password
+      - button "Login" [ref=e28] [cursor=pointer]
+    - paragraph [ref=e29]: Don't have an account ?Register Now
+  - generic [ref=e32]:
+    - paragraph [ref=e33]: Subscribe to our Newsletter
+    - generic [ref=e34]:
+      - textbox "Your email address" [ref=e35]
+      - button "Subscribe" [ref=e36] [cursor=pointer]
+  - contentinfo [ref=e37]:
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - paragraph [ref=e41]: Contact Us
+        - paragraph [ref=e42]: Email
+        - paragraph [ref=e43]: needhelp@Organia.com
+        - paragraph [ref=e44]: Phone
+        - paragraph [ref=e45]: 666 888 888
+        - paragraph [ref=e46]: Address
+        - paragraph [ref=e47]: 88 road, borklyn street, USA
+      - generic [ref=e48]:
+        - link "Organick" [ref=e49] [cursor=pointer]:
+          - /url: ""
+          - paragraph [ref=e50]: Organick
+        - paragraph [ref=e51]: Simply dummy text of the printing and typesetting industry. Lorem Ipsum simply dummy text of the printing
+        - generic [ref=e52]:
+          - img [ref=e53] [cursor=pointer]
+          - img [ref=e55] [cursor=pointer]
+          - img [ref=e57] [cursor=pointer]
+          - img [ref=e59] [cursor=pointer]
+      - generic [ref=e61]:
+        - paragraph [ref=e62]: Utility Pages
+        - paragraph [ref=e63]: Style Guide
+        - paragraph [ref=e64]: 404 Not Found
+        - paragraph [ref=e65]: Password Protected
+        - paragraph [ref=e66]: Licences
+        - paragraph [ref=e67]: Changelog
+  - generic [ref=e68]:
+    - img [ref=e70]
+    - button "Open Tanstack query devtools" [ref=e118] [cursor=pointer]:
+      - img [ref=e119]
+  - alert [ref=e167]
