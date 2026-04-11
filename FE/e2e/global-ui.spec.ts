@@ -16,10 +16,10 @@ class HeaderObject {
   constructor(readonly page: Page) {
     this.logo = page.locator('.header-logo');
     this.navMenu = page.locator('.header-menu-list');
-    this.cartIcon = page.locator('.cart-box').first();
-    this.cartBadge = page.locator('.cart-box-number');
-    this.wishlistIcon = page.locator('.wishlist-box').first();
-    this.wishlistBadge = page.locator('.wishlist-box-number');
+    this.cartIcon = page.locator('[aria-label="Cart"]').first();
+    this.cartBadge = page.locator('[aria-label="Cart"]');
+    this.wishlistIcon = page.locator('[aria-label="Wishlist"]').first();
+    this.wishlistBadge = page.locator('[aria-label="Wishlist"]');
     this.userDropdown = page.locator('.avatar-box').first();
     this.userMenuButton = page.locator('.avatar-box').first();
     this.mobileMenuToggle = page.locator('.header-menu-mobile').first();
@@ -30,8 +30,8 @@ class HeaderObject {
     const badge = this.cartBadge;
     if (await badge.isVisible()) {
       const text = await badge.textContent();
-      const match = text?.match(/Cart\((\d+)\)/);
-      return match ? parseInt(match[1]) : 0;
+      const match = text?.match(/\d+/);
+      return match ? parseInt(match[0]) : 0;
     }
     return 0;
   }
@@ -40,8 +40,8 @@ class HeaderObject {
     const badge = this.wishlistBadge;
     if (await badge.isVisible()) {
       const text = await badge.textContent();
-      const match = text?.match(/Wishlist\((\d+)\)/);
-      return match ? parseInt(match[1]) : 0;
+      const match = text?.match(/\d+/);
+      return match ? parseInt(match[0]) : 0;
     }
     return 0;
   }

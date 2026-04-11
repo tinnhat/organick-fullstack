@@ -25,15 +25,14 @@ class CartPageObject {
   }
 
   async openCartModal() {
-    await this.page.locator('.cart-box').first().click();
+    await this.page.locator('[aria-label="Cart"]').first().click();
     // Wait for modal to be visible
     await this.page.locator('.modalCart, [class*="cart-modal"]').waitFor({ state: 'visible', timeout: 5000 });
     await this.page.waitForTimeout(500);
   }
 
   async getCartBadgeCount(): Promise<number> {
-    // Badge shows "Cart(X)" format - extract the number
-    const badge = this.page.locator('.cart-box-number');
+    const badge = this.page.locator('[aria-label="Cart"]');
     await badge.waitFor({ state: 'visible', timeout: 5000 });
     const text = await badge.textContent() || '';
     const match = text.match(/\d+/);
@@ -114,7 +113,7 @@ test.describe('Cart Persistence', () => {
     // Wait for badge to update
     await page.waitForFunction(
       (prev) => {
-        const badge = document.querySelector('.cart-box-number');
+        const badge = document.querySelector('[aria-label="Cart"]');
         const text = badge?.textContent || '';
         const match = text.match(/\d+/);
         const count = match ? parseInt(match[0], 10) : 0;

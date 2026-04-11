@@ -1,9 +1,10 @@
 'use client'
 import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
 import useFetch from '@/app/utils/useFetch'
-import { faBars, faCartShopping } from '@fortawesome/free-solid-svg-icons'
+import { GearSix, Receipt, ShoppingCart, SignOut, User, Heart } from '@phosphor-icons/react'
+import { Badge, Menu, MenuItem } from '@mui/material'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FavoriteBorder } from '@mui/icons-material'
 import { useQuery } from '@tanstack/react-query'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
@@ -26,12 +27,20 @@ export default function Header() {
   const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
   const [showWishlist, setShowWishlist] = useState(false)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const router = useRouter()
   const handleShowCart = () => {
     setShowCart(true)
   }
   const handleShowWishlist = () => {
     setShowWishlist(true)
+  }
+  const open = Boolean(anchorEl)
+  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleMenuClose = () => {
+    setAnchorEl(null)
   }
 
   return (
@@ -69,14 +78,28 @@ export default function Header() {
             })}
           </ul>
           <div className='header-box-cart'>
-            <div className='wishlist-box' onClick={handleShowWishlist}>
-              <FavoriteBorder className='wishlist-icon' />
-              <p className='wishlist-box-number'>Wishlist({wishlist ? wishlist.length : 0})</p>
-            </div>
-            <div className='cart-box' onClick={handleShowCart}>
-              <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
-              <p className='cart-box-number'>Cart({userCart ? userCart.length : 0})</p>
-            </div>
+            <Badge
+              badgeContent={wishlist && wishlist.length > 0 ? wishlist.length : 0}
+              color='error'
+              sx={{
+                '& .MuiBadge-badge': { fontSize: '10px', height: '16px', minWidth: '16px' },
+              }}
+            >
+              <div className='icon-btn' onClick={handleShowWishlist} role='button' aria-label='Wishlist'>
+                <Heart size={22} />
+              </div>
+            </Badge>
+            <Badge
+              badgeContent={userCart && userCart.length > 0 ? userCart.length : 0}
+              color='error'
+              sx={{
+                '& .MuiBadge-badge': { fontSize: '10px', height: '16px', minWidth: '16px' },
+              }}
+            >
+              <div className='icon-btn' onClick={handleShowCart} role='button' aria-label='Cart'>
+                <ShoppingCart size={22} />
+              </div>
+            </Badge>
             {status === 'authenticated' ? (
               <div className='avatar-box'>
                 {isLoading ? (
@@ -93,24 +116,40 @@ export default function Header() {
                       borderRadius: '50%',
                       cursor: 'pointer',
                     }}
+                    onClick={handleAvatarClick}
                   />
                 )}
-                <div className='avatar-menu'>
-                  <div className='item' onClick={() => router.push('/my-account')}>
-                    My account
-                  </div>
-                  <div className='item' onClick={() => router.push('/order-history')}>
-                    Order History
-                  </div>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleMenuClose}
+                  onClick={handleMenuClose}
+                  PaperProps={{
+                    sx: {
+                      mt: 1,
+                      minWidth: 180,
+                      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+                      borderRadius: '8px',
+                    },
+                  }}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                  <MenuItem onClick={() => { router.push('/my-account'); handleMenuClose(); }}>
+                    <User size={18} style={{ marginRight: 10 }} /> My Account
+                  </MenuItem>
+                  <MenuItem onClick={() => { router.push('/order-history'); handleMenuClose(); }}>
+                    <Receipt size={18} style={{ marginRight: 10 }} /> Order History
+                  </MenuItem>
                   {userInfo?.isAdmin && (
-                    <div className='item' onClick={() => router.push('/admin')}>
-                      Admin
-                    </div>
+                    <MenuItem onClick={() => { router.push('/admin'); handleMenuClose(); }}>
+                      <GearSix size={18} style={{ marginRight: 10 }} /> Admin
+                    </MenuItem>
                   )}
-                  <div className='item' onClick={() => signOut()}>
-                    Logout
-                  </div>
-                </div>
+                  <MenuItem onClick={() => signOut()}>
+                    <SignOut size={18} style={{ marginRight: 10 }} /> Logout
+                  </MenuItem>
+                </Menu>
               </div>
             ) : status === 'loading' ? (
               <div className='loading-container'>

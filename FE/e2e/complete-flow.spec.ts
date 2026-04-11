@@ -36,11 +36,11 @@ test.describe('Complete Purchase Flow', () => {
     await page.waitForTimeout(500);
     
     // Verify cart badge shows item was added
-    const cartBadge = page.locator('.cart-box-number');
+    const cartBadge = page.locator('[aria-label="Cart"]');
     await expect(cartBadge).toBeVisible();
 
     // Step 3: Open cart modal via header cart icon
-    const cartIcon = page.locator('.cart-box').first();
+    const cartIcon = page.locator('[aria-label="Cart"]').first();
     await cartIcon.click();
     await page.waitForTimeout(500);
     

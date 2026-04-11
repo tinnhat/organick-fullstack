@@ -28,7 +28,7 @@ test.describe('Checkout', () => {
     await page.waitForTimeout(500);
 
     // Open cart modal
-    await page.locator('.cart-box').first().click();
+    await page.locator('[aria-label="Cart"]').first().click();
     await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
@@ -58,7 +58,7 @@ test.describe('Checkout', () => {
     await page.waitForTimeout(500);
 
     // Open cart modal
-    await page.locator('.cart-box').first().click();
+    await page.locator('[aria-label="Cart"]').first().click();
     await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
@@ -86,7 +86,7 @@ test.describe('Checkout', () => {
     await page.waitForTimeout(500);
 
     // Open cart modal
-    await page.locator('.cart-box').first().click();
+    await page.locator('[aria-label="Cart"]').first().click();
     await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
@@ -114,7 +114,7 @@ test.describe('Checkout', () => {
     await page.waitForTimeout(500);
 
     // Open cart modal
-    await page.locator('.cart-box').first().click();
+    await page.locator('[aria-label="Cart"]').first().click();
     await page.waitForTimeout(500);
 
     const couponInput = page.locator('[data-testid="coupon-input"]');
@@ -146,7 +146,7 @@ test.describe('Checkout', () => {
     await page.waitForTimeout(500);
 
     // Open cart modal
-    await page.locator('.cart-box').first().click();
+    await page.locator('[aria-label="Cart"]').first().click();
     await page.waitForTimeout(500);
 
     const cartItems = page.locator('.modalCart .item');

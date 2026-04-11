@@ -132,7 +132,7 @@ test.describe('Product Detail Page', () => {
       await expect(toast).toBeVisible({ timeout: 5000 });
       await expect(toast).toContainText(/Added to cart|cart/i);
 
-      const cartBadge = page.locator('.cart-box-number');
+      const cartBadge = page.locator('[aria-label="Cart"]');
       await expect(cartBadge).toBeVisible();
     }
   });

@@ -43,7 +43,7 @@ test.describe('Shop Page', () => {
       if (await addToCartButton.isVisible({ timeout: 2000 })) {
         await addToCartButton.click();
         await page.waitForTimeout(300);
-        const badge = page.locator('.cart-box-number');
+        const badge = page.locator('[aria-label="Cart"]');
         await expect(badge).toBeVisible();
       }
     }

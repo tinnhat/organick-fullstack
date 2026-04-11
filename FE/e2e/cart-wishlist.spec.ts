@@ -12,9 +12,9 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
 
   const getToast = (page: Page) => page.locator('[data-sonner-toast]').first();
 
-  // Helper to extract cart count from badge text like "Cart(3)"
+  // Helper to extract cart count from badge
   const getCartCount = async (page: Page): Promise<number> => {
-    const badge = page.locator('.cart-box-number');
+    const badge = page.locator('[aria-label="Cart"]');
     const text = await badge.textContent() || '';
     const match = text.match(/\d+/);
     return match ? parseInt(match[0]) : 0;
@@ -40,7 +40,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     const toast = getToast(page);
     await expect(toast).toBeVisible({ timeout: 5000 });
 
-    const cartBadge = page.locator('.cart-box-number');
+    const cartBadge = page.locator('[aria-label="Cart"]');
     await expect(cartBadge).toBeVisible();
     const badgeCount = await getCartCount(page);
     expect(badgeCount).toBeGreaterThan(0);
@@ -110,7 +110,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     await expect(toast).toContainText(/wishlist/i);
 
     // Verify wishlist count increased
-    const wishlistBadge = page.locator('.wishlist-box-number');
+    const wishlistBadge = page.locator('[aria-label="Wishlist"]');
     if (await wishlistBadge.isVisible()) {
       const wishlistText = await wishlistBadge.textContent() || '';
       const match = wishlistText.match(/\d+/);
@@ -135,7 +135,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     await page.waitForTimeout(1000);
 
     // Click the wishlist icon in header
-    const wishlistIcon = page.locator('.wishlist-box').first();
+    const wishlistIcon = page.locator('[aria-label="Wishlist"]').first();
     await wishlistIcon.click();
     await page.waitForTimeout(1000);
 
@@ -152,7 +152,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     await addToCartFromWishlist.click();
     await page.waitForTimeout(1000);
 
-    const cartBadge = page.locator('.cart-box-number');
+    const cartBadge = page.locator('[aria-label="Cart"]');
     await expect(cartBadge).toBeVisible();
 
     // Remove button uses className='btn-remove'
@@ -185,7 +185,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     await page.waitForTimeout(1000);
 
     // Open wishlist
-    const wishlistIcon = page.locator('.wishlist-box').first();
+    const wishlistIcon = page.locator('[aria-label="Wishlist"]').first();
     await wishlistIcon.click();
     await page.waitForTimeout(1000);
 
@@ -210,7 +210,7 @@ test.describe('Cart, Quick View, and Wishlist Features', () => {
     }
     await page.waitForTimeout(500);
 
-    const cartIcon = page.locator('.cart-box').first();
+    const cartIcon = page.locator('[aria-label="Cart"]').first();
     await cartIcon.click();
     await page.waitForTimeout(1000);
 
