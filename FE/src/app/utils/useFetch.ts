@@ -5,25 +5,32 @@ import { toast } from 'sonner'
 
 const useFetch = () => {
   const { data: session, status, update } = useSession()
-  let accessToken = session?.user.access_token
+  // Use a ref to always get the latest accessToken from session
+  // This avoids stale closures where accessToken is captured once at mount
 
   let baseURL = process.env.HOST_BE
 
   let originalRequest = async (url: string, config: any = {}) => {
-    let response = await fetch(`${baseURL}${url}`, config)
-    let data = await response.json()
-    return { response, data }
+    try {
+      let response = await fetch(`${baseURL}${url}`, config)
+      let data = await response.json()
+      return { response, data }
+    } catch (error) {
+      console.error('Request failed:', error)
+      return { response: null, data: null }
+    }
   }
 
   let refreshToken = async (accessToken: any) => {
-    const refreshTokenValue = session?.user.refreshToken
+    // Always get fresh refreshToken from session to avoid stale closures
+    const refreshTokenValue = session?.user?.refreshToken
     //check refresh token con han hay khong
     //neu con han thi kep vao header api get refresh token len server de cap nhat lai token moi
     //neu het han thi redirect nguoi dung ve login -> goi ham logout
     if (!refreshTokenValue) {
       signOut()
       toast.error('Please login again', { position: 'bottom-right' })
-      return
+      return null
     }
     let userRefresh: any
     try {
@@ -31,13 +38,13 @@ const useFetch = () => {
     } catch (error) {
       signOut()
       toast.error('Please login again', { position: 'bottom-right' })
-      return
+      return null
     }
     const isExpired = dayjs.unix(userRefresh.exp!).diff(dayjs()) < 1
     if (isExpired) {
       signOut()
       toast.error('Please login again', { position: 'bottom-right' })
-      return
+      return null
     }
     try {
       let response = await fetch(`${baseURL}/auth/refresh`, {
@@ -58,14 +65,18 @@ const useFetch = () => {
         },
       })
       return result
-     } catch (error) {
+    } catch (error) {
       //signout
       signOut()
       toast.error('Please login again', { position: 'bottom-right' })
+      return null
     }
   }
 
   let callFetch = async (url: string, config: any) => {
+    // Always get fresh accessToken from session
+    let accessToken = session?.user?.access_token
+    
     if (!accessToken) {
       return null
     }

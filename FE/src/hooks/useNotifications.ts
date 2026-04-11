@@ -6,7 +6,7 @@ import { Notification } from '@/app/type.d'
 import { toast } from 'sonner'
 
 export const useNotifications = () => {
-  const { socket, isConnected } = useSocket()
+  const { socket, isConnected } = useSocket() as { socket: any; isConnected: boolean }
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -16,21 +16,31 @@ export const useNotifications = () => {
     setNotifications((prev) =>
       prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
     )
-    socket?.emit('markNotificationAsRead', { notificationId: id })
-  }, [socket])
+    // Only emit if socket exists and is connected
+    if (socket && isConnected) {
+      socket.emit('markNotificationAsRead', { notificationId: id })
+    }
+  }, [socket, isConnected])
 
   const markAllAsRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
-    socket?.emit('markAllNotificationsAsRead')
-  }, [socket])
+    // Only emit if socket exists and is connected
+    if (socket && isConnected) {
+      socket.emit('markAllNotificationsAsRead')
+    }
+  }, [socket, isConnected])
 
   const deleteNotification = useCallback((id: string) => {
     setNotifications((prev) => prev.filter((n) => n._id !== id))
-    socket?.emit('deleteNotification', { notificationId: id })
-  }, [socket])
+    // Only emit if socket exists and is connected
+    if (socket && isConnected) {
+      socket.emit('deleteNotification', { notificationId: id })
+    }
+  }, [socket, isConnected])
 
   useEffect(() => {
-    if (!socket) return
+    // Don't run if socket doesn't exist or isn't connected
+    if (!socket || !isConnected) return
 
     const handleNewNotification = (notification: Notification) => {
       setNotifications((prev) => [notification, ...prev])
@@ -64,7 +74,7 @@ export const useNotifications = () => {
       socket.off('notification', handleNewNotification)
       socket.off('notificationsList', handleNotificationsList)
     }
-  }, [socket])
+  }, [socket, isConnected])
 
   return {
     notifications,

@@ -11,11 +11,15 @@ export const useGetOrdersQuery = (fetchApi: any) =>
           'Content-Type': 'application/json',
         },
       })
-      if (res.data.hasOwnProperty('message')) {
+      // Handle null response (e.g., no access token)
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -29,11 +33,14 @@ export const useGetOrderDetailQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 export const useCreateOrderMutation = (fetchApi: any) =>
@@ -46,11 +53,14 @@ export const useCreateOrderMutation = (fetchApi: any) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -69,11 +79,14 @@ export const useGetOrdersOfUserQuery = (
           'Content-Type': 'application/json',
         },
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -87,11 +100,14 @@ export const useGetAllOrdersOfUserQuery = (fetchApi: any, id: string) =>
           'Content-Type': 'application/json',
         },
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -105,11 +121,14 @@ export const useCreateOrderByAdminMutation = (fetchApi: any) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -123,11 +142,14 @@ export const useUpdateOrderByAdminMutation = (fetchApi: any, id: string) =>
         },
         body: JSON.stringify(data),
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -137,11 +159,14 @@ export const useDeleteOrderMutation = (fetchApi: any) =>
       const res = await fetchApi(`/orders/${id}`, {
         method: 'DELETE',
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
 
@@ -155,11 +180,13 @@ export const useCancelOrderMutation = (fetchApi: any) =>
         },
         body: JSON.stringify({ status: 'Cancel' }),
       })
-      if (res.data.hasOwnProperty('message')) {
+      if (!res) {
+        return null
+      }
+      if (res.data && res.data.hasOwnProperty('message')) {
         toast.error(res.data.message, { position: 'bottom-right' })
         return
       }
-      return res.data.data
+      return res.data?.orders
     },
   })
-
