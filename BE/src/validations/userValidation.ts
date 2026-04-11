@@ -30,14 +30,8 @@ const createNew = async (req: Request, res: Response, next: any) => {
       'any.required': 'Password is required',
       'string.empty': 'Password cannot be an empty field'
     }),
-    isConfirmed: Joi.boolean().valid(true, false).messages({
-      'any.required': 'isConfirmed is required',
-      'any.only': 'isConfirmed must be true'
-    }),
-    isAdmin: Joi.boolean().valid(true, false).messages({
-      'any.required': 'isAdmin is required',
-      'any.only': 'isAdmin must be true'
-    }),
+    isConfirmed: Joi.boolean().valid(true, false).optional(),
+    isAdmin: Joi.boolean().valid(true, false).optional(),
     file: Joi.any().optional()
   })
   try {
@@ -175,6 +169,50 @@ const resetPassword = async (req: any, res: Response, next: any) => {
   }
 }
 
+const forgotPassword = async (req: any, res: Response, next: any) => {
+  const check = Joi.object({
+    email: Joi.string().required().email().trim().strict().messages({
+      'string.email': 'Email must be a valid email',
+      'string.base': 'Email must be a string',
+      'any.required': 'Email is required',
+      'string.empty': 'Email cannot be an empty field'
+    })
+  })
+  try {
+    await check.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
+const resetPasswordWithToken = async (req: any, res: Response, next: any) => {
+  const check = Joi.object({
+    token: Joi.string().required().messages({
+      'string.base': 'Token must be a string',
+      'any.required': 'Token is required'
+    }),
+    newPassword: Joi.string().required().min(6).max(50).trim().strict().messages({
+      'string.min': 'Password must be at least 6 characters long',
+      'string.max': 'Password must be at most 50 characters long',
+      'string.trim': 'Password must not have leading or trailing spaces',
+      'string.base': 'Password must be a string',
+      'any.required': 'Password is required',
+      'string.empty': 'Password cannot be an empty field'
+    })
+  })
+  try {
+    await check.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    const errorMessage = new Error(String(error)).message
+    const customError = new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage)
+    next(customError)
+  }
+}
+
 export const userValidation = {
   createNew,
   login,
@@ -182,5 +220,7 @@ export const userValidation = {
   editUserInfo,
   verifyEmail,
   changePassword,
-  resetPassword
+  resetPassword,
+  forgotPassword,
+  resetPasswordWithToken
 }

@@ -83,6 +83,24 @@ const resetPassword = async (req: Request, res: Response, next: any) => {
   }
 }
 
+const forgotPassword = async (req: Request, res: Response, next: any) => {
+  try {
+    const result = await userServices.forgotPassword(req.body.email)
+    res.status(StatusCodes.OK).json(result)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const resetPasswordWithToken = async (req: Request, res: Response, next: any) => {
+  try {
+    const result = await userServices.resetPasswordWithToken(req.body.token, req.body.newPassword)
+    res.status(StatusCodes.OK).json(result)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export const userController = {
   createNew,
   login,
@@ -92,5 +110,7 @@ export const userController = {
   verifyEmail,
   deleteUserById,
   changePassword,
-  resetPassword
+  resetPassword,
+  forgotPassword,
+  resetPasswordWithToken
 }

@@ -16,7 +16,10 @@ const USER_SCHEMA = Joi.object({
   avatar: Joi.string().uri().default(DEFAULT_AVATAR),
   refreshToken: Joi.string(),
   emailToken: Joi.string(),
-  _destroy: Joi.boolean().default(false)
+  resetPasswordToken: Joi.string(),
+  resetPasswordExpires: Joi.date().timestamp('javascript').allow(null),
+  _destroy: Joi.boolean().default(false),
+  wishlist: Joi.array().items(Joi.string()).default([])
 })
 
 const createNew = async (data: any) => {
@@ -163,6 +166,99 @@ const updateRefreshToken = async (userId: string, newRefreshToken: string) => {
   }
 }
 
+const getWishlist = async (userId: string) => {
+  try {
+    const user = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(userId) }, { projection: { wishlist: 1 } })
+    return user?.wishlist || []
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const addToWishlist = async (userId: string, productId: string) => {
+  try {
+    await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne({ _id: new ObjectId(userId) }, { $addToSet: { wishlist: productId } })
+    return getWishlist(userId)
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const removeFromWishlist = async (userId: string, productId: string) => {
+  try {
+    await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne({ _id: new ObjectId(userId) }, { $pull: { wishlist: productId } })
+    return getWishlist(userId)
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const toggleWishlist = async (userId: string, productId: string) => {
+  try {
+    const user = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(userId) }, { projection: { wishlist: 1 } })
+    const isInWishlist = user?.wishlist?.includes(productId)
+    if (isInWishlist) {
+      await getDB()
+        .collection(USER_COLLECTION_NAME)
+        .updateOne({ _id: new ObjectId(userId) }, { $pull: { wishlist: productId } })
+    } else {
+      await getDB()
+        .collection(USER_COLLECTION_NAME)
+        .updateOne({ _id: new ObjectId(userId) }, { $addToSet: { wishlist: productId } })
+    }
+    return !isInWishlist
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const findOneByResetToken = async (resetPasswordToken: string) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ 
+        resetPasswordToken,
+        resetPasswordExpires: { $gt: Date.now() }
+      })
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
+const updatePasswordWithToken = async (resetPasswordToken: string, newPassword: string) => {
+  try {
+    const result = await getDB()
+      .collection(USER_COLLECTION_NAME)
+      .findOneAndUpdate(
+        { 
+          resetPasswordToken,
+          resetPasswordExpires: { $gt: Date.now() }
+        },
+        { 
+          $set: { 
+            password: newPassword,
+            resetPasswordToken: null,
+            resetPasswordExpires: null,
+            updatedAt: Date.now()
+          }
+        }
+      )
+    if (!result) return null
+    return result
+  } catch (error) {
+    throw new Error(error as string)
+  }
+}
+
 export const userModel = {
   createNew,
   findOneById,
@@ -174,5 +270,11 @@ export const userModel = {
   findAndRemove,
   checkRefreshToken,
   updateRefreshToken,
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  toggleWishlist,
+  findOneByResetToken,
+  updatePasswordWithToken,
   USER_COLLECTION_NAME
 }

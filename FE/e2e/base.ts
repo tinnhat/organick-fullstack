@@ -12,10 +12,10 @@ export const test = base.extend<{
   loginAsUser: async ({ page }, use) => {
     await use(async () => {
       await page.goto('/login');
-      await page.fill('#email', 'admin@gmail.com');
+      await page.fill('#email', 'tin1234@gmail.com');
       await page.fill('#password', '123456789');
       await page.click('form button:has-text("Login")');
-      await page.waitForURL('**/', { timeout: 10000 });
+      await page.waitForURL(/\/(home|admin)/, { timeout: 10000 });
     });
   },
   
@@ -25,7 +25,7 @@ export const test = base.extend<{
       await page.fill('#email', 'admin@gmail.com');
       await page.fill('#password', '123456789');
       await page.click('form button:has-text("Login")');
-      await page.waitForURL('**/admin**', { timeout: 10000 });
+      await page.waitForURL(/\/admin/, { timeout: 10000 });
     });
   },
   

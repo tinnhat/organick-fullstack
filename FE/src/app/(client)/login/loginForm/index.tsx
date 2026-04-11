@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type Props = {
   setShowRegister: (value: boolean) => void
@@ -68,6 +69,9 @@ export default function LoginForm({ setShowRegister }: Props) {
             onChange={e => setPassword(e.target.value)}
             required
           />
+        </div>
+        <div className='forgot-password'>
+          <Link href='/login/forgotPassword'>Forgot Password?</Link>
         </div>
         <button disabled={isLoading} className={`btn-create-account ${isLoading ? 'loading' : ''}`}>Login</button>
       </form>

@@ -16,7 +16,7 @@ import {
 import { Form, Formik } from 'formik'
 import { useParams, useRouter } from 'next/navigation'
 import * as yup from 'yup'
-import BaseCard from '../components/shared/BaseCard'
+import BaseCard from '../../components/shared/BaseCard'
 import { useState } from 'react'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import useFetch from '@/app/utils/useFetch'

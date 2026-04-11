@@ -31,7 +31,7 @@ export const useAddReviewMutation = (fetchApi: any) =>
       rating: number
       comment: string
     }) => {
-      const res = await fetchApi(`/reviews`, {
+      const res = await fetchApi('/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, rating, comment }),

@@ -13,9 +13,8 @@ const createNew = async (req: Request, res: Response, next: NextFunction) => {
       'any.required': 'Product id is required',
       'string.empty': 'Product id cannot be an empty field'
     }),
-    orderId: Joi.string().required().messages({
+    orderId: Joi.string().optional().messages({
       'string.base': 'Order id must be a string',
-      'any.required': 'Order id is required',
       'string.empty': 'Order id cannot be an empty field'
     }),
     rating: Joi.number().required().min(1).max(5).messages({

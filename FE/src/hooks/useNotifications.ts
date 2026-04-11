@@ -42,7 +42,7 @@ export const useNotifications = () => {
             if (notification.type === 'order') {
               window.location.href = `/admin/orders/${notification.relatedId}`
             } else if (notification.type === 'chat') {
-              window.location.href = `/admin/chat`
+              window.location.href = '/admin/chat'
             }
           },
         } : undefined,

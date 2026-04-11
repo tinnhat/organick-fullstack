@@ -24,17 +24,39 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [socket, setSocket] = useState<Socket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const { data: session } = useSession()
-  const listenersRef = useRef(0)
+  // Use ref to track the current socket instance to avoid stale closures
+  const socketRef = useRef<Socket | null>(null)
 
   useEffect(() => {
-    if (!session?.user?.access_token) return
+    const accessToken = session?.user?.access_token
 
+    // If no access token, clean up any existing socket
+    if (!accessToken) {
+      if (socketRef.current) {
+        socketRef.current.disconnect()
+        socketRef.current = null
+        setSocket(null)
+        setIsConnected(false)
+      }
+      return
+    }
+
+    // Create new socket connection
     const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
       auth: {
-        token: session.user.access_token,
+        token: accessToken,
       },
       transports: ['websocket', 'polling'],
+      // Timeout settings to prevent hanging
+      timeout: 10000,
+      // Auto reconnect settings
+      reconnection: true,
+      reconnectionAttempts: 3,
+      reconnectionDelay: 1000,
     })
+
+    // Store socket in ref
+    socketRef.current = socketInstance
 
     const handleConnect = () => {
       console.log('Socket connected:', socketInstance.id)
@@ -47,23 +69,33 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     }
 
     const handleConnectError = (error: Error) => {
-      console.error('Socket connection error:', error)
+      console.error('Socket connection error:', error.message)
       setIsConnected(false)
+      // Don't throw - handle gracefully
     }
 
     socketInstance.on('connect', handleConnect)
     socketInstance.on('disconnect', handleDisconnect)
     socketInstance.on('connect_error', handleConnectError)
-    listenersRef.current += 3
 
     setSocket(socketInstance)
 
+    // Cleanup function
     return () => {
+      // Remove listeners first to prevent memory leaks
       socketInstance.off('connect', handleConnect)
       socketInstance.off('disconnect', handleDisconnect)
       socketInstance.off('connect_error', handleConnectError)
-      listenersRef.current -= 3
-      socketInstance.disconnect()
+      
+      // Safely disconnect the socket
+      if (socketInstance.connected) {
+        socketInstance.disconnect()
+      }
+      
+      // Clear the ref
+      if (socketRef.current === socketInstance) {
+        socketRef.current = null
+      }
     }
   }, [session?.user?.access_token])
 

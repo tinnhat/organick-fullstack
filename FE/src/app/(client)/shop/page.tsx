@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 import { useGetAllProductsQuery } from '@/app/utils/hooks/productsHooks'
 import { FilterSidebar } from '@/components/shop'
 import { ProductCardNew } from '@/components/product'
+import ModalQuickView from '@/components/quickViewModal'
 import { SortOption } from '@/components/shop/SortFilter'
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
@@ -43,9 +44,21 @@ export default function ShopPage() {
   const [pageNumber, setPageNumber] = useState(0)
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [showQuickView, setShowQuickView] = useState(false)
 
   const { data: allProducts, isLoading, isError } = useGetAllProductsQuery()
   const router = useRouter()
+
+  const handleQuickView = (product: Product) => {
+    setQuickViewProduct(product)
+    setShowQuickView(true)
+  }
+
+  const handleCloseQuickView = () => {
+    setShowQuickView(false)
+    setQuickViewProduct(null)
+  }
 
   const productPerPage = 12
   const pagesVisited = pageNumber * productPerPage
@@ -210,7 +223,7 @@ export default function ShopPage() {
                   <Grid container spacing={3} className='products-grid'>
                     {displayProducts.map((product: Product) => (
                       <Grid item xs={12} sm={6} lg={4} key={product._id}>
-                        <ProductCardNew product={product} />
+                        <ProductCardNew product={product} onQuickView={handleQuickView} />
                       </Grid>
                     ))}
                   </Grid>
@@ -246,6 +259,8 @@ export default function ShopPage() {
           </Grid>
         </Box>
       </Container>
+
+      <ModalQuickView product={quickViewProduct} open={showQuickView} onClose={handleCloseQuickView} />
     </Box>
     // ============ FEATURE: shop-ui END ============
   )

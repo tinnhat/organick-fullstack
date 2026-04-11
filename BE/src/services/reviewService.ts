@@ -10,22 +10,24 @@ import ApiError from '../utils/ApiError'
 import { responseData } from '../utils/algorithms'
 /* eslint-disable no-useless-catch */
 
-const createReview = async (userId: string, productId: string, orderId: string, rating: number, comment?: string) => {
+const createReview = async (userId: string, productId: string, orderId: string | undefined, rating: number, comment?: string) => {
   try {
     const userOrders = await orderModel.getOrdersByUser(userId, 1, 100)
-    if (!userOrders || userOrders.data.length === 0) {
+    if (!userOrders || userOrders.length === 0) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'You have not purchased this product')
     }
 
-    const hasCompletedOrder = userOrders.data.some((order: any) => {
-      const hasProduct = order.listProducts.some((p: any) => p._id === productId)
+    const completedOrderWithProduct = userOrders.find((order: any) => {
+      const hasProduct = order.listProducts?.some((p: any) => p._id === productId)
       const isCompleted = order.status === 'Completed' || order.status === 'Delivered' || order.status === 'Complete'
       return hasProduct && isCompleted
     })
 
-    if (!hasCompletedOrder) {
+    if (!completedOrderWithProduct) {
       throw new ApiError(StatusCodes.BAD_REQUEST, 'You can only review products from completed or delivered orders')
     }
+
+    const finalOrderId = orderId || completedOrderWithProduct._id.toString()
 
     const existingReview = await reviewModel.findOneByUserAndProduct(userId, productId)
     if (existingReview) {
@@ -38,7 +40,7 @@ const createReview = async (userId: string, productId: string, orderId: string, 
     const review = await reviewModel.createNew({
       userId: new ObjectId(userId),
       productId: new ObjectId(productId),
-      orderId: new ObjectId(orderId),
+      orderId: new ObjectId(finalOrderId),
       rating,
       comment: comment || '',
       createdAt,
@@ -147,12 +149,12 @@ const getProductReviews = async (productId: string, page: number, limit: number)
 const canUserReviewProduct = async (userId: string, productId: string) => {
   try {
     const userOrders = await orderModel.getOrdersByUser(userId, 1, 100)
-    if (!userOrders || userOrders.data.length === 0) {
+    if (!userOrders || userOrders.length === 0) {
       return { canReview: false, reason: 'No orders found' }
     }
 
-    const hasCompletedOrder = userOrders.data.some((order: any) => {
-      const hasProduct = order.listProducts.some((p: any) => p._id === productId)
+    const hasCompletedOrder = userOrders.some((order: any) => {
+      const hasProduct = order.listProducts?.some((p: any) => p._id === productId)
       const isCompleted = order.status === 'Completed' || order.status === 'Delivered' || order.status === 'Complete'
       return hasProduct && isCompleted
     })

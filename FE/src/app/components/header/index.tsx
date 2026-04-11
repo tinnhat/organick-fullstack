@@ -3,6 +3,7 @@ import { useGetUserInfoQuery } from '@/app/utils/hooks/usersHooks'
 import useFetch from '@/app/utils/useFetch'
 import { faBars, faCartShopping } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FavoriteBorder } from '@mui/icons-material'
 import { useQuery } from '@tanstack/react-query'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
@@ -10,6 +11,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import ModalCart from '../modalCart'
+import ModalWishlist from '../../../components/wishlistModal'
 import './style.scss'
 import { DotLoader } from 'react-spinners'
 
@@ -18,13 +20,18 @@ const paths = ['/home', '/about', '/shop', '/portfolio', '/services', '/quality'
 export default function Header() {
   const fetchApi = useFetch()
   const { data: userCart } = useQuery<any>({ queryKey: ['User Cart'] })
+  const { data: wishlist } = useQuery<any>({ queryKey: ['User Wishlist'] })
   const { data: session, status } = useSession()
   const { data: userInfo, isLoading } = useGetUserInfoQuery(fetchApi, session?.user?._id)
   const pathName = usePathname()
   const [showCart, setShowCart] = useState(false)
+  const [showWishlist, setShowWishlist] = useState(false)
   const router = useRouter()
   const handleShowCart = () => {
     setShowCart(true)
+  }
+  const handleShowWishlist = () => {
+    setShowWishlist(true)
   }
 
   return (
@@ -62,6 +69,10 @@ export default function Header() {
             })}
           </ul>
           <div className='header-box-cart'>
+            <div className='wishlist-box' onClick={handleShowWishlist}>
+              <FavoriteBorder className='wishlist-icon' />
+              <p className='wishlist-box-number'>Wishlist({wishlist ? wishlist.length : 0})</p>
+            </div>
             <div className='cart-box' onClick={handleShowCart}>
               <FontAwesomeIcon icon={faCartShopping} className='cart-box-icon' />
               <p className='cart-box-number'>Cart({userCart ? userCart.length : 0})</p>
@@ -111,6 +122,7 @@ export default function Header() {
               </button>
             )}
             {showCart && <ModalCart setShowCart={setShowCart} />}
+            {showWishlist && <ModalWishlist open={showWishlist} onClose={() => setShowWishlist(false)} />}
           </div>
         </div>
       </div>

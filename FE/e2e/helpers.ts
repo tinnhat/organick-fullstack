@@ -21,7 +21,7 @@ export async function login(page: Page, userType: 'regular' | 'admin' = 'regular
   await page.fill('#email', user.email);
   await page.fill('#password', user.password);
   await page.click('form button:has-text("Login")');
-  await page.waitForURL('**/', { timeout: 10000 });
+  await page.waitForURL(/\/(home|admin)/, { timeout: 10000 });
 }
 
 export async function logout(page: Page) {

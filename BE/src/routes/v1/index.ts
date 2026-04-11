@@ -9,6 +9,7 @@ import { reviewRoute } from './reviewRoute'
 import { notificationRoute } from './notificationRoute'
 import { chatRoute } from './chatRoute'
 import { couponRoute } from './couponRoute'
+import { wishlistRoute } from './wishlistRoute'
 
 const Router = express.Router()
 
@@ -35,5 +36,7 @@ Router.use('/notifications', notificationRoute)
 Router.use('/chat', chatRoute)
 
 Router.use('/coupons', couponRoute)
+
+Router.use('/wishlist', wishlistRoute)
 
 export const APIs_V1 = Router

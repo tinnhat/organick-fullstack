@@ -23,3 +23,4 @@ BE/.env
 FE/.env
 BE/.env.local
 FE/.env.local
+.playwright-mcp/

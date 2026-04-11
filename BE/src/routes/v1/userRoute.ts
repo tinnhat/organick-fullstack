@@ -19,8 +19,14 @@ Router.post('/verify-email', userValidation.verifyEmail, userController.verifyEm
 //change password
 Router.put('/change-password/:id', Auth, userValidation.changePassword, userController.changePassword)
 
-//reset password
+//reset password (admin only)
 Router.post('/reset-password', Auth, AdminAuth, userValidation.resetPassword, userController.resetPassword)
+
+//forgot password (public)
+Router.post('/forgot-password', userValidation.forgotPassword, userController.forgotPassword)
+
+//reset password with token (public)
+Router.post('/reset-password-with-token', userValidation.resetPasswordWithToken, userController.resetPasswordWithToken)
 
 //login
 Router.post('/login', userValidation.login, userController.login)

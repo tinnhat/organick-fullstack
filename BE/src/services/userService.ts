@@ -1,12 +1,12 @@
 import bcrypt, { hashSync } from 'bcryptjs'
+import crypto from 'crypto'
 import { StatusCodes } from 'http-status-codes'
-import CryptoJS from 'crypto-js'
 import { userModel } from '../models/userModel'
 import ApiError from '../utils/ApiError'
 import { generateRandomPassword, generateRefreshToken, generateToken, responseData, uploadImage } from '../utils/algorithms'
 import { DEFAULT_AVATAR } from '../utils/constants'
-import sendVerificationMail from '../utils/mail/sendVertificationMail'
 import resetPasswordMail from '../utils/mail/resetPasswordEmail'
+import sendForgotPasswordEmail from '../utils/mail/sendForgotPasswordEmail'
 
 /* eslint-disable no-useless-catch */
 const createNew = async (reqBody: any, reqFile: any) => {
@@ -19,18 +19,15 @@ const createNew = async (reqBody: any, reqFile: any) => {
       throw new ApiError(StatusCodes.CONFLICT, 'Email already exists')
     }
     const newUser = {
-      isConfirmed: false,
+      isConfirmed: true,
       isAdmin: false,
       ...reqBody,
       password: bcrypt.hashSync(reqBody.password),
-      emailToken: CryptoJS.lib.WordArray.random(64).toString(CryptoJS.enc.Hex),
       avatar: reqFile ? await uploadImage(reqFile, 'organick/users') : DEFAULT_AVATAR
     }
     //insert new user
     const createdUser = await userModel.createNew(newUser)
     const getNewUser = await userModel.findOneById(createdUser.insertedId)
-    // sned email
-    sendVerificationMail(getNewUser)
     //not show password when response
     delete getNewUser.password
     return responseData(getNewUser)
@@ -44,9 +41,6 @@ const login = async (reqBody: any) => {
     const getNewUser = await userModel.findOneByEmail(reqBody.email)
     if (!getNewUser) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Email not found')
-    }
-    if (!getNewUser.isConfirmed) {
-      throw new ApiError(StatusCodes.UNAUTHORIZED, 'Account is not confirmed, Please confirm your account')
     }
     if (getNewUser._destroy) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'User is deleted, Please contact admin')
@@ -211,6 +205,47 @@ const resetPassword = async (data: any) => {
   }
 }
 
+const forgotPassword = async (email: string) => {
+  try {
+    const user = await userModel.findOneByEmail(email)
+    if (!user) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
+    }
+    if (user._destroy) {
+      throw new ApiError(StatusCodes.UNAUTHORIZED, 'User is deleted, please contact admin')
+    }
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const resetPasswordExpires = Date.now() + 3600000
+
+    await userModel.findAndUpdate(user._id, {
+      resetPasswordToken: resetToken,
+      resetPasswordExpires: resetPasswordExpires,
+      updatedAt: Date.now()
+    })
+
+    await sendForgotPasswordEmail(user, resetToken)
+    return responseData({ message: 'Reset password email sent successfully' })
+  } catch (error) {
+    throw error
+  }
+}
+
+const resetPasswordWithToken = async (token: string, newPassword: string) => {
+  try {
+    const user = await userModel.findOneByResetToken(token)
+    if (!user) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid or expired reset token')
+    }
+    const updatedUser = await userModel.updatePasswordWithToken(token, hashSync(newPassword))
+    if (!updatedUser) {
+      throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to reset password')
+    }
+    return responseData({ message: 'Password reset successfully' })
+  } catch (error) {
+    throw error
+  }
+}
+
 export const userServices = {
   createNew,
   login,
@@ -221,5 +256,7 @@ export const userServices = {
   deleteUserById,
   checkRefreshToken,
   changePassword,
-  resetPassword
+  resetPassword,
+  forgotPassword,
+  resetPasswordWithToken
 }

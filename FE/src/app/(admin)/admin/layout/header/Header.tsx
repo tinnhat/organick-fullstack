@@ -59,12 +59,12 @@ const Header = ({ toggleMobileSidebar }: ItemType) => {
           <IconMenu2 width='22' height='22' />
         </IconButton>
         <Box flexGrow={1} />
-// ============ FEATURE: notifications START ============
+        {/* ============ FEATURE: notifications START ============ */}
         <Stack spacing={1} direction='row' alignItems='center'>
           <NotificationBell />
           <Profile />
         </Stack>
-// ============ FEATURE: notifications END ============
+        {/* ============ FEATURE: notifications END ============ */}
       </ToolbarStyled>
     </AppBarStyled>
   )

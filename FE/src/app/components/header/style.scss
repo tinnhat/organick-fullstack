@@ -86,6 +86,27 @@ ul {
           font-size: 1.2em;
         }
       }
+      .wishlist-box {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid $white-mix-gray-color;
+        padding: 6px;
+        border-radius: 3em;
+        margin-right: 10px;
+        .wishlist-icon {
+          background-color: $text-bold-color;
+          color: $white-color;
+          padding: 1em;
+          border-radius: 50%;
+          font-size: 1.2em;
+        }
+        .wishlist-box-number {
+          margin: 0 6px;
+          color: $text-bold-color;
+          font-size: 1.2em;
+        }
+      }
       .loading-container {
         display: flex;
         justify-content: center;
@@ -170,6 +191,14 @@ ul {
             padding: 0.5em;
           }
         }
+        .wishlist-box {
+          .wishlist-icon {
+            padding: 0.5em;
+          }
+          .wishlist-box-number {
+            font-size: 1em;
+          }
+        }
         .cart-box {
           i {
             padding: 0.5em;
@@ -209,6 +238,14 @@ ul {
           margin-right: 0.5em;
           .icon-box-search {
             padding: 0.5em;
+          }
+        }
+        .wishlist-box {
+          .wishlist-icon {
+            padding: 0.5em;
+          }
+          .wishlist-box-number {
+            font-size: 1em;
           }
         }
         .cart-box {

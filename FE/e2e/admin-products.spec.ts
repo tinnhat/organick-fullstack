@@ -4,10 +4,11 @@ import { test, expect, Page } from '@playwright/test';
 test.describe('Admin Product Management', () => {
   const loginAsAdmin = async (page: Page) => {
     await page.goto('/login');
-await page.fill('#email', 'admin@gmail.com');
-      await page.fill('#password', '123456789');
+    await page.fill('#email', 'admin@gmail.com');
+    await page.fill('#password', '123456789');
     await page.click('form button:has-text("Login")');
-    await page.waitForURL('**/admin**', { timeout: 10000 });
+    // After login, admin is redirected to /home, not /admin
+    await page.waitForURL(/\/(home|admin)/, { timeout: 10000 });
   };
 
   test('admin can add new product', async ({ page }) => {
