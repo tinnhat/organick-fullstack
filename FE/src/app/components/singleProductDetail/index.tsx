@@ -2,7 +2,7 @@
 import { Box, Typography } from '@mui/material'
 import client from '@/app/client'
 import { useGetProductByIdQuery } from '@/app/utils/hooks/productsHooks'
-import { useGetReviewsByProductIdQuery, useAddReviewMutation, useEditReviewMutation, useDeleteReviewMutation } from '@/app/utils/hooks/reviewsHooks'
+import { useGetReviewsByProductIdQuery, useAddReviewMutation, useEditReviewMutation, useDeleteReviewMutation, useCheckCanReviewQuery } from '@/app/utils/hooks/reviewsHooks'
 import useFetch from '@/app/utils/useFetch'
 import { faStar } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -28,6 +28,7 @@ export default function SingleProductDetail({ params }: Props) {
   const fetchApi = useFetch()
   const { data: product, isLoading, isError } = useGetProductByIdQuery(params.id)
   const { data: reviews } = useGetReviewsByProductIdQuery(params.id)
+  const { data: canReviewData } = useCheckCanReviewQuery(params.id, session?.user?._id)
   const [isAdding, setIsAdding] = useState(false)
   const [editingReview, setEditingReview] = useState<any>(null)
 
@@ -199,6 +200,8 @@ export default function SingleProductDetail({ params }: Props) {
             </Typography>
             <ReviewForm
               productId={params.id}
+              canReview={canReviewData?.canReview}
+              canReviewReason={canReviewData?.reason}
               existingReview={editingReview}
               onSubmit={handleReviewSubmit}
               onCancel={editingReview ? () => setEditingReview(null) : undefined}

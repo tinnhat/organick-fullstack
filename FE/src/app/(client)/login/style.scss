@@ -156,6 +156,21 @@
           margin-bottom: 10px;
           color: $white-mix-gray-color;
         }
+        .generated-password {
+          background-color: $text-bold-color;
+          color: $orange-mix-yellow-color;
+          padding: 15px 20px;
+          border-radius: 8px;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          margin: 15px 0;
+          word-break: break-all;
+        }
+        .note {
+          font-size: 12px;
+          color: $white-mix-gray-color;
+        }
         .btn-back {
           display: inline-block;
           margin-top: 15px;

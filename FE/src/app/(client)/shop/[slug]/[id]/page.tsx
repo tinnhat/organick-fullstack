@@ -15,14 +15,22 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const res = await fetch(`${process.env.HOST_BE}/products/${params.id}`, {
-    method: 'GET',
-  })
-  const result = await res.json()
+  try {
+    const res = await fetch(`${process.env.HOST_BE}/products/${params.id}`, {
+      method: 'GET',
+    })
+    const result = await res.json()
 
-  return {
-    title: result.data.name,
-    description: result.data.description,
+    if (!result?.data?.name) {
+      return { title: 'Product Not Found' }
+    }
+
+    return {
+      title: result.data.name,
+      description: result.data.description,
+    }
+  } catch {
+    return { title: 'Product' }
   }
 }
 

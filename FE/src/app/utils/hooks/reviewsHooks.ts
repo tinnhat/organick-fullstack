@@ -20,6 +20,24 @@ export const useGetReviewsByProductIdQuery = (productId: string) =>
     },
   })
 
+export const useCheckCanReviewQuery = (productId: string, userId?: string) =>
+  useQuery({
+    queryKey: ['canReview', productId, userId],
+    queryFn: async () => {
+      if (!productId || !userId) return { canReview: false, reason: 'Please login to review' }
+      const res = await fetch(`${process.env.HOST_BE}/reviews/product/${productId}/can-review`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const result = await res.json()
+      if (result.success) {
+        return result.data
+      }
+      return { canReview: false, reason: result.message || 'Unable to check review eligibility' }
+    },
+    enabled: !!productId && !!userId,
+  })
+
 export const useAddReviewMutation = (fetchApi: any) =>
   useMutation({
     mutationFn: async ({

@@ -4,30 +4,42 @@
   margin: 40px 0;
   .order-history-container {
     margin: auto;
-    padding: 10px;
+    padding: 20px;
     background-color: #f5f6fa;
+    border-radius: 12px;
     .order-history-title {
       font-weight: 700;
-      font-size: 24px;
+      font-size: 28px;
       line-height: 33px;
       color: $text-bold-color;
+      margin-bottom: 20px;
     }
     .order-history-options {
       display: flex;
       align-items: center;
       justify-content: center;
-      justify-content: space-around;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
       .option {
-        padding: 10px;
+        padding: 10px 20px;
         text-align: center;
-        width: 33.33%;
         cursor: pointer;
         font-weight: 500;
-        background-color: $gray-color;
+        background-color: $white-color;
         color: $text-bold-color;
+        border-radius: 20px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        font-size: 14px;
         &.active {
           background-color: $green-leaf-color;
           color: $white-color;
+          border-color: $green-leaf-color;
+        }
+        &:hover:not(.active) {
+          border-color: $green-leaf-color;
+          color: $green-leaf-color;
         }
       }
     }
@@ -36,142 +48,225 @@
       position: relative;
       .icon {
         position: absolute;
-        right: 10px;
+        right: 15px;
         top: 50%;
         transform: translateY(-50%);
         color: $text-bold-color;
         cursor: pointer;
+        transition: color 0.2s;
+        &:hover {
+          color: $green-leaf-color;
+        }
       }
       input {
-        padding: 10px;
-        padding-right: 40px;
+        padding: 12px 45px 12px 15px;
         width: 100%;
         outline: none;
-        border: none;
-        border: 1px solid $gray-color;
-        background-color: $gray-color;
-        border-radius: 4px;
+        border: 2px solid transparent;
+        background-color: $white-color;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.2s;
         &:active,
         &:focus {
-          border: 1px solid $text-bold-color;
+          border-color: $green-leaf-color;
+        }
+        &::placeholder {
+          color: #999;
         }
       }
     }
     .list-orders {
       padding: 10px 0;
-      .loading {
-        text-align: center;
-        color: $text-bold-color;
-        margin-top: 20px;
-      }
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       .order {
-        margin: 20px 0;
         background-color: #fff;
-        padding: 10px;
-        border-radius: 4px;
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-
-        .order-id {
-          span {
-            color: $green-leaf-color;
-            font-weight: 500;
-          }
+        padding: 0;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+        &:hover {
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
         }
         .order-header-info {
           display: flex;
           align-items: center;
-          border-bottom: 1px solid $white-mix-gray-color;
+          padding: 15px 20px;
+          background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+          border-bottom: 1px solid #eee;
+          flex-wrap: wrap;
+          gap: 10px;
+          .order-id {
+            font-size: 13px;
+            color: #666;
+            span {
+              color: $text-bold-color;
+              font-weight: 600;
+              font-size: 12px;
+              background: #f0f0f0;
+              padding: 3px 8px;
+              border-radius: 4px;
+            }
+          }
           .order-date {
+            font-size: 13px;
+            color: #666;
             margin-left: 10px;
           }
           .order-status {
             margin-left: auto;
-            padding: 4px;
-            border-radius: 4px;
-            color: $white-color;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             &.Pending {
-              background-color: #f1c40f;
+              background-color: #fef3cd;
+              color: #856404;
             }
             &.Cancel {
-              background-color: #e74c3ced;
+              background-color: #f8d7da;
+              color: #721c24;
             }
             &.Complete {
-              background-color: #27ae60;
+              background-color: #d4edda;
+              color: #155724;
             }
             &.Expired {
-              background-color: #2980b9;
+              background-color: #cce5ff;
+              color: #004085;
             }
           }
         }
         .product-info {
           display: flex;
           align-items: center;
-          border-bottom: 1px solid $white-mix-gray-color;
+          padding: 15px 20px;
+          border-bottom: 1px solid #f0f0f0;
+          gap: 15px;
+          &:last-of-type {
+            border-bottom: none;
+          }
+          img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+          }
           .product-straight {
-            margin-left: 10px;
+            flex: 1;
             .product-name {
-              font-weight: bold;
+              font-weight: 600;
               color: $text-bold-color;
+              font-size: 15px;
+              margin-bottom: 4px;
             }
           }
+          .product-quantity {
+            font-size: 13px;
+            color: #888;
+          }
           .product-price {
-            margin-left: auto;
-            font-size: 17px;
-            color: $text-bold-color;
+            font-size: 16px;
+            font-weight: 700;
+            color: $green-leaf-color;
           }
         }
         .order-more-info {
-          margin-top: 20px;
+          margin-top: 0;
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           padding: 20px;
+          background-color: #fafafa;
+          gap: 20px;
+          flex-wrap: wrap;
+          .box-address {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+          }
           .note,
           .address,
           .phone {
+            font-size: 13px;
+            color: #555;
             span {
               font-weight: 600;
+              color: $text-bold-color;
             }
-            width: max-content;
           }
           .total {
             text-align: right;
-            width: 30%;
             font-weight: bold;
-            font-size: 17px;
+            font-size: 20px;
             color: $text-bold-color;
+            .currency {
+              font-size: 14px;
+              color: #888;
+            }
           }
         }
         .action-for-order {
-          padding-top: 10px;
-          border-top: 1px solid $white-mix-gray-color;
+          padding: 15px 20px;
+          border-top: 1px solid #eee;
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
           .btn-checkout {
             background-color: $green-leaf-color;
             color: $white-color;
             outline: none;
-            border-radius: 4px;
-            padding: 10px;
+            border-radius: 8px;
+            padding: 10px 20px;
             border: none;
-            margin-right: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            &:hover {
+              background-color: darken($green-leaf-color, 10%);
+              transform: translateY(-1px);
+            }
           }
           .btn-cancel {
-            background-color: $text-bold-color;
-            color: $white-color;
+            background-color: $white-color;
+            color: #e74c3c;
             outline: none;
-            border-radius: 4px;
-            padding: 10px;
-            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: 2px solid #e74c3c;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            &:hover {
+              background-color: #e74c3c;
+              color: $white-color;
+            }
           }
         }
       }
     }
     .no-order {
       text-align: center;
-      color: $text-bold-color;
+      color: #999;
       font-weight: 500;
-      margin-top: 20px;
-      font-size: 20px;
-      margin-bottom: 20px;
+      margin-top: 40px;
+      font-size: 18px;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 12px;
+      .icon-empty {
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: #ddd;
+      }
     }
   }
   .container-pagination {
@@ -182,34 +277,41 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      gap: 6px;
     }
     .page-btn {
-      color: #000000;
-      margin-right: 0.25rem;
+      color: $text-bold-color;
       transition: all 0.2s linear;
-      border-radius: 50%;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       a {
         display: block;
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 8px;
+        font-weight: 500;
       }
       &.active {
-        background-color: $text-bold-color;
-        color: $white-color;
-      }
-      &:hover {
-        cursor: pointer;
         background-color: $green-leaf-color;
-        color: $white-color;
+        a {
+          color: $white-color;
+        }
+      }
+      &:hover:not(.active):not(.disabled-page) {
+        cursor: pointer;
+        background-color: rgba($green-leaf-color, 0.1);
+        a {
+          color: $green-leaf-color;
+        }
       }
       &.disabled-page {
         cursor: not-allowed !important;
+        opacity: 0.5;
         a {
           cursor: not-allowed !important;
         }
@@ -217,15 +319,64 @@
       &.next,
       &.previous {
         cursor: pointer;
+        a {
+          &:hover {
+            color: $green-leaf-color;
+          }
+        }
       }
     }
-
     .page-num {
       display: none;
     }
-
     .page-step {
       display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  .order-history {
+    .order-history-container {
+      padding: 15px;
+      .order-history-title {
+        font-size: 22px;
+      }
+      .order-history-options {
+        .option {
+          padding: 8px 14px;
+          font-size: 13px;
+        }
+      }
+      .list-orders {
+        .order {
+          .order-header-info {
+            .order-status {
+              margin-left: 0;
+            }
+          }
+          .product-info {
+            img {
+              width: 60px;
+              height: 60px;
+            }
+          }
+          .order-more-info {
+            flex-direction: column;
+            .total {
+              text-align: left;
+            }
+          }
+          .action-for-order {
+            flex-direction: column;
+            .btn-checkout,
+            .btn-cancel {
+              width: 100%;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
   }
 }

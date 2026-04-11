@@ -9,6 +9,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [generatedPassword, setGeneratedPassword] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -23,13 +24,14 @@ export default function ForgotPasswordPage() {
       })
       const data = await response.json()
       if (!response.ok) {
-        toast.error(data.message || 'Failed to send reset email', {
+        toast.error(data.message || 'Failed to reset password', {
           position: 'bottom-right'
         })
         return
       }
       setIsSuccess(true)
-      toast.success('Reset password email sent successfully! Check your email.', {
+      setGeneratedPassword(data.data.password)
+      toast.success('Password has been reset!', {
         position: 'bottom-right'
       })
     } catch (error) {
@@ -64,13 +66,15 @@ export default function ForgotPasswordPage() {
           <p className='box__title'>Forgot Password</p>
           {isSuccess ? (
             <div className='success-message'>
-              <p>We have sent a password reset link to your email.</p>
-              <p>Please check your inbox and click the link to reset your password.</p>
+              <p>Your password has been reset!</p>
+              <p>Your new temporary password:</p>
+              <div className='generated-password'>{generatedPassword}</div>
+              <p className='note'>Please copy this password and login with it. You can change your password after logging in.</p>
               <Link href='/login' className='btn-back'>Back to Login</Link>
             </div>
           ) : (
             <>
-              <p className='box__desc'>Enter your email address and we will send you a link to reset your password.</p>
+              <p className='box__desc'>Enter your email address and we will generate a new password for you.</p>
               <form onSubmit={handleSubmit}>
                 <div className='input-box'>
                   <label htmlFor='email'>Email</label>
@@ -87,7 +91,7 @@ export default function ForgotPasswordPage() {
                   />
                 </div>
                 <button disabled={isLoading} className={`btn-create-account ${isLoading ? 'loading' : ''}`}>
-                  {isLoading ? 'Sending...' : 'Send Reset Link'}
+                  {isLoading ? 'Generating...' : 'Generate New Password'}
                 </button>
               </form>
               <p className='box__text'>

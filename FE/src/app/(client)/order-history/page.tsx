@@ -227,7 +227,7 @@ export default function OrderHistory() {
                 <li className='order' key={order._id}>
                   <div className='order-header-info'>
                     <p className='order-id'>
-                      ID: <span>{order._id}</span>
+                      Order <span>#{order._id.slice(-8).toUpperCase()}</span>
                     </p>
                     <p className='order-date'>- {moment(order.createdAt).format('MM-DD-YYYY')}</p>
                     <p className={`order-status ${order.status}`}>{order.status}</p>
@@ -246,7 +246,7 @@ export default function OrderHistory() {
                       />
                       <div className='product-straight'>
                         <p className='product-name'>{product.name}</p>
-                        <p className='product-quantity'>x{product.quantityAddtoCart}</p>
+                        <p className='product-quantity'>Qty: {product.quantityAddtoCart}</p>
                       </div>
                       <p className='product-price'>${product.price}</p>
                     </div>
@@ -255,22 +255,25 @@ export default function OrderHistory() {
                     <div className='box-address'>
                       <div className='address'>
                         <p>
-                          <span>Address:</span> {order.address}
+                          <span>Address:</span> {order.address || 'No address provided'}
                         </p>
                       </div>
                       <div className='phone'>
                         <p>
-                          <span>Phone:</span> {order.phone}
+                          <span>Phone:</span> {order.phone || 'No phone provided'}
                         </p>
                       </div>
                       <div className='note'>
                         <p>
-                          <span>Note:</span> {order.note ? order.note : 'No note'}
+                          <span>Note:</span> {order.note || 'No note'}
                         </p>
                       </div>
                     </div>
 
-                    <div className='total'>Total: ${order.totalPrice}</div>
+                    <div className='total'>
+                      <span className='total-label'>Total</span>
+                      <span className='total-amount'>${order.totalPrice}</span>
+                    </div>
                   </div>
                   <div className='action-for-order'>
                     {order.isPaid ||
@@ -292,7 +295,9 @@ export default function OrderHistory() {
                 </li>
               ))
             ) : (
-              <p className='no-order'>No order</p>
+              <div className='no-order'>
+                <p>No orders found</p>
+              </div>
             )}
           </ul>
         </div>

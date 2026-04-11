@@ -5,6 +5,8 @@ import StarRating from '../rating/StarRating'
 
 interface ReviewFormProps {
   productId: string
+  canReview?: boolean
+  canReviewReason?: string
   existingReview?: {
     _id: string
     rating: number
@@ -14,7 +16,14 @@ interface ReviewFormProps {
   onCancel?: () => void
 }
 
-export default function ReviewForm({ productId, existingReview, onSubmit, onCancel }: ReviewFormProps) {
+export default function ReviewForm({
+  productId,
+  canReview = false,
+  canReviewReason,
+  existingReview,
+  onSubmit,
+  onCancel
+}: ReviewFormProps) {
   const [rating, setRating] = useState(existingReview?.rating || 0)
   const [comment, setComment] = useState(existingReview?.comment || '')
   const [loading, setLoading] = useState(false)
@@ -24,6 +33,11 @@ export default function ReviewForm({ productId, existingReview, onSubmit, onCanc
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    if (!canReview && !existingReview) {
+      setError(canReviewReason || 'You cannot review this product')
+      return
+    }
 
     if (rating === 0) {
       setError('Please select a rating')
@@ -49,6 +63,8 @@ export default function ReviewForm({ productId, existingReview, onSubmit, onCanc
       setLoading(false)
     }
   }
+
+  const isDisabled = !canReview && !existingReview
 
   return (
     // ============ FEATURE: shop-ui START ============
@@ -82,7 +98,7 @@ export default function ReviewForm({ productId, existingReview, onSubmit, onCanc
         <Typography variant='body2' sx={{ mb: 1, fontWeight: 500 }}>
           Your Rating *
         </Typography>
-        <StarRating value={rating} onChange={setRating} size='large' />
+        <StarRating value={rating} onChange={isDisabled ? undefined : setRating} size='large' />
       </Box>
 
       <TextField
@@ -90,18 +106,19 @@ export default function ReviewForm({ productId, existingReview, onSubmit, onCanc
         multiline
         rows={4}
         label='Your Review *'
-        placeholder='Share your experience with this product...'
+        placeholder={isDisabled ? canReviewReason || 'You cannot review this product' : 'Share your experience with this product...'}
         value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        onChange={(e) => !isDisabled && setComment(e.target.value)}
         sx={{ mb: 3 }}
-        inputProps={{ minLength: 10 }}
+        inputProps={{ minLength: 10, disabled: isDisabled }}
+        disabled={isDisabled}
       />
 
       <Box sx={{ display: 'flex', gap: 2 }}>
         <Button
           type='submit'
           variant='contained'
-          disabled={loading}
+          disabled={loading || isDisabled}
           sx={{
             bgcolor: '#7eb693',
             '&:hover': { bgcolor: '#6aa583' },

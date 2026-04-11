@@ -6,7 +6,6 @@ import ApiError from '../utils/ApiError'
 import { generateRandomPassword, generateRefreshToken, generateToken, responseData, uploadImage } from '../utils/algorithms'
 import { DEFAULT_AVATAR } from '../utils/constants'
 import resetPasswordMail from '../utils/mail/resetPasswordEmail'
-import sendForgotPasswordEmail from '../utils/mail/sendForgotPasswordEmail'
 
 /* eslint-disable no-useless-catch */
 const createNew = async (reqBody: any, reqFile: any) => {
@@ -214,17 +213,12 @@ const forgotPassword = async (email: string) => {
     if (user._destroy) {
       throw new ApiError(StatusCodes.UNAUTHORIZED, 'User is deleted, please contact admin')
     }
-    const resetToken = crypto.randomBytes(32).toString('hex')
-    const resetPasswordExpires = Date.now() + 3600000
-
+    const newPassword = generateRandomPassword()
     await userModel.findAndUpdate(user._id, {
-      resetPasswordToken: resetToken,
-      resetPasswordExpires: resetPasswordExpires,
+      password: hashSync(newPassword),
       updatedAt: Date.now()
     })
-
-    await sendForgotPasswordEmail(user, resetToken)
-    return responseData({ message: 'Reset password email sent successfully' })
+    return responseData({ password: newPassword })
   } catch (error) {
     throw error
   }
