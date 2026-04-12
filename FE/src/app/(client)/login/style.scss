@@ -1,10 +1,9 @@
 @import '../../variables';
 .auth-page {
   .auth-container {
-    margin: 0 auto;
-    margin-top: 60px;
+    margin: 60px auto 0;
     width: 70%;
-    height: 750px;
+    min-height: 750px;
     background-color: #fedcc5;
     display: flex;
     align-items: center;
@@ -16,11 +15,11 @@
     }
     .box {
       background-color: $green-leaf-color;
-      padding: 20px;
+      padding: 30px 20px;
       border-top-right-radius: 10px;
       border-bottom-right-radius: 10px;
       margin-left: 20px;
-      width: calc(50% - 20px);
+      width: calc(50% - 40px);
       height: 100%;
       text-align: center;
       display: flex;
@@ -99,14 +98,15 @@
       .btn-create-account {
         border: none;
         outline: none;
-        width: 80%;
-        padding: 10px;
+        width: 100%;
+        padding: 12px;
         border-radius: 10px;
         background-color: $white-color;
         color: $text-bold-color;
         transition: all 0.2s linear;
-        font-size: 17px;
-        margin: 20px 0;
+        font-size: 16px;
+        margin: 15px 0 10px;
+        font-weight: 500;
         &:hover {
           color: $text-bold-color;
           background-color: $orange-mix-yellow-color;
@@ -213,12 +213,18 @@
   .auth-page {
     .auth-container {
       width: 90%;
+      min-height: auto;
+      height: auto;
+      flex-direction: column;
       .bkg-login-img {
-        width: 0%;
+        display: none;
       }
       .box {
         width: 100%;
         margin-left: 0;
+        min-height: auto;
+        height: auto;
+        padding: 30px 20px;
       }
     }
   }

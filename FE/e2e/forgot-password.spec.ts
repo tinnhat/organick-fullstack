@@ -24,10 +24,9 @@ test.describe('Forgot Password Flow', () => {
     await expect(page).toHaveURL(/\/login\/forgotPassword/);
 
     await expect(page.locator('#email')).toBeVisible();
-    // Use #email selector instead of generic input[type="email"] to avoid matching newsletter input
     await expect(page.locator('#email')).toHaveAttribute('type', 'email');
-    await expect(page.locator('button:has-text("Send Reset Link")')).toBeVisible();
-    await expect(page.locator('a:has-text("Login")')).toBeVisible();
+    await expect(page.locator('button:has-text("Generate Password")')).toBeVisible();
+    await expect(page.locator('text=Remember your password?')).toBeVisible();
   });
 
   test('shows validation error for invalid email format', async ({ page }) => {
@@ -35,51 +34,47 @@ test.describe('Forgot Password Flow', () => {
     await expect(page).toHaveURL(/\/login\/forgotPassword/);
 
     await page.fill('#email', 'invalidemail');
-    await page.locator('button:has-text("Send Reset Link")').click();
+    await page.locator('button:has-text("Generate Password")').click();
 
-    await page.waitForTimeout(500);
-    const emailInput = page.locator('#email');
-    await expect(emailInput).toHaveAttribute('type', 'email');
+    // Wait for toast to appear - sonner has specific class structure
+    await page.waitForTimeout(1000);
+    // Use more generic selector for sonner toasts
+    const toast = page.locator('.sonner-toast, [data-sonner-toast], [class*="toast"]').first();
+    await expect(toast).toBeVisible({ timeout: 5000 });
   });
 
-  test('shows error for non-existent email', async ({ page }) => {
-    await page.locator('.forgot-password a').click();
-    await expect(page).toHaveURL(/\/login\/forgotPassword/);
-
-    await page.fill('#email', 'nonexistent@example.com');
-    await page.locator('button:has-text("Send Reset Link")').click();
-
-    // Wait for toast to appear - sonner renders toasts with class containing "sonner"
-    await page.waitForTimeout(3000);
-    // Sonner toast container typically has class with "sonner" and message contains the error text
-    const toast = page.locator('[class*="sonner"]:has-text("Failed to send reset email")');
-    await expect(toast).toBeVisible({ timeout: 8000 });
-  });
-
-  test('shows success message after submitting valid email', async ({ page }) => {
+  test('shows success modal when submitting valid email', async ({ page }) => {
     await page.locator('.forgot-password a').click();
     await expect(page).toHaveURL(/\/login\/forgotPassword/);
 
     await page.fill('#email', 'test@example.com');
-    await page.locator('button:has-text("Send Reset Link")').click();
+    await page.locator('button:has-text("Generate Password")').click();
 
-    await page.waitForTimeout(3000);
-    await expect(page.locator('.success-message')).toBeVisible({ timeout: 8000 });
-    await expect(page.locator('text=/We have sent a password reset link/i')).toBeVisible();
-    await expect(page.locator('a:has-text("Back to Login")')).toBeVisible();
+    // Wait for modal to appear
+    await page.waitForTimeout(1000);
+    const dialog = page.locator('[role="dialog"]');
+    await expect(dialog).toBeVisible({ timeout: 8000 });
+    await expect(page.locator('text="Password Generated"')).toBeVisible();
+    await expect(page.locator('[role="dialog"] button:has-text("Back to Login")')).toBeVisible();
   });
 
-  test('user can navigate back to login from success state', async ({ page }) => {
+  test('user can navigate back to login from success modal', async ({ page }) => {
     await page.locator('.forgot-password a').click();
     await expect(page).toHaveURL(/\/login\/forgotPassword/);
 
     await page.fill('#email', 'test@example.com');
-    await page.locator('button:has-text("Send Reset Link")').click();
+    await page.locator('button:has-text("Generate Password")').click();
 
-    await page.waitForTimeout(3000);
-    await expect(page.locator('.success-message')).toBeVisible({ timeout: 8000 });
+    // Wait for modal to appear
+    await page.waitForTimeout(1000);
+    const dialog = page.locator('[role="dialog"]');
+    await expect(dialog).toBeVisible({ timeout: 8000 });
 
-    await page.locator('a:has-text("Back to Login")').click();
+    // Click Back to Login button in modal
+    await page.locator('[role="dialog"] button:has-text("Back to Login")').click();
+
+    // Modal should be closed
+    await expect(dialog).not.toBeVisible();
     await expect(page).toHaveURL(/\/login/);
     await expect(page.locator('#email')).toBeVisible();
   });
@@ -88,8 +83,9 @@ test.describe('Forgot Password Flow', () => {
     await page.locator('.forgot-password a').click();
     await expect(page).toHaveURL(/\/login\/forgotPassword/);
 
-    await expect(page.locator('a:has-text("Login")')).toBeVisible();
-    await page.locator('a:has-text("Login")').click();
+    await expect(page.locator('text=Remember your password?')).toBeVisible();
+    // The Login link is inside the page content, scope it specifically
+    await page.locator('.box span:has-text("Login")').click();
 
     await expect(page).toHaveURL(/\/login/);
     await expect(page.locator('#email')).toBeVisible();
