@@ -2,7 +2,7 @@
 'use client'
 import { useState } from 'react'
 import { Box, Badge, IconButton, useTheme } from '@mui/material'
-import { MessageCircle } from '@tabler/icons-react'
+import { IconMessageCircle2 } from '@tabler/icons-react'
 import ChatModal from './ChatModal'
 
 const FloatingChatButton = ({ unreadCount = 0 }: { unreadCount?: number }) => {
@@ -44,7 +44,7 @@ const FloatingChatButton = ({ unreadCount = 0 }: { unreadCount?: number }) => {
               },
             }}
           >
-            <MessageCircle size={28} />
+            <IconMessageCircle2 size={28} />
           </IconButton>
         </Badge>
       </Box>

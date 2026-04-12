@@ -8,7 +8,8 @@ export const authOptions: AuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        token: { label: 'Token', type: 'text' },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials: any, req: any): Promise<any> {
         const { email, password } = credentials

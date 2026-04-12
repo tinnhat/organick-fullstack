@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Sidebar from './layout/sidebar/Sidebar'
 import Footer from './layout/footer'
 import Header from './layout/header/Header'
+import AdminChatWrapper from './ChatWrapper'
 
 const MainWrapper = styled('div')(() => ({
   // display: 'flex',
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </Container>
       </PageWrapper>
+      <AdminChatWrapper />
     </MainWrapper>
   )
 }

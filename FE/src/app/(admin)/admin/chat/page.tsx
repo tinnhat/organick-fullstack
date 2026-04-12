@@ -22,6 +22,7 @@ import { useSocket } from '@/hooks/useSocket'
 import { useOnlineStatus } from '@/hooks/useOnlineStatus'
 import { useSession } from 'next-auth/react'
 import { Message, Conversation } from '@/app/type.d'
+import MessageBubble from '@/components/chat/MessageBubble'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -354,51 +355,40 @@ export default function AdminChatPage() {
               }}
             >
               {messages.map((message) => (
-                <Box
+                <MessageBubble
                   key={message._id}
-                  sx={{
-                    display: 'flex',
-                    justifyContent:
-                      message.senderId === session?.user?._id ? 'flex-end' : 'flex-start',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      maxWidth: '60%',
-                      p: 1.5,
-                      borderRadius:
-                        message.senderId === session?.user?._id
-                          ? '16px 16px 4px 16px'
-                          : '16px 16px 16px 4px',
-                      backgroundColor:
-                        message.senderId === session?.user?._id
-                          ? theme.palette.primary.main
-                          : '#fff',
-                      color:
-                        message.senderId === session?.user?._id ? '#fff' : 'text.primary',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                    }}
-                  >
-                    <Typography variant='body2'>{message.content}</Typography>
-                    <Typography
-                      variant='caption'
-                      sx={{
-                        opacity: 0.7,
-                        display: 'block',
-                        mt: 0.5,
-                        textAlign: 'right',
-                      }}
-                    >
-                      {dayjs(message.createdAt).format('HH:mm')}
-                    </Typography>
-                  </Box>
-                </Box>
+                  message={message}
+                  isSent={message.senderId === session?.user?._id}
+                />
               ))}
               {isTyping && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pl: 1 }}>
                   <Typography variant='caption' color='text.secondary'>
                     {selectedConversation.userName} is typing...
                   </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 0.5,
+                      '& span': {
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        backgroundColor: theme.palette.text.secondary,
+                        animation: 'bounce 1.4s infinite ease-in-out',
+                        '&:nth-of-type(1)': { animationDelay: '-0.32s' },
+                        '&:nth-of-type(2)': { animationDelay: '-0.16s' },
+                      },
+                      '@keyframes bounce': {
+                        '0%, 80%, 100%': { transform: 'scale(0)' },
+                        '40%': { transform: 'scale(1)' },
+                      },
+                    }}
+                  >
+                    <span />
+                    <span />
+                    <span />
+                  </Box>
                 </Box>
               )}
               <div ref={messagesEndRef} />
@@ -424,6 +414,7 @@ export default function AdminChatPage() {
                 multiline
                 maxRows={4}
                 disabled={!isConnected}
+                data-testid="chat-input"
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '24px',
@@ -433,6 +424,7 @@ export default function AdminChatPage() {
               <IconButton
                 onClick={handleSend}
                 disabled={!inputValue.trim() || !isConnected}
+                data-testid="send-button"
                 sx={{
                   backgroundColor: theme.palette.primary.main,
                   color: '#fff',
